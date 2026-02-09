@@ -14,9 +14,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.Random;
 
-public class logarCadastrarDAO {
+public class LogarCadastrarDAO {
     Conexao conexao = new Conexao();
     public Object logar(String email, String senha) {
         Connection conn = conexao.conectar();
@@ -246,14 +245,14 @@ public class logarCadastrarDAO {
     public int verificar(String email, String hash){
         Connection conn = conexao.conectar();
         System.out.println(email+hash);
-        String sql="SELECT aluno_id from aluno WHERE EMAIL=? AND troca_senha_hash=?";
+        String sql="SELECT id_aluno from aluno WHERE EMAIL=? AND troca_senha_hash=?";
         try {
             PreparedStatement pstm = conn.prepareStatement(sql);
             pstm.setString(1, email);
             pstm.setString(2, hash);
             ResultSet rs = pstm.executeQuery();
             if (rs.next()){
-                return rs.getInt("aluno_id");
+                return rs.getInt("id_aluno");
             }
             return 0;
         } catch (SQLException e) {

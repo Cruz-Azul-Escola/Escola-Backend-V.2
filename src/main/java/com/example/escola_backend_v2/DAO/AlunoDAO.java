@@ -13,7 +13,7 @@ public class AlunoDAO {
     Conexao conexao= new Conexao();
     public int buscarPorEmail(String email) {
         Connection conn = conexao.conectar();
-        String sql = "SELECT  aluno_id FROM ALUNO WHERE email = ?";
+        String sql = "SELECT  id_aluno FROM ALUNO WHERE email = ?";
         try {
 
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -33,7 +33,7 @@ public class AlunoDAO {
         }
     }
     public int editarSenha(int id, String senha){
-        String sql = "UPDATE ALUNO SET SENHA=? WHERE  aluno_id=?";
+        String sql = "UPDATE ALUNO SET SENHA=? WHERE  id_aluno=?";
         Connection conn = conexao.conectar();
         try {
             PreparedStatement pstm = conn.prepareStatement(sql);
@@ -52,8 +52,8 @@ public class AlunoDAO {
         Connection conn = conexao.conectar();
 
         String sqlInsertAluno =
-                "INSERT INTO aluno (nome, cpf_signup, matricula, email, senha, esta_ativo) " +
-                        "VALUES (?, ?, ?, ?, ?, TRUE)";
+                "INSERT INTO aluno (nome, cpf_signup, matricula, esta_ativo) " +
+                        "VALUES (?, ?, ?, TRUE)";
 
         String sqlBuscarTurmasSala =
                 "SELECT id_turma FROM turma WHERE id_sala = ?";
@@ -72,9 +72,6 @@ public class AlunoDAO {
             psAluno.setString(2, alunoDTO.getCpf());
             psAluno.setString(3, matricula);
 
-            //dados padrões
-            psAluno.setString(4, "pendente@" + matricula.toLowerCase() + ".com");
-            psAluno.setString(5, "trocar123");
             psAluno.executeUpdate();
 
             ResultSet rs = psAluno.getGeneratedKeys();
@@ -133,13 +130,13 @@ public class AlunoDAO {
 
     public int buscarPorCpf(String cpf){
         Connection conn = conexao.conectar();
-        String sql = "SELECT aluno_id FROM ALUNO WHERE cpf_signup=?";
+        String sql = "SELECT id_aluno FROM ALUNO WHERE cpf_signup=? AND EMAIL IS NULL AND SENHA IS NULL";
         try{
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, cpf);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()){
-                return rs.getInt("aluno_id");
+                return rs.getInt("id_aluno");
             }
             return 0;
         } catch (SQLException e) {
@@ -192,31 +189,31 @@ public class AlunoDAO {
                     aluno.setNome(rs.getString("nome"));
                     aluno.setMatricula(rs.getString("matricula"));
                     aluno.setEmail(rs.getString("email"));
-                    aluno.setSenha(rs.getString("senha"));
+                   // aluno.setSenha(rs.getString("senha"));
                     aluno.setCpf(rs.getString("cpf_signup"));
                     aluno.setMatriculas(matriculas); // lista de TurmaAlunoDTO
                 }
 
                 int idTurma = rs.getInt("id_turma");
                 if (!rs.wasNull()) {
-                    // Disciplina
+                    // disciplina
                     DisciplinaDTO d = new DisciplinaDTO();
                     d.setId(rs.getInt("id_disciplina"));
                     d.setNome(rs.getString("nome_disciplina"));
 
-                    // Sala
+                    // sala
                     SalaDTO s = new SalaDTO();
                     s.setId(rs.getInt("id_sala"));
                     s.setNome(rs.getString("nome_sala"));
 
-                    // Turma
+                    // turma
                     TurmaDTO t = new TurmaDTO();
                     t.setId(rs.getInt("id_turma"));
                     t.setPeriodoLetivo(rs.getString("periodo_letivo"));
                     t.setDisciplina(d);
                     t.setSala(s);
 
-                    // Notas
+                    // notas
                     BigDecimal bdNota1 = rs.getBigDecimal("nota1");
                     BigDecimal bdNota2 = rs.getBigDecimal("nota2");
 
@@ -230,7 +227,6 @@ public class AlunoDAO {
                         media = -1; // ainda não disponível
                     }
 
-                    // TurmaAluno (vínculo)
                     TurmaAlunoDTO ta = new TurmaAlunoDTO();
                     ta.setAluno(aluno);
                     ta.setTurma(t);
@@ -266,7 +262,6 @@ public class AlunoDAO {
                         "VALUES (?, ?, ?, ?, ?)";
 
         try {
-            // 1) Atualiza dados básicos do aluno
             PreparedStatement psAluno = conn.prepareStatement(sqlUpdateAluno);
             psAluno.setString(1, aluno.getNome());
             psAluno.setString(2, aluno.getEmail());
@@ -276,13 +271,10 @@ public class AlunoDAO {
             psAluno.setInt(6, aluno.getId());
 
             psAluno.executeUpdate();
-
-            // 2) Remove vínculos antigos
             PreparedStatement psDel = conn.prepareStatement(sqlDeleteVinculos);
             psDel.setInt(1, aluno.getId());
             psDel.executeUpdate();
 
-            // 3) Insere vínculos novos
             if (aluno.getMatriculas() != null && !aluno.getMatriculas().isEmpty()) {
                 PreparedStatement psIns = conn.prepareStatement(sqlInsertVinculo);
 
@@ -321,7 +313,7 @@ public class AlunoDAO {
 
     public int excluir(int id){
         Connection conn = conexao.conectar();
-        String sql="UPDATE ALUNO SET esta_ativo=FALSE WHERE ALUNO_ID = ?";
+        String sql="UPDATE ALUNO SET esta_ativo=FALSE WHERE id_aluno = ?";
         try {
             PreparedStatement pstm = conn.prepareStatement(sql);
             pstm.setInt(1, id);
@@ -338,7 +330,7 @@ public class AlunoDAO {
     }
 
     public boolean notasFaltando(int id){
-        String sql = "SELECT COUNT(*) AS faltando FROM turma_aluno WHERE aluno_id =? AND (nota1 IS NULL OR nota2 IS NULL)";
+        String sql = "SELECT COUNT(*) AS faltando FROM turma_aluno WHERE id_aluno =? AND (nota1 IS NULL OR nota2 IS NULL)";
         Connection conn = conexao.conectar();
         try {
             PreparedStatement pstmt= conn.prepareStatement(sql);
@@ -375,7 +367,7 @@ public class AlunoDAO {
                 "ORDER BY d.nome_disciplina";
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, idAluno);
+            pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
