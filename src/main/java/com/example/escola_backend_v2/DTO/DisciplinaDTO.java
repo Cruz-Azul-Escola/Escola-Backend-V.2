@@ -3,10 +3,12 @@ package com.example.escola_backend_v2.DTO;
 public class DisciplinaDTO {
     private int id;
     private String nome;
+    private int cargaHoraria;
 
-    public DisciplinaDTO(int id, String nome) {
+    public DisciplinaDTO(int id, String nome, int cargaHoraria) {
         this.id = id;
         this.nome = nome;
+        this.cargaHoraria = cargaHoraria;
     }
 
     public DisciplinaDTO() {
@@ -26,6 +28,14 @@ public class DisciplinaDTO {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public int getCargaHoraria(){
+        return cargaHoraria;
+    }
+
+    public void setCargaHoraria(int cargaHoraria){
+        this.cargaHoraria = cargaHoraria;
     }
 
     @Override

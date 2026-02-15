@@ -7,23 +7,67 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.escola_backend_v2.DTO.ProfessorDTO;
-import com.example.escola_backend_v2.DTO.SalaDTO;
+import com.example.escola_backend_v2.DTO.DisciplinaDTO;
 import com.example.escola_backend_v2.Util.Conexao;
 
-public class SalaDAO {
-
+public class DisciplinaDAO {
     Conexao conexao = new Conexao();
 
-    //Método para inserir sala
-    public void adicionarSala(String sala, int capacidade){
+    //Método para inserir
+    public void adicionarDisciplina(String disciplina, int cargaHoraria){
         Connection conn = conexao.conectar();
-        String query = "INSERT INTO sala(nome_sala, capacidade) VALUES(?,?)";
-
+        String query = "INSERT INTO disciplina(nome_disciplina, carga_horaria) VALUES(?,?)";
         try {
             PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setString(1, sala);
-            pstmt.setInt(2, capacidade);
+            pstmt.setString(1, disciplina);
+            pstmt.setInt(2, cargaHoraria);
+            pstmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally{
+            conexao.desconectar(conn);
+        }
+    }
+
+    //Método para editar nome
+    public int editarNome (String disciplina, int id) {
+        Connection conn = conexao.conectar();
+        String query = "UPDATE disciplina SET disciplina_nome = ? WHERE id_disciplina = ?";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, disciplina);
+            pstmt.setInt(2, id);
+            return pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally{
+            conexao.desconectar(conn);
+        }
+    }
+
+    //Método para editar carga horária
+    public int editarCargaHorária (int cargaHoraria, int id) {
+        Connection conn = conexao.conectar();
+        String query = "UPDATE disciplina SET carga_horaria = ? WHERE id_disciplina = ?";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, cargaHoraria);
+            pstmt.setInt(2, id);
+            return pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally{
+            conexao.desconectar(conn);
+        }
+    }
+
+    //Método para excluir disciplina
+    public void excluirDisciplina(int id) {
+        Connection conn = conexao.conectar();
+        String query = "DELETE FROM disciplina WHERE disciplina_id = ?";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, id);
             pstmt.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -32,95 +76,49 @@ public class SalaDAO {
         }
     }
 
-    //Método para editar nome da sala
-    public int editarNome(String sala, int id) {
+    //Método para consultar disciplina
+    public int buscar(String disciplina){
         Connection conn = conexao.conectar();
-        String query = "UPDATE sala SET nome_sala = ? WHERE id_sala = ?";
+        String query = "SELECT * FROM disciplina WHERE disciplina_nome = ?";
         try {
             PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setString(1, sala);
-            pstmt.setInt(2, id);
-            return pstmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally{
-            conexao.desconectar(conn);
-        }
-    }
-
-    //Método para editar capacidade da sala
-    public int editarSala(int capacidade, int id) {
-        Connection conn = conexao.conectar();
-        String query = "UPDATE sala SET capacidade = ? WHERE id_sala = ?";
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setInt(1, capacidade);
-            pstmt.setInt(2, id);
-            return pstmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally{
-            conexao.desconectar(conn);
-        }
-    }
-
-    //Método para excluir sala
-    public void excluirSala(String sala) {
-        Connection conn = conexao.conectar();
-        String query = "DELETE FROM sala WHERE sala = ?";
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setString(1, query);
-            pstmt.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally{
-            conexao.desconectar(conn);
-        }
-    }
-
-    //Método para buscar sala
-    public int buscarSala(String sala){
-        Connection conn = conexao.conectar();
-        String query = "SELECT * FROM sala WHERE sala = ?";
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setString(1, sala);
+            pstmt.setString(1, disciplina);
             ResultSet rs = pstmt.executeQuery();
-
+            
             if (rs.next()) {
                 return 1;
-            } else{
+            } else {
                 return 0;
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
-        }finally{
+        } finally {
             conexao.desconectar(conn);
         }
     }
 
-    //Método para listar todas as salas
-    public List<SalaDTO> listarSalas(){
-        List<SalaDTO> salas = new ArrayList<>();
+    //Método para listar disciplinas 
+     public List<DisciplinaDTO> listarDisciplina() {
+        List<DisciplinaDTO> disciplinas = new ArrayList<>();
         Connection conn = conexao.conectar();
-        String query = "SELECT * FROM sala";
+        String query = "SELECT * FROM disciplina";
+
         try {
             PreparedStatement pstmt = conn.prepareStatement(query);
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                SalaDTO sala = new SalaDTO();
-                sala.setId(rs.getInt("id_sala"));
-                sala.setNome(rs.getString("nome"));
-                sala.setCapacidade(rs.getInt("capacidade"));
-                salas.add(sala);
+                DisciplinaDTO disciplina = new DisciplinaDTO();
+                disciplina.setId(rs.getInt("id_disciplina"));
+                disciplina.setNome(rs.getString("nome"));
+                disciplina.setCargaHoraria(rs.getInt("carga_horaria"));
+                disciplinas.add(disciplina);
             }
-            return salas;
+            return disciplinas;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally{
+        }finally{
             conexao.desconectar(conn);
         }
-    }
+     }
 }
