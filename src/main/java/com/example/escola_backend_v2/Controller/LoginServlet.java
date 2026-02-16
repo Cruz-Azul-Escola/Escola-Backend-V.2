@@ -48,8 +48,11 @@ public class LoginServlet extends HttpServlet {
                     ProfessorDTO prof = (ProfessorDTO) usuario;
                     session.setAttribute("usuarioLogado", prof);
                     session.setAttribute("tipo", "PROFESSOR");
-
-                    request.getRequestDispatcher("/homeProfessor.jsp").forward(request, response);
+                    session.setAttribute("id", prof.getId());
+                    System.out.println(prof.getId());
+                    System.out.println(prof);
+                    System.out.println("banana");
+                    response.sendRedirect("homeProfessor");
                     return;
                 }
 

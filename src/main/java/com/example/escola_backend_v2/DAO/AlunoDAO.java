@@ -411,6 +411,116 @@ public class AlunoDAO {
 
     }
 
+    public AlunoDTO buscarAlunoPorMatricula(String matricula, int idTurma) {
+
+        Connection conn = conexao.conectar();
+
+        String sql =
+                "SELECT " +
+                        "    a.id_aluno, " +
+                        "    a.nome, " +
+                        "    a.matricula, " +
+                        "    a.email, " +
+                        "    a.senha, " +
+                        "    a.cpf_signup, " +
+                        "    a.esta_ativo, " +
+                        "    t.id_turma, " +
+                        "    t.periodo_letivo, " +
+                        "    d.id_disciplina, " +
+                        "    d.nome_disciplina, " +
+                        "    s.id_sala, " +
+                        "    s.nome_sala, " +
+                        "    ta.nota1, " +
+                        "    ta.nota2, " +
+                        "    ta.observacoes " +
+                        "FROM aluno a " +
+                        "LEFT JOIN turma_aluno ta ON ta.id_aluno = a.id_aluno " +
+                        "LEFT JOIN turma t ON t.id_turma = ta.id_turma " +
+                        "LEFT JOIN disciplina d ON d.id_disciplina = t.id_disciplina " +
+                        "LEFT JOIN sala s ON s.id_sala = t.id_sala " +
+                        "WHERE a.matricula = ? AND ta.id_turma=? " +
+                        "ORDER BY d.nome_disciplina";
+
+        try {
+
+            PreparedStatement ptmt = conn.prepareStatement(sql);
+            ptmt.setString(1, matricula);
+            ptmt.setInt(2, idTurma);
+            ResultSet rs = ptmt.executeQuery();
+
+            AlunoDTO aluno = null;
+            List<TurmaAlunoDTO> matriculas = new ArrayList<>();
+
+            while (rs.next()) {
+
+                if (aluno == null) {
+                    aluno = new AlunoDTO();
+                    aluno.setId(rs.getInt("id_aluno"));
+                    aluno.setNome(rs.getString("nome"));
+                    aluno.setMatricula(rs.getString("matricula"));
+                    aluno.setEmail(rs.getString("email"));
+                    aluno.setCpf(rs.getString("cpf_signup"));
+                    aluno.setEstaAtivo(rs.getBoolean("esta_ativo"));
+                    aluno.setMatriculas(matriculas);
+                }
+
+                int idTurma2 = rs.getInt("id_turma");
+
+                if (!rs.wasNull()) {
+
+                    // Disciplina
+                    DisciplinaDTO d = new DisciplinaDTO();
+                    d.setId(rs.getInt("id_disciplina"));
+                    d.setNome(rs.getString("nome_disciplina"));
+
+                    // Sala
+                    SalaDTO s = new SalaDTO();
+                    s.setId(rs.getInt("id_sala"));
+                    s.setNome(rs.getString("nome_sala"));
+
+                    // Turma
+                    TurmaDTO t = new TurmaDTO();
+                    t.setId(idTurma2);
+                    t.setPeriodoLetivo(rs.getString("periodo_letivo"));
+                    t.setDisciplina(d);
+                    t.setSala(s);
+
+                    // Notas
+                    Double nota1 = rs.getObject("nota1") != null ? rs.getDouble("nota1") : null;
+                    Double nota2 = rs.getObject("nota2") != null ? rs.getDouble("nota2") : null;
+
+                    double media;
+                    if (nota1 != null && nota2 != null) {
+                        media = (nota1 + nota2) / 2.0;
+                    } else {
+                        media = -1;
+                    }
+
+                    // Relação TurmaAluno
+                    TurmaAlunoDTO ta = new TurmaAlunoDTO();
+                    ta.setAluno(aluno);
+                    ta.setTurma(t);
+                    ta.setNota1(nota1);
+                    ta.setNota2(nota2);
+                    ta.setMedia(media);
+                    ta.setObservacoes(rs.getString("observacoes"));
+
+                    matriculas.add(ta);
+                }
+            }
+
+            return aluno;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar aluno por matrícula: " + e.getMessage(), e);
+        } finally {
+            conexao.desconectar(conn);
+        }
+    }
+
+
+
+
 
 
 

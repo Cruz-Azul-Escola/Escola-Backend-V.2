@@ -169,7 +169,7 @@
                 <img style="width: 50px; height: auto;" src="logo.png" alt="">
                 <h1 style="margin-bottom: 50px;" class="title-h1">Faça seu login</h1>
             </div>
-            <form action="login">
+            <form action="login" method="post">
                 <div class="field">
                     <label>E-mail</label>
                     <input name="email" type="email" placeholder="Digite seu email">
@@ -179,17 +179,12 @@
                     <label>Senha</label>
                     <input name="senha" type="password" placeholder="Digite sua senha">
                 </div>
-                <p style="margin-bottom: 50px;" class="direi">Esqueceu, mude <a class="link" href="esqueci.jsp">Aqui</a></p>
 
                 <div>
                     <button class="botao-entrar" type="submit">Entrar</button>
                 </div>
-                <div style="margin-top: 12px;">
-                    <a class="link" href="cadastro.jsp">Cadastrar</a>
-                </div>
-
-
             </form>
+
 
         </div>
     </div>
