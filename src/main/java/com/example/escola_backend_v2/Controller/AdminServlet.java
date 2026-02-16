@@ -19,10 +19,9 @@ public class AdminServlet extends HttpServlet {
     private SalaDAO salaDAO = new SalaDAO();
     private TurmaDAO turmaDAO = new TurmaDAO();
 
-    // ==========================
-    // CARREGAR DADOS PARA O JSP
-    // ==========================
+
     @Override
+    //primeiro carrego dados da home
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -30,9 +29,7 @@ public class AdminServlet extends HttpServlet {
         request.getRequestDispatcher("adminHome.jsp").forward(request, response);
     }
 
-    // ==========================
-    // EXECUTAR AÇÕES
-    // ==========================
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -66,9 +63,6 @@ public class AdminServlet extends HttpServlet {
         }
     }
 
-    // ==========================
-    // MÉTODOS AUXILIARES
-    // ==========================
     private void carregarListas(HttpServletRequest request) {
         List<AlunoDTO> listaAlunos = alunoDAO.listarAlunos();
         List<ProfessorDTO> listaProfessores = professorDAO.listarProfessores();
@@ -97,9 +91,7 @@ public class AdminServlet extends HttpServlet {
         req.getRequestDispatcher("adminHome.jsp").forward(req, resp);
     }
 
-    // ==========================
-    // CADASTRO DE ALUNO
-    // ==========================
+
     private void cadastrarAluno(HttpServletRequest request, HttpServletResponse response) {
         try {
             String cpf = request.getParameter("cpf");
@@ -124,9 +116,6 @@ public class AdminServlet extends HttpServlet {
         }
     }
 
-    // ==========================
-    // CADASTRO DE PROFESSOR
-    // ==========================
     private void cadastrarProfessor(HttpServletRequest request, HttpServletResponse response) {
         try {
             String email = request.getParameter("email");
@@ -160,9 +149,7 @@ public class AdminServlet extends HttpServlet {
         }
     }
 
-    // ==========================
-    // CADASTRO DE SALA
-    // ==========================
+
     private void cadastrarSala(HttpServletRequest request, HttpServletResponse response) {
         try {
             String nomeSala = request.getParameter("nomeSala");
@@ -190,9 +177,6 @@ public class AdminServlet extends HttpServlet {
         }
     }
 
-    // ==========================
-    // CADASTRO DE TURMA
-    // ==========================
     private void cadastrarTurma(HttpServletRequest request, HttpServletResponse response) {
         try {
             int idDisciplina = Integer.parseInt(request.getParameter("idDisciplina"));
@@ -222,9 +206,7 @@ public class AdminServlet extends HttpServlet {
         }
     }
 
-    // ==========================
-    // CADASTRO DE DISCIPLINA
-    // ==========================
+
     private void cadastrarDisciplina(HttpServletRequest request, HttpServletResponse response) {
         try {
             String nomeDisciplina = request.getParameter("nomeDisciplina");
