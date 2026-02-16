@@ -1,9 +1,6 @@
 package com.example.escola_backend_v2.DAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -270,6 +267,120 @@ public class ProfessorDAO {
 
         return total;
     }
+
+    public List<TurmaDTO> listarTurmasDoProfessor(int idProfessor) {
+        List<TurmaDTO> turmas = new ArrayList<>();
+        Connection conn = conexao.conectar();
+        String sql = "SELECT t.id_turma, t.periodo_letivo, " +
+                "d.id_disciplina, d.nome_disciplina, " +
+                "s.id_sala, s.nome_sala " +
+                "FROM professor_turma pt " +
+                "JOIN turma t ON t.id_turma = pt.turma_id " +
+                "JOIN disciplina d ON d.id_disciplina = t.id_disciplina " +
+                "JOIN sala s ON s.id_sala = t.id_sala " +
+                "WHERE pt.professor_id = ?";
+
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, idProfessor);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+
+                DisciplinaDTO d = new DisciplinaDTO();
+                d.setId(rs.getInt("id_disciplina"));
+                d.setNome(rs.getString("nome_disciplina"));
+
+                SalaDTO s = new SalaDTO();
+                s.setId(rs.getInt("id_sala"));
+                s.setNome(rs.getString("nome_sala"));
+
+                TurmaDTO t = new TurmaDTO();
+                t.setId(rs.getInt("id_turma"));
+                t.setPeriodoLetivo(rs.getString("periodo_letivo"));
+                t.setDisciplina(d);
+                t.setSala(s);
+
+                turmas.add(t);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            conexao.desconectar(conn);
+        }
+
+        return turmas;
+    }
+
+    public void vincularProfessorTurma(int idProfessor, int idTurma) {
+
+        Connection conn = conexao.conectar();
+        String sql = "INSERT INTO professor_turma (professor_id, turma_id) VALUES (?, ?)";
+
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, idProfessor);
+            pstmt.setInt(2, idTurma);
+            pstmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            conexao.desconectar(conn);
+        }
+    }
+
+
+    public void criarProfessorCompleto(ProfessorDTO professor, List<Integer> turmaIds) {
+        Connection conn = conexao.conectar();
+        PreparedStatement ptmt = null;
+
+        try {
+            String sqlInsertProfessor = "INSERT INTO professor (nome, email, senha, esta_ativo) VALUES (?, ?, ?, ?)";
+            ptmt = conn.prepareStatement(sqlInsertProfessor, Statement.RETURN_GENERATED_KEYS);
+            ptmt.setString(1, professor.getNome());
+            ptmt.setString(2, professor.getEmail());
+            ptmt.setString(3, professor.getSenha());
+            ptmt.setBoolean(4, professor.isEstaAtivo());
+            int affectedRows = ptmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Falha ao criar professor, nenhuma linha afetada.");
+            }
+
+            try (ResultSet generatedKeys = ptmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    professor.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("Falha ao criar professor, nenhum ID retornado.");
+                }
+            }
+
+            if (turmaIds != null && !turmaIds.isEmpty()) {
+                String sqlInsertProfessorTurma = "INSERT INTO professor_turma (professor_id, turma_id) VALUES (?, ?)";
+                ptmt = conn.prepareStatement(sqlInsertProfessorTurma);
+
+                for (Integer idTurma : turmaIds) {
+                    ptmt.setInt(1, professor.getId());
+                    ptmt.setInt(2, idTurma);
+                    ptmt.addBatch();
+                }
+
+                ptmt.executeBatch();
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao criar professor completo: " + e.getMessage(), e);
+        } finally {
+            try {
+                if (ptmt != null) ptmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            conexao.desconectar(conn);
+        }
+    }
+
 
 
 }

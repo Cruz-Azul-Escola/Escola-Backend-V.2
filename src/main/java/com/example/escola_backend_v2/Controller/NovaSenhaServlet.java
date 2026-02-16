@@ -13,8 +13,7 @@ import java.io.IOException;
 @WebServlet("/novaSenha")
 public class NovaSenhaServlet extends HttpServlet {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String email = request.getParameter("email");
         String codigo = request.getParameter("codigo");

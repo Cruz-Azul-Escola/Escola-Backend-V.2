@@ -5,9 +5,7 @@ import com.example.escola_backend_v2.Util.Conexao;
 
 import java.math.BigDecimal;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class AlunoDAO {
     Conexao conexao= new Conexao();
@@ -513,6 +511,103 @@ public class AlunoDAO {
 
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao buscar aluno por matrícula: " + e.getMessage(), e);
+        } finally {
+            conexao.desconectar(conn);
+        }
+    }
+
+    public List<AlunoDTO> listarAlunos() {
+        Connection conn = conexao.conectar();
+
+        String sql =
+                "SELECT " +
+                        "    a.id_aluno, " +
+                        "    a.nome, " +
+                        "    a.matricula, " +
+                        "    a.email, " +
+                        "    a.senha, " +
+                        "    a.cpf_signup, " +
+                        "    t.id_turma, " +
+                        "    t.periodo_letivo, " +
+                        "    d.id_disciplina, " +
+                        "    d.nome_disciplina, " +
+                        "    s.id_sala, " +
+                        "    s.nome_sala, " +
+                        "    ta.nota1, " +
+                        "    ta.nota2, " +
+                        "    ta.observacoes " +
+                        "FROM aluno a " +
+                        "LEFT JOIN turma_aluno ta ON ta.id_aluno = a.id_aluno " +
+                        "LEFT JOIN turma t ON t.id_turma = ta.id_turma " +
+                        "LEFT JOIN disciplina d ON d.id_disciplina = t.id_disciplina " +
+                        "LEFT JOIN sala s ON s.id_sala = t.id_sala " +
+                        "ORDER BY a.nome, d.nome_disciplina";
+
+        try {
+            PreparedStatement ptmt = conn.prepareStatement(sql);
+            ResultSet rs = ptmt.executeQuery();
+
+            Map<Integer, AlunoDTO> alunosMap = new LinkedHashMap<>(); // mantém ordem
+            while (rs.next()) {
+                int idAluno = rs.getInt("id_aluno");
+                AlunoDTO aluno = alunosMap.get(idAluno);
+
+                if (aluno == null) {
+                    aluno = new AlunoDTO();
+                    aluno.setId(idAluno);
+                    aluno.setNome(rs.getString("nome"));
+                    aluno.setMatricula(rs.getString("matricula"));
+                    aluno.setEmail(rs.getString("email"));
+                    // aluno.setSenha(rs.getString("senha")); // opcional
+                    aluno.setCpf(rs.getString("cpf_signup"));
+                    aluno.setMatriculas(new ArrayList<>());
+                    alunosMap.put(idAluno, aluno);
+                }
+
+                int idTurma = rs.getInt("id_turma");
+                if (!rs.wasNull()) {
+                    // disciplina
+                    DisciplinaDTO d = new DisciplinaDTO();
+                    d.setId(rs.getInt("id_disciplina"));
+                    d.setNome(rs.getString("nome_disciplina"));
+
+                    // sala
+                    SalaDTO s = new SalaDTO();
+                    s.setId(rs.getInt("id_sala"));
+                    s.setNome(rs.getString("nome_sala"));
+
+                    // turma
+                    TurmaDTO t = new TurmaDTO();
+                    t.setId(idTurma);
+                    t.setPeriodoLetivo(rs.getString("periodo_letivo"));
+                    t.setDisciplina(d);
+                    t.setSala(s);
+
+                    // notas
+                    BigDecimal bdNota1 = rs.getBigDecimal("nota1");
+                    BigDecimal bdNota2 = rs.getBigDecimal("nota2");
+
+                    Double nota1 = (bdNota1 != null) ? bdNota1.doubleValue() : null;
+                    Double nota2 = (bdNota2 != null) ? bdNota2.doubleValue() : null;
+
+                    double media = (nota1 != null && nota2 != null) ? (nota1 + nota2) / 2.0 : -1;
+
+                    TurmaAlunoDTO ta = new TurmaAlunoDTO();
+                    ta.setAluno(aluno);
+                    ta.setTurma(t);
+                    ta.setNota1(nota1);
+                    ta.setNota2(nota2);
+                    ta.setMedia(media);
+                    ta.setObservacoes(rs.getString("observacoes"));
+
+                    aluno.getMatriculas().add(ta);
+                }
+            }
+
+            return new ArrayList<>(alunosMap.values());
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar alunos: " + e.getMessage(), e);
         } finally {
             conexao.desconectar(conn);
         }

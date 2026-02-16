@@ -20,7 +20,7 @@ public class AlunoServlet extends HttpServlet {
 
         HttpSession session = req.getSession();
 
-        Integer idAluno = (Integer) session.getAttribute("id"); // só o id
+        Integer idAluno = (Integer) session.getAttribute("id"); // so o id
         System.out.println(idAluno);
 
         if (idAluno == null) {

@@ -1,6 +1,13 @@
 <%--
   Created by IntelliJ IDEA.
   User: iagodiniz-ieg
+  Date: 16/02/2026
+  Time: 16:28
+  To change this template use File | Settings | File Templates.
+--%>
+<%--
+  Created by IntelliJ IDEA.
+  User: iagodiniz-ieg
   Date: 13/02/2026
   Time: 20:46
   To change this template use File | Settings | File Templates.
@@ -153,7 +160,7 @@
         </div>
         <div>
             <h1>Cruz Azul</h1>
-            <span>Portal do Aluno</span>
+            <span>Portal do ADM</span>
         </div>
     </div>
     <form action="login.jsp">
@@ -164,14 +171,14 @@
 <main>
     <div class="container">
         <h1 class="title-h1">
-            <a href="logarAdm">Bem-vindo, ao portal Cruz Azul</a>
+            <a href="logarAdm">Bem-vindo, ADM</a>
         </h1>
         <div class="card-login">
             <div>
                 <img style="width: 50px; height: auto;" src="logo.png" alt="">
                 <h1 style="margin-bottom: 50px;" class="title-h1">Faça seu login</h1>
             </div>
-            <form action="login" method="post">
+            <form action="logarAdm" method="post">
                 <div class="field">
                     <label>E-mail</label>
                     <input name="email" type="email" placeholder="Digite seu email">

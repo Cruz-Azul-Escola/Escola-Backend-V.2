@@ -12,87 +12,133 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.util.List;
 
-@WebServlet(urlPatterns = {"/login", "/cadastrar"})
+@WebServlet(urlPatterns = {"/login", "/cadastrar", "/logarAdm"})
 public class LoginServlet extends HttpServlet {
-    LogarCadastrarDAO dao = new LogarCadastrarDAO();
-    AlunoDAO alunoDAO = new AlunoDAO();
 
+    private final LogarCadastrarDAO dao = new LogarCadastrarDAO();
+    private final AlunoDAO alunoDAO = new AlunoDAO();
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        String path = request.getServletPath();
+        switch (path) {
+            case "/login":
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                break;
+
+            case "/cadastrar":
+                request.getRequestDispatcher("cadastro.jsp").forward(request, response);
+                break;
+
+            case "/logarAdm":
+                request.getRequestDispatcher("logarAdm.jsp").forward(request, response);
+                break;
+
+            default:
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                break;
+        }
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String path = request.getServletPath();
-        if ("/login".equals(path)) {
 
-            String email = request.getParameter("email");
-            String senha = request.getParameter("senha");
-            Object usuario = dao.logar(email, senha);
-            System.out.println(usuario.toString());
-            System.out.println("Retorno DAO: " + usuario);
+        switch (path) {
+            case "/login":
+                loginAlunoOuProfessor(request, response);
+                break;
 
-            if (usuario != null) {
-                System.out.println("d");
-                HttpSession session = request.getSession();
+            case "/cadastrar":
+                cadastrarAluno(request, response);
+                break;
 
-                if (usuario instanceof AlunoDTO) {
-                    AlunoDTO aluno = (AlunoDTO) usuario;
-                    session.setAttribute("usuarioLogado", aluno);
-                    session.setAttribute("tipo", "ALUNO");
-                    session.setAttribute("id", aluno.getId());
-                    System.out.println(aluno);
-                    response.sendRedirect("homeAluno");
-                    return;
+            case "/logarAdm":
+                loginAdministrador(request, response);
+                break;
 
-                } else if (usuario instanceof ProfessorDTO) {
-                    ProfessorDTO prof = (ProfessorDTO) usuario;
-                    session.setAttribute("usuarioLogado", prof);
-                    session.setAttribute("tipo", "PROFESSOR");
-                    session.setAttribute("id", prof.getId());
-                    System.out.println(prof.getId());
-                    System.out.println(prof);
-                    System.out.println("banana");
-                    response.sendRedirect("homeProfessor");
-                    return;
-                }
+            default:
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                break;
+        }
+    }
 
-            } else {
-                request.setAttribute("erro", "Email ou senha inválidos");
-                request.getRequestDispatcher("login.jsp").forward(request, response);
-            }
-        } else if ("/cadastrar".equals(path)) {
-            String cpf = request.getParameter("cpf");
-            String email = request.getParameter("email");
-            String senha = request.getParameter("senha");
+    // ==========================
+    // MÉTODOS AUXILIARES
+    // ==========================
 
-            if (cpf == null || email == null || senha == null ||
-                    cpf.isBlank() || email.isBlank() || senha.isBlank()) {
-                response.sendRedirect(request.getContextPath() + "/cadastro.jsp");
-                return;
-            }
-            cpf = cpf.trim();
-            email = email.trim();
-            senha = senha.trim();
-            int id = alunoDAO.buscarPorCpf(cpf);
-            System.out.println(id);
-            if (id <= 0) {
-                response.sendRedirect(request.getContextPath() + "/cadastro.jsp");
+    private void loginAlunoOuProfessor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-                return;
-            }
-            int resultado = alunoDAO.Cadastro(email, senha, id);
-            System.out.println(resultado);
-            if (resultado > 0) {
-                response.sendRedirect("login.jsp");
-            } else {
-                response.sendRedirect(request.getContextPath() + "/cadastro.jsp");
+        String email = request.getParameter("email");
+        String senha = request.getParameter("senha");
+        Object usuario = dao.logar(email, senha);
 
+        if (usuario != null) {
+            HttpSession session = request.getSession();
+
+            if (usuario instanceof AlunoDTO) {
+                AlunoDTO aluno = (AlunoDTO) usuario;
+                session.setAttribute("usuarioLogado", aluno);
+                session.setAttribute("tipo", "ALUNO");
+                session.setAttribute("id", aluno.getId());
+                response.sendRedirect("homeAluno");
+
+            } else if (usuario instanceof ProfessorDTO) {
+                ProfessorDTO prof = (ProfessorDTO) usuario;
+                session.setAttribute("usuarioLogado", prof);
+                session.setAttribute("tipo", "PROFESSOR");
+                session.setAttribute("id", prof.getId());
+                response.sendRedirect("homeProfessor");
             }
 
+        } else {
+            request.setAttribute("erro", "Email ou senha inválidos");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        }
+    }
 
+    private void cadastrarAluno(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        String cpf = request.getParameter("cpf");
+        String email = request.getParameter("email");
+        String senha = request.getParameter("senha");
+
+        if (cpf == null || email == null || senha == null ||
+                cpf.isBlank() || email.isBlank() || senha.isBlank()) {
+            response.sendRedirect(request.getContextPath() + "/cadastro.jsp");
+            return;
         }
 
+        cpf = cpf.trim();
+        email = email.trim();
+        senha = senha.trim();
+
+        int id = alunoDAO.buscarPorCpf(cpf);
+        if (id <= 0) {
+            response.sendRedirect(request.getContextPath() + "/cadastro.jsp");
+            return;
+        }
+
+        int resultado = alunoDAO.Cadastro(email, senha, id);
+        if (resultado > 0) {
+            response.sendRedirect("login.jsp");
+        } else {
+            response.sendRedirect(request.getContextPath() + "/cadastro.jsp");
+        }
+    }
+
+    private void loginAdministrador(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String email = request.getParameter("email").trim();
+        String senha = request.getParameter("senha").trim();
+
+        if (dao.logarAdm(email, senha) > 0) {
+            response.sendRedirect("admin");
+        } else {
+            request.setAttribute("erro", "Email ou senha inválidos");
+            request.getRequestDispatcher("logarAdm.jsp").forward(request, response);
+        }
     }
 }
-

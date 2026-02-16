@@ -76,12 +76,8 @@ public class ProfServlet extends HttpServlet {
 
             int idAluno = Integer.parseInt(request.getParameter("idAluno"));
             int idTurma = Integer.parseInt(request.getParameter("idTurma"));
-
-            Double nota1 = request.getParameter("nota1").isEmpty() ?
-                    null : Double.parseDouble(request.getParameter("nota1"));
-
-            Double nota2 = request.getParameter("nota2").isEmpty() ?
-                    null : Double.parseDouble(request.getParameter("nota2"));
+            Double nota1 = request.getParameter("nota1").isEmpty() ? null : Double.parseDouble(request.getParameter("nota1"));
+            Double nota2 = request.getParameter("nota2").isEmpty() ? null : Double.parseDouble(request.getParameter("nota2"));
 
             String observacao = request.getParameter("observacao");
             TurmaAlunoDAO turmaAlunoDAO= new TurmaAlunoDAO();

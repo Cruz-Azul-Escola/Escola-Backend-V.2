@@ -8,8 +8,7 @@ import java.sql.SQLException;
 
 public class TurmaAlunoDAO {
     Conexao conexao = new Conexao();
-    public int atualizarNotas(int idAluno, int idTurma,
-                              Double n1, Double n2, String desc) {
+    public int atualizarNotas(int idAluno, int idTurma, Double n1, Double n2, String desc) {
 
         Connection conn = conexao.conectar();
 

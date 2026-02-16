@@ -112,7 +112,7 @@ public class SalaDAO {
             while (rs.next()) {
                 SalaDTO sala = new SalaDTO();
                 sala.setId(rs.getInt("id_sala"));
-                sala.setNome(rs.getString("nome"));
+                sala.setNome(rs.getString("nome_sala"));
                 sala.setCapacidade(rs.getInt("capacidade"));
                 salas.add(sala);
             }

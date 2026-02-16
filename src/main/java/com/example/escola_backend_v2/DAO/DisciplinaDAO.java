@@ -110,7 +110,7 @@ public class DisciplinaDAO {
             while (rs.next()) {
                 DisciplinaDTO disciplina = new DisciplinaDTO();
                 disciplina.setId(rs.getInt("id_disciplina"));
-                disciplina.setNome(rs.getString("nome"));
+                disciplina.setNome(rs.getString("nome_disciplina"));
                 disciplina.setCargaHoraria(rs.getInt("carga_horaria"));
                 disciplinas.add(disciplina);
             }
