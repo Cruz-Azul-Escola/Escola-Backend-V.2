@@ -29,15 +29,12 @@ public class AdminServlet extends HttpServlet {
         request.getRequestDispatcher("adminHome.jsp").forward(request, response);
     }
 
-
+    //Controle das ações
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         String acao = request.getParameter("acao");
-
         switch (acao) {
-
             case "salvarAluno":
                 cadastrarAluno(request, response);
                 break;
@@ -63,6 +60,7 @@ public class AdminServlet extends HttpServlet {
         }
     }
 
+    //Listas
     private void carregarListas(HttpServletRequest request) {
         List<AlunoDTO> listaAlunos = alunoDAO.listarAlunos();
         List<ProfessorDTO> listaProfessores = professorDAO.listarProfessores();
@@ -77,6 +75,7 @@ public class AdminServlet extends HttpServlet {
         request.setAttribute("listaTurmas", listaTurmas);
     }
 
+    //Mensagens
     private void enviarMensagem(HttpServletRequest req, HttpServletResponse resp, String mensagem)
             throws ServletException, IOException {
         req.setAttribute("mensagem", mensagem);
@@ -91,7 +90,7 @@ public class AdminServlet extends HttpServlet {
         req.getRequestDispatcher("adminHome.jsp").forward(req, resp);
     }
 
-
+    //Cadastros
     private void cadastrarAluno(HttpServletRequest request, HttpServletResponse response) {
         try {
             String cpf = request.getParameter("cpf");
@@ -108,11 +107,7 @@ public class AdminServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            try {
-                enviarErro(request, response, "Erro ao cadastrar aluno: " + e.getMessage());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            tratarErro(response, request, "Erro ao cadastrar aluno", e);
         }
     }
 
@@ -141,11 +136,7 @@ public class AdminServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            try {
-                enviarErro(request, response, "Erro ao cadastrar professor: " + e.getMessage());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            tratarErro(response, request, "Erro ao cadastrar professor", e);
         }
     }
 
@@ -162,18 +153,10 @@ public class AdminServlet extends HttpServlet {
 
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            try {
-                enviarErro(request, response, "Capacidade inválida: " + e.getMessage());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            tratarErro(response, request, "Capacidade inválida", e);
         } catch (Exception e) {
             e.printStackTrace();
-            try {
-                enviarErro(request, response, "Erro ao cadastrar sala: " + e.getMessage());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            tratarErro(response, request, "Erro ao cadastrar sala", e);
         }
     }
 
@@ -191,18 +174,10 @@ public class AdminServlet extends HttpServlet {
 
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            try {
-                enviarErro(request, response, "ID inválido: " + e.getMessage());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            tratarErro(response, request, "ID inválido", e);
         } catch (Exception e) {
             e.printStackTrace();
-            try {
-                enviarErro(request, response, "Erro ao cadastrar turma: " + e.getMessage());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            tratarErro(response, request, "Erro ao cadastrar turma", e);
         }
     }
 
@@ -212,26 +187,25 @@ public class AdminServlet extends HttpServlet {
             String nomeDisciplina = request.getParameter("nomeDisciplina");
             int cargaHoraria = Integer.parseInt(request.getParameter("cargaHoraria"));
 
-
-
             disciplinaDAO.adicionarDisciplina(nomeDisciplina, cargaHoraria);
 
             enviarMensagem(request, response, "Disciplina cadastrada com sucesso!");
 
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            try {
-                enviarErro(request, response, "Carga horária inválida: " + e.getMessage());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            tratarErro(response, request, "Carga horária inválida", e);
         } catch (Exception e) {
             e.printStackTrace();
-            try {
-                enviarErro(request, response, "Erro ao cadastrar disciplina: " + e.getMessage());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            tratarErro(response, request, "Erro ao cadastrar disciplina", e);
+        }
+    }
+
+    //Tratamento
+    private void tratarErro(HttpServletResponse response, HttpServletRequest request, String mensagem, Exception e){
+        try{
+            enviarErro(request, response, mensagem + ": " + e.getMessage());
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 }
