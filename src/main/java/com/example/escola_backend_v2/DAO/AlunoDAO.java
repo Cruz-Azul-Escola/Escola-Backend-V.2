@@ -101,18 +101,19 @@ public class AlunoDAO {
         }
     }
 
-    public int Cadastro(String email, String senha, int idAluno) {
+    public int Cadastro(String email, String senha, int idAluno, String nome) {
         Connection conn = conexao.conectar();
 
         String sql = "UPDATE aluno " +
-                "SET email = ?, senha = ? " +
+                "SET email = ?, senha = ?, nome=? " +
                 "WHERE id_aluno = ?";
 
         try {
             PreparedStatement ptmt = conn.prepareStatement(sql);
             ptmt.setString(1, email);
             ptmt.setString(2, senha);
-            ptmt.setInt(3, idAluno);
+            ptmt.setString(3, nome);
+            ptmt.setInt(4, idAluno);
 
             if (ptmt.executeUpdate() > 0) {
                 return 1;

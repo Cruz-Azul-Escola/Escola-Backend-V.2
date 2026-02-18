@@ -181,6 +181,10 @@
                     <label>Senha</label>
                     <input name="senha" type="password" placeholder="Digite sua senha">
                 </div>
+                <div style="margin-top: 12px;">
+                    <a class="link" href="buscarAlunoCadastro.jsp">Cadastrar</a>
+                </div>
+                <p style="margin-bottom: 50px;" class="direi">Esqueceu, mude <a class="link" href="esqueci.jsp">Aqui</a></p>
 
                 <div>
                     <button class="botao-entrar" type="submit">Entrar</button>

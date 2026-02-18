@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-@WebServlet(urlPatterns = {"/login", "/cadastrar", "/logarAdm"})
+@WebServlet(urlPatterns = {"/login", "/buscar", "/cadastrar", "/logarAdm"})
 public class LoginServlet extends HttpServlet {
 
     private final LogarCadastrarDAO dao = new LogarCadastrarDAO();
@@ -25,6 +25,9 @@ public class LoginServlet extends HttpServlet {
         switch (path) {
             case "/login":
                 request.getRequestDispatcher("login.jsp").forward(request, response);
+                break;
+            case "/buscar":
+                request.getRequestDispatcher("buscarAlunoCadastro.jsp").forward(request, response);
                 break;
 
             case "/cadastrar":
@@ -51,6 +54,9 @@ public class LoginServlet extends HttpServlet {
             case "/login":
                 loginAlunoOuProfessor(request, response);
                 break;
+            case "/buscar":
+                buscarAluno(request, response);
+                break;
 
             case "/cadastrar":
                 cadastrarAluno(request, response);
@@ -59,6 +65,7 @@ public class LoginServlet extends HttpServlet {
             case "/logarAdm":
                 loginAdministrador(request, response);
                 break;
+
 
             default:
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -101,32 +108,48 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void cadastrarAluno(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        String cpf = request.getParameter("cpf");
+        int id = Integer.parseInt( request.getParameter("id"));
+        String nome = request.getParameter("nome");
         String email = request.getParameter("email");
         String senha = request.getParameter("senha");
+        String senhaconf = request.getParameter("senhaConf");
 
-        if (cpf == null || email == null || senha == null ||
-                cpf.isBlank() || email.isBlank() || senha.isBlank()) {
+        if (nome == null || nome.isBlank() || email == null || email.isBlank() || senha == null || senha.isBlank() ){
             response.sendRedirect(request.getContextPath() + "/cadastro.jsp");
             return;
         }
 
-        cpf = cpf.trim();
+        nome= nome.trim();
         email = email.trim();
-        senha = senha.trim();
-
-        int id = alunoDAO.buscarPorCpf(cpf);
-        if (id <= 0) {
+        senha=senha.trim();
+        senhaconf= senhaconf.trim();
+        if (!senhaconf.equals(senha)){
             response.sendRedirect(request.getContextPath() + "/cadastro.jsp");
-            return;
+
+        }
+        int result=alunoDAO.Cadastro(email, senha, id, nome);
+        if (result>0){
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
         }
 
-        int resultado = alunoDAO.Cadastro(email, senha, id);
-        if (resultado > 0) {
-            response.sendRedirect("login.jsp");
-        } else {
-            response.sendRedirect(request.getContextPath() + "/cadastro.jsp");
+
+
+    }
+
+    private void buscarAluno(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String cpf = request.getParameter("cpf");
+
+        if (cpf == null || cpf.isBlank()) {
+            response.sendRedirect(request.getContextPath() + "/buscarAlunoCadastro.jsp");
+            return;
+        }
+        cpf = cpf.trim();
+        int id = alunoDAO.buscarPorCpf(cpf);
+        if (id>0){
+            request.setAttribute("id", id);
+            request.getRequestDispatcher("cadastro.jsp").forward(request, response);
+        }else {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
         }
     }
 
