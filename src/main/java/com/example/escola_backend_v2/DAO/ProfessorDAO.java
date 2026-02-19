@@ -419,7 +419,7 @@ public class ProfessorDAO {
 
         try {
 
-            conn.setAutoCommit(false); // 🔥 INICIA TRANSAÇÃO
+            conn.setAutoCommit(false);
 
             String sqlUpdateProfessor =
                     "UPDATE professor SET nome = ?, email = ?, senha = ?, esta_ativo = TRUE " +
@@ -435,7 +435,7 @@ public class ProfessorDAO {
                 pstmt.executeUpdate();
             }
 
-            // 🔥 Apaga vínculos antigos
+
             String sqlDeleteVinculos =
                     "DELETE FROM professor_turma WHERE professor_id = ?";
 
@@ -444,7 +444,7 @@ public class ProfessorDAO {
                 pstmt.executeUpdate();
             }
 
-            // 🔥 Reinsere vínculos novos
+
             if (turmaIds != null && !turmaIds.isEmpty()) {
 
                 String sqlInsertVinculo =
@@ -462,13 +462,13 @@ public class ProfessorDAO {
                 }
             }
 
-            conn.commit(); // 🔥 CONFIRMA TUDO JUNTO
+            conn.commit();
             return true;
 
         } catch (SQLException e) {
 
             try {
-                conn.rollback(); // 🔥 DESFAZ TUDO SE DER ERRO
+                conn.rollback();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -503,9 +503,9 @@ public class ProfessorDAO {
 
         try {
 
-            conn.setAutoCommit(false); // 🔥 transação
+            conn.setAutoCommit(false);
 
-            // 1️⃣ Buscar turmas da disciplina
+
             PreparedStatement buscarStmt = conn.prepareStatement(sqlBuscarTurmas);
             buscarStmt.setInt(1, idDisciplina);
             ResultSet rs = buscarStmt.executeQuery();
@@ -514,7 +514,6 @@ public class ProfessorDAO {
 
                 int idTurma = rs.getInt("id_turma");
 
-                // 2️⃣ Verificar se já existe vínculo
                 PreparedStatement verificarStmt = conn.prepareStatement(sqlVerificarVinculo);
                 verificarStmt.setInt(1, idProfessor);
                 verificarStmt.setInt(2, idTurma);
@@ -522,7 +521,6 @@ public class ProfessorDAO {
 
                 if (!rsVerifica.next()) {
 
-                    // 3️⃣ Inserir vínculo se não existir
                     PreparedStatement inserirStmt = conn.prepareStatement(sqlInserir);
                     inserirStmt.setInt(1, idProfessor);
                     inserirStmt.setInt(2, idTurma);
@@ -534,12 +532,12 @@ public class ProfessorDAO {
                 verificarStmt.close();
             }
 
-            conn.commit(); // 🔥 confirma tudo
+            conn.commit();
 
         } catch (SQLException e) {
 
             try {
-                conn.rollback(); // 🔥 desfaz se erro
+                conn.rollback();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }

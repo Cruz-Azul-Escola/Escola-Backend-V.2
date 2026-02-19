@@ -247,23 +247,13 @@ public class AlunoDAO {
         }
     }
     public boolean alterarAlunoCompleto(AlunoDTO aluno) {
-
         Connection conn = conexao.conectar();
-
         try {
+            conn.setAutoCommit(false);
 
-            conn.setAutoCommit(false); // 🔥 INICIA TRANSAÇÃO
-
-            String sqlUpdateAluno =
-                    "UPDATE aluno SET nome = ?, email = ?, cpf_signup = ?, matricula = ?, esta_ativo = ? WHERE id_aluno = ?";
-
-            String sqlDeleteVinculos =
-                    "DELETE FROM turma_aluno WHERE id_aluno = ?";
-
-            String sqlInsertVinculo =
-                    "INSERT INTO turma_aluno (id_aluno, id_turma, nota1, nota2, observacoes) VALUES (?, ?, ?, ?, ?)";
-
-            // UPDATE aluno
+            String sqlUpdateAluno = "UPDATE aluno SET nome = ?, email = ?, cpf_signup = ?, matricula = ?, esta_ativo = ? WHERE id_aluno = ?";
+            String sqlDeleteVinculos = "DELETE FROM turma_aluno WHERE id_aluno = ?";
+            String sqlInsertVinculo = "INSERT INTO turma_aluno (id_aluno, id_turma, nota1, nota2, observacoes) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement psAluno = conn.prepareStatement(sqlUpdateAluno)) {
                 psAluno.setString(1, aluno.getNome());
                 psAluno.setString(2, aluno.getEmail());
@@ -273,14 +263,11 @@ public class AlunoDAO {
                 psAluno.setInt(6, aluno.getId());
                 psAluno.executeUpdate();
             }
-
-            // DELETE vínculos antigos
             try (PreparedStatement psDel = conn.prepareStatement(sqlDeleteVinculos)) {
                 psDel.setInt(1, aluno.getId());
                 psDel.executeUpdate();
             }
 
-            // INSERT novos vínculos
             if (aluno.getMatriculas() != null && !aluno.getMatriculas().isEmpty()) {
 
                 try (PreparedStatement psIns = conn.prepareStatement(sqlInsertVinculo)) {
@@ -290,16 +277,22 @@ public class AlunoDAO {
                         psIns.setInt(1, aluno.getId());
                         psIns.setInt(2, ta.getTurma().getId());
 
-                        if (ta.getNota1() != null)
+                        if (ta.getNota1() != null){
                             psIns.setDouble(3, ta.getNota1());
-                        else
+
+                        }
+                        else{
                             psIns.setNull(3, Types.NUMERIC);
 
-                        if (ta.getNota2() != null)
+                        }
+                        if (ta.getNota2() != null){
                             psIns.setDouble(4, ta.getNota2());
-                        else
+
+                        }
+                        else{
                             psIns.setNull(4, Types.NUMERIC);
 
+                        }
                         psIns.setString(5, ta.getObservacoes());
 
                         psIns.addBatch();
@@ -309,13 +302,13 @@ public class AlunoDAO {
                 }
             }
 
-            conn.commit(); // 🔥 CONFIRMA TUDO JUNTO
+            conn.commit();
             return true;
 
         } catch (SQLException e) {
 
             try {
-                conn.rollback(); // 🔥 DESFAZ TUDO SE DER ERRO
+                conn.rollback();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
