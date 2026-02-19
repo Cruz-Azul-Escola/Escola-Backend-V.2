@@ -1,11 +1,12 @@
 <%--
   Created by IntelliJ IDEA.
   User: iagodiniz-ieg
-  Date: 17/02/2026
-  Time: 20:13
+  Date: 18/02/2026
+  Time: 13:17
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -18,7 +19,7 @@
   <link rel="stylesheet" href="styles/styleDadosCadastrais.css">
   <link rel="stylesheet" href="styles/styleVerificar.css">
   <link rel="shortcut icon" href="assets/icons/Logo da escola.png" type="image/x-icon">
-  <title>Cruz Azul - Cadastro</title>
+  <title>Cruz Azul - Código</title>
 </head>
 <body>
 <header>
@@ -31,7 +32,7 @@
       <h4>Portal do Aluno</h4>
     </div>
   </div>
-  <a href="login.jsp">
+  <a href="pages/esqueceuSenha.html">
     <div id="voltar">
       <img src="assets/icons/voltar.png" alt="">
       <h4>Voltar</h4>
@@ -40,18 +41,19 @@
 </header>
 <main>
   <div>
-    <h2>Cadastro de Aluno</h2>
-    <h5>Estudante, informe seu CPF para continuar o cadastro</h5>
+    <h2>Código de Redefinição</h2>
+    <h5>Digite o código de 6 dígitos enviado para seu email cadastrado</h5>
   </div>
   <div id="container">
-    <img src="assets/images/logo de documento.png" alt="">
-    <h2>Cadastro</h2>
-    <form action="${pageContext.request.contextPath}/buscar" method="post">
+    <img src="assets/icons/Logo da escola.png" alt="">
+    <h2>Token</h2>
+    <form action="hashSenha" method="post">
+      <input type="hidden" name="email" value="<%= request.getAttribute("email") %>">
       <div>
-        <label>CPF</label>
-        <input type="text" name="cpf" placeholder="Digite seu CPF" required pattern="^[0-9]{3}\.?[0-9]{3}\.?[0-9]{3}[ \-]?[0-9]{2}$" title="Digite um CPF válido, Ex: 123.456.789-00 ou 12345678900">
+        <label >Código</label>
+        <input name="codigo" type="text" pattern="^[0-9]{6}$" placeholder="Digite o código" title="Apenas números, 6 dígitos">
       </div>
-      <button type="submit" class="confirmar">Confirmar CPF</button>
+      <button type="submit" class="confirmar">Confirmar Código</button>
     </form>
   </div>
 </main>

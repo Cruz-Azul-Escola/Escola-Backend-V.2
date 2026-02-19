@@ -1,0 +1,145 @@
+:root {
+    --corAzul: #0E4194;
+    --corAzulSaturada: #E8F0FE;
+    --corAmarelo: #F5B800;
+    --corLaranja: #FF8000;
+    --tamanho16px: 16px;
+    --tamanho22px: 22px;
+    --tamanho36px: 36px;
+}
+* {
+    margin: 0;
+    padding: 0;
+    font-weight: 400;
+    font-family: 'Poppins';
+    text-decoration: none;
+    box-sizing: border-box;
+}
+html, body {
+    padding: 0;
+    margin: 0;
+    background-color: var(--corAzulSaturada);
+    width: 100%;
+    height: 95%;
+}
+header {
+    color: white;
+    background-color: var(--corAzul);
+    padding: 10px;
+}
+header img {
+    transition: 0.5s;
+    margin-left: 15px;
+    width: 80px;
+}
+header h1 {
+    transition: 0.5s;
+    font-size: var(--tamanho36px);
+    margin-bottom: -5px;
+    font-weight: 600;
+}
+header h4 {
+    font-weight: 400;
+}
+#logotipo {
+    display: flex;
+    gap: 20px;
+}
+#voltar {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    color: var(--corAzul);
+    margin-top: 22px;
+    padding: 6px;
+    width: fit-content;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    gap: 10px;
+}
+#voltar img {
+    margin: 0;
+    margin-top: 4px;
+    width: 25px;
+    height: 17px;
+}
+#voltar:hover {
+    background-color: var(--corAmarelo);
+    color: var(--corAzul);
+    transition: 0.5s;
+}
+label {
+    display: block;
+    position: relative;
+    font-weight: 400;
+    margin-bottom: -17px;
+    margin-left: 12%;
+    background-color: white;
+    font-size: var(--tamanho22px);
+    padding: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: fit-content;
+    z-index: 1;
+}
+input {
+    font-size: var(--tamanho16px);
+    border: 2px solid black;
+    background-color: transparent;
+    font-weight: 400;
+    border-radius: 60px;
+    height: 60px;
+    width: 80%;
+    padding-left: 20px;
+    padding-right: 20px;
+    transition: 0.5s;
+}
+input::placeholder {
+    font-size: var(--tamanho16px);
+    font-weight: 400;
+}
+input:hover {
+    border: 2px solid var(--corAzul);
+    transition: 0.5s;
+}
+input:focus {
+    border: 2px solid var(--corLaranja);
+    outline: none;
+    transition: 0.5s;
+}
+form button {
+    margin-top: 20px;
+}
+form div {
+    margin: 40px 0px;
+}
+button {
+    font-size: var(--tamanho16px);
+    color: white;
+    border-radius: 25px;
+    height: 50px;
+    width: 30%;
+    border: 0px;
+    background-color: var(--corLaranja);
+    box-shadow: 3px 3px 3px rgb(167, 167, 167);
+}
+.confirmar {
+    transition: 0.5s;
+}
+.confirmar:hover {
+    box-shadow: 0px 0px 10px var(--corLaranja);
+    transition: 0.5s;
+}
+
+@media (max-width: 500px) {
+    header img {
+        width: 60px;
+    }
+    header h1 {
+        font-size: var(--tamanho22px);
+    }
+    #voltar {
+        top: 0px;
+    }
+}

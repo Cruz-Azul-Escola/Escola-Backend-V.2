@@ -62,12 +62,12 @@ public class ProfessorDAO {
     }
 
     //Método para desativar
-    public int desativar(String nome){
+    public int desativar(int id){
         Connection conn = conexao.conectar();
-        String query = "UPDATE professor SET esta_ativo = false WHERE nome = ?";
+        String query = "UPDATE professor SET esta_ativo = false WHERE id_professor = ?";
         try {
             PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setString(1, nome);
+            pstmt.setInt(1, id);
             return pstmt.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -101,7 +101,7 @@ public class ProfessorDAO {
     public List<ProfessorDTO> listarProfessores(){
         List<ProfessorDTO> professores = new ArrayList<>();
         Connection conn = conexao.conectar();
-        String query = "SELECT * FROM professor";
+        String query = "SELECT * FROM professor WHERE esta_ativo = TRUE ";
         try {
             PreparedStatement pstmt = conn.prepareStatement(query);
             ResultSet rs = pstmt.executeQuery();
@@ -381,6 +381,182 @@ public class ProfessorDAO {
         }
     }
 
+    public List<DisciplinaDTO> listarDisciplinasDoProfessor(int idProfessor) {
+        List<DisciplinaDTO> disciplinas = new ArrayList<>();
+        Connection conn = conexao.conectar();
+
+        String sql = "SELECT DISTINCT d.id_disciplina, d.nome_disciplina, d.carga_horaria " +
+                "FROM professor_turma pt " +
+                "JOIN turma t ON t.id_turma = pt.turma_id " +
+                "JOIN disciplina d ON d.id_disciplina = t.id_disciplina " +
+                "WHERE pt.professor_id = ?";
+
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, idProfessor);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                DisciplinaDTO disciplina = new DisciplinaDTO();
+                disciplina.setId(rs.getInt("id_disciplina"));
+                disciplina.setNome(rs.getString("nome_disciplina"));
+                disciplina.setCargaHoraria(rs.getInt("carga_horaria"));
+
+                disciplinas.add(disciplina);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            conexao.desconectar(conn);
+        }
+
+        return disciplinas;
+    }
+    public boolean atualizarProfessorCompleto(ProfessorDTO professor, List<Integer> turmaIds) {
+
+        Connection conn = conexao.conectar();
+
+        try {
+
+            conn.setAutoCommit(false); // 🔥 INICIA TRANSAÇÃO
+
+            String sqlUpdateProfessor =
+                    "UPDATE professor SET nome = ?, email = ?, senha = ?, esta_ativo = TRUE " +
+                            "WHERE id_professor = ?";
+
+            try (PreparedStatement pstmt = conn.prepareStatement(sqlUpdateProfessor)) {
+
+                pstmt.setString(1, professor.getNome());
+                pstmt.setString(2, professor.getEmail());
+                pstmt.setString(3, professor.getSenha());
+                pstmt.setInt(4, professor.getId());
+
+                pstmt.executeUpdate();
+            }
+
+            // 🔥 Apaga vínculos antigos
+            String sqlDeleteVinculos =
+                    "DELETE FROM professor_turma WHERE professor_id = ?";
+
+            try (PreparedStatement pstmt = conn.prepareStatement(sqlDeleteVinculos)) {
+                pstmt.setInt(1, professor.getId());
+                pstmt.executeUpdate();
+            }
+
+            // 🔥 Reinsere vínculos novos
+            if (turmaIds != null && !turmaIds.isEmpty()) {
+
+                String sqlInsertVinculo =
+                        "INSERT INTO professor_turma (professor_id, turma_id) VALUES (?, ?)";
+
+                try (PreparedStatement pstmt = conn.prepareStatement(sqlInsertVinculo)) {
+
+                    for (Integer idTurma : turmaIds) {
+                        pstmt.setInt(1, professor.getId());
+                        pstmt.setInt(2, idTurma);
+                        pstmt.addBatch();
+                    }
+
+                    pstmt.executeBatch();
+                }
+            }
+
+            conn.commit(); // 🔥 CONFIRMA TUDO JUNTO
+            return true;
+
+        } catch (SQLException e) {
+
+            try {
+                conn.rollback(); // 🔥 DESFAZ TUDO SE DER ERRO
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+            throw new RuntimeException("Erro ao atualizar professor completo: " + e.getMessage(), e);
+
+        } finally {
+
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            conexao.desconectar(conn);
+        }
+    }
+
+
+    public void vincularProfessorDisciplina(int idProfessor, int idDisciplina) {
+
+        Connection conn = conexao.conectar();
+
+        String sqlBuscarTurmas =
+                "SELECT id_turma FROM turma WHERE id_disciplina = ?";
+
+        String sqlVerificarVinculo =
+                "SELECT 1 FROM professor_turma WHERE professor_id = ? AND turma_id = ?";
+
+        String sqlInserir =
+                "INSERT INTO professor_turma (professor_id, turma_id) VALUES (?, ?)";
+
+        try {
+
+            conn.setAutoCommit(false); // 🔥 transação
+
+            // 1️⃣ Buscar turmas da disciplina
+            PreparedStatement buscarStmt = conn.prepareStatement(sqlBuscarTurmas);
+            buscarStmt.setInt(1, idDisciplina);
+            ResultSet rs = buscarStmt.executeQuery();
+
+            while (rs.next()) {
+
+                int idTurma = rs.getInt("id_turma");
+
+                // 2️⃣ Verificar se já existe vínculo
+                PreparedStatement verificarStmt = conn.prepareStatement(sqlVerificarVinculo);
+                verificarStmt.setInt(1, idProfessor);
+                verificarStmt.setInt(2, idTurma);
+                ResultSet rsVerifica = verificarStmt.executeQuery();
+
+                if (!rsVerifica.next()) {
+
+                    // 3️⃣ Inserir vínculo se não existir
+                    PreparedStatement inserirStmt = conn.prepareStatement(sqlInserir);
+                    inserirStmt.setInt(1, idProfessor);
+                    inserirStmt.setInt(2, idTurma);
+                    inserirStmt.executeUpdate();
+                    inserirStmt.close();
+                }
+
+                rsVerifica.close();
+                verificarStmt.close();
+            }
+
+            conn.commit(); // 🔥 confirma tudo
+
+        } catch (SQLException e) {
+
+            try {
+                conn.rollback(); // 🔥 desfaz se erro
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+            throw new RuntimeException("Erro ao vincular professor à disciplina", e);
+
+        } finally {
+
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            conexao.desconectar(conn);
+        }
+    }
 
 
 }

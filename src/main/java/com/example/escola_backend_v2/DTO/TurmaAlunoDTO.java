@@ -52,9 +52,13 @@ public class TurmaAlunoDTO {
     }
 
     public Double getMedia() {
-        this.media=(nota1+nota2)/2;
-        return this.media;
+
+        double n1 = (nota1 != null) ? nota1 : 0.0;
+        double n2 = (nota2 != null) ? nota2 : 0.0;
+
+        return (n1 + n2) / 2;
     }
+
 
     public AlunoDTO getAluno() {
         return aluno;

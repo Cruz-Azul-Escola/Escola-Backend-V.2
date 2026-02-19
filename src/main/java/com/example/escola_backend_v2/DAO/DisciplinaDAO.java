@@ -44,6 +44,28 @@ public class DisciplinaDAO {
             conexao.desconectar(conn);
         }
     }
+    public int editarDisciplina(DisciplinaDTO disciplina) {
+
+        Connection conn = conexao.conectar();
+
+        String query =
+                "UPDATE disciplina SET nome_disciplina = ?, carga_horaria = ? " +
+                        "WHERE id_disciplina = ?";
+
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, disciplina.getNome());
+            pstmt.setInt(2, disciplina.getCargaHoraria());
+            pstmt.setInt(3, disciplina.getId());
+
+            return pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            conexao.desconectar(conn);
+        }
+    }
 
     //Método para editar carga horária
     public int editarCargaHorária (int cargaHoraria, int id) {
@@ -77,19 +99,22 @@ public class DisciplinaDAO {
     }
 
     //Método para consultar disciplina
-    public int buscar(String disciplina){
+    public DisciplinaDTO buscar(int id){
         Connection conn = conexao.conectar();
-        String query = "SELECT * FROM disciplina WHERE disciplina_nome = ?";
+        String query = "SELECT * FROM disciplina WHERE id_disciplina = ?";
         try {
             PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setString(1, disciplina);
+            pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
-            
-            if (rs.next()) {
-                return 1;
-            } else {
-                return 0;
+            DisciplinaDTO disciplinaDTO = new DisciplinaDTO();
+            if (rs.next()){
+                disciplinaDTO.setId(rs.getInt("id_disciplina"));
+                disciplinaDTO.setNome(rs.getString("nome_disciplina"));
+                disciplinaDTO.setCargaHoraria(rs.getInt("carga_horaria"));
+                return disciplinaDTO;
             }
+            return null;
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

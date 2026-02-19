@@ -1,0 +1,85 @@
+:root {
+    --corAzul: #0E4194;
+    --corAzulSaturada: #E8F0FE;
+    --corAmarelo: #F5B800;
+    --corLaranja: #FF8000;
+    --tamanho16px: 16px;
+    --tamanho22px: 22px;
+    --tamanho36px: 36px;
+}
+main {
+    padding-top: 30px;
+    height: 97.8%;
+    text-align: center;
+}
+#container > img {
+    width: 100px;
+    height: 100px;
+}
+h1 {
+    margin: 0;
+    font-size: var(--tamanho36px);
+}
+h2, h5 {
+    color: var(--corAzul);
+    font-weight: bold;
+}
+main > div:nth-child(1) {
+    padding-bottom: 30px;
+}
+#button-area-restrita {
+    align-items: center;
+    text-align: left;
+    display: block;
+    margin: 0;
+    padding: 0;
+    color: white;
+    background-color: transparent;
+    border-radius: 0px;
+    width: 163px;
+    border: 0px;
+    box-shadow: 0px 0px 0px transparent;
+    transition: 0.5s;
+    font-size: var(--tamanho36px);
+}
+#container {
+    padding-top: 20px;
+    transition: 0.5s;
+    display: block;
+    border-radius: 100px 100px 100px 100px;
+    margin: 0 auto;
+    background-color: white;
+    width: 80%;
+    max-width: 900px;
+    height: fit-content;
+    padding-bottom: 20px;
+}
+#container button {
+    width: 50%;
+    margin-bottom: 10px;
+    font-size: var(--tamanho16px);
+}
+a {
+    color: var(--corLaranja);
+}
+#esqueceu-senha {
+    text-align: right;
+    margin-right: 11%;
+}
+
+@media(max-width: 1300px) {
+    #container {
+        width: 90%;
+        margin: 0;
+        margin-left: auto;
+        border-radius: 100px 0px 0px 0px;
+    }
+}
+@media(max-width: 850px) {
+    #container {
+        width: 100%;
+        margin: 0;
+        margin-left: auto;
+        border-radius: 0px 0px 0px 0px;
+    }
+}

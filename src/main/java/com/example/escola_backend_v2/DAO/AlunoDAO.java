@@ -247,68 +247,93 @@ public class AlunoDAO {
         }
     }
     public boolean alterarAlunoCompleto(AlunoDTO aluno) {
+
         Connection conn = conexao.conectar();
 
-        String sqlUpdateAluno =
-                "UPDATE aluno SET nome = ?, email = ?, cpf_signup = ?, matricula = ?, esta_ativo = ? " +
-                        "WHERE id_aluno = ?";
-
-        String sqlDeleteVinculos =
-                "DELETE FROM turma_aluno WHERE id_aluno = ?";
-
-        String sqlInsertVinculo =
-                "INSERT INTO turma_aluno (id_aluno, id_turma, nota1, nota2, observacoes) " +
-                        "VALUES (?, ?, ?, ?, ?)";
-
         try {
-            PreparedStatement psAluno = conn.prepareStatement(sqlUpdateAluno);
-            psAluno.setString(1, aluno.getNome());
-            psAluno.setString(2, aluno.getEmail());
-            psAluno.setString(3, aluno.getCpf());
-            psAluno.setString(4, aluno.getMatricula());
-            psAluno.setBoolean(5, aluno.isEstaAtivo());
-            psAluno.setInt(6, aluno.getId());
 
-            psAluno.executeUpdate();
-            PreparedStatement psDel = conn.prepareStatement(sqlDeleteVinculos);
-            psDel.setInt(1, aluno.getId());
-            psDel.executeUpdate();
+            conn.setAutoCommit(false); // 🔥 INICIA TRANSAÇÃO
 
-            if (aluno.getMatriculas() != null && !aluno.getMatriculas().isEmpty()) {
-                PreparedStatement psIns = conn.prepareStatement(sqlInsertVinculo);
+            String sqlUpdateAluno =
+                    "UPDATE aluno SET nome = ?, email = ?, cpf_signup = ?, matricula = ?, esta_ativo = ? WHERE id_aluno = ?";
 
-                for (TurmaAlunoDTO ta : aluno.getMatriculas()) {
-                    psIns.setInt(1, aluno.getId());
-                    psIns.setInt(2, ta.getTurma().getId());
+            String sqlDeleteVinculos =
+                    "DELETE FROM turma_aluno WHERE id_aluno = ?";
 
-                    if (ta.getNota1() != null) {
-                        psIns.setDouble(3, ta.getNota1());
-                    } else {
-                        psIns.setNull(3, java.sql.Types.NUMERIC);
-                    }
+            String sqlInsertVinculo =
+                    "INSERT INTO turma_aluno (id_aluno, id_turma, nota1, nota2, observacoes) VALUES (?, ?, ?, ?, ?)";
 
-                    if (ta.getNota2() != null) {
-                        psIns.setDouble(4, ta.getNota2());
-                    } else {
-                        psIns.setNull(4, java.sql.Types.NUMERIC);
-                    }
-
-                    psIns.setString(5, ta.getObservacoes());
-
-                    psIns.addBatch();
-                }
-
-                psIns.executeBatch();
+            // UPDATE aluno
+            try (PreparedStatement psAluno = conn.prepareStatement(sqlUpdateAluno)) {
+                psAluno.setString(1, aluno.getNome());
+                psAluno.setString(2, aluno.getEmail());
+                psAluno.setString(3, aluno.getCpf());
+                psAluno.setString(4, aluno.getMatricula());
+                psAluno.setBoolean(5, aluno.isEstaAtivo());
+                psAluno.setInt(6, aluno.getId());
+                psAluno.executeUpdate();
             }
 
+            // DELETE vínculos antigos
+            try (PreparedStatement psDel = conn.prepareStatement(sqlDeleteVinculos)) {
+                psDel.setInt(1, aluno.getId());
+                psDel.executeUpdate();
+            }
+
+            // INSERT novos vínculos
+            if (aluno.getMatriculas() != null && !aluno.getMatriculas().isEmpty()) {
+
+                try (PreparedStatement psIns = conn.prepareStatement(sqlInsertVinculo)) {
+
+                    for (TurmaAlunoDTO ta : aluno.getMatriculas()) {
+
+                        psIns.setInt(1, aluno.getId());
+                        psIns.setInt(2, ta.getTurma().getId());
+
+                        if (ta.getNota1() != null)
+                            psIns.setDouble(3, ta.getNota1());
+                        else
+                            psIns.setNull(3, Types.NUMERIC);
+
+                        if (ta.getNota2() != null)
+                            psIns.setDouble(4, ta.getNota2());
+                        else
+                            psIns.setNull(4, Types.NUMERIC);
+
+                        psIns.setString(5, ta.getObservacoes());
+
+                        psIns.addBatch();
+                    }
+
+                    psIns.executeBatch();
+                }
+            }
+
+            conn.commit(); // 🔥 CONFIRMA TUDO JUNTO
             return true;
 
         } catch (SQLException e) {
+
+            try {
+                conn.rollback(); // 🔥 DESFAZ TUDO SE DER ERRO
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             throw new RuntimeException("Erro ao alterar aluno completo: " + e.getMessage(), e);
+
         } finally {
+
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             conexao.desconectar(conn);
         }
     }
+
 
     public int excluir(int id){
         Connection conn = conexao.conectar();
@@ -542,6 +567,7 @@ public class AlunoDAO {
                         "LEFT JOIN turma t ON t.id_turma = ta.id_turma " +
                         "LEFT JOIN disciplina d ON d.id_disciplina = t.id_disciplina " +
                         "LEFT JOIN sala s ON s.id_sala = t.id_sala " +
+                        "WHERE a.esta_ativo = TRUE "+
                         "ORDER BY a.nome, d.nome_disciplina";
 
         try {
@@ -615,7 +641,85 @@ public class AlunoDAO {
     }
 
 
+    public boolean atualizarAlunoCompleto(AlunoDTO aluno) {
 
+        Connection conn = conexao.conectar();
+        PreparedStatement pstmt = null;
+        String sqlUpdateAluno =
+                "UPDATE aluno SET nome = ?, email = ?, cpf_signup = ?, matricula = ?, esta_ativo = ? " + "WHERE id_aluno = ?";
+        String sqlDeleteVinculos =
+                "DELETE FROM turma_aluno WHERE id_aluno = ?";
+        String sqlInsertVinculo =
+                "INSERT INTO turma_aluno (id_aluno, id_turma, nota1, nota2, observacoes) " + "VALUES (?, ?, ?, ?, ?)";
+        try {
+            pstmt = conn.prepareStatement(sqlUpdateAluno);
+            pstmt.setString(1, aluno.getNome());
+            pstmt.setString(2, aluno.getEmail());
+            pstmt.setString(3, aluno.getCpf());
+            pstmt.setString(4, aluno.getMatricula());
+            pstmt.setBoolean(5, aluno.isEstaAtivo());
+            pstmt.setInt(6, aluno.getId());
+            pstmt.executeUpdate();
+            pstmt.close();
+            pstmt = conn.prepareStatement(sqlDeleteVinculos);
+            pstmt.setInt(1, aluno.getId());
+            pstmt.executeUpdate();
+            pstmt.close();
+            if (aluno.getMatriculas() != null && !aluno.getMatriculas().isEmpty()) {
+
+                pstmt = conn.prepareStatement(sqlInsertVinculo);
+
+                for (TurmaAlunoDTO ta : aluno.getMatriculas()) {
+
+                    pstmt.setInt(1, aluno.getId());
+                    pstmt.setInt(2, ta.getTurma().getId());
+
+                    if (ta.getNota1() != null) {
+                        pstmt.setDouble(3, ta.getNota1());
+                    } else {
+                        pstmt.setNull(3, java.sql.Types.NUMERIC);
+                    }
+
+                    if (ta.getNota2() != null) {
+                        pstmt.setDouble(4, ta.getNota2());
+                    } else {
+                        pstmt.setNull(4, java.sql.Types.NUMERIC);
+                    }
+                    pstmt.setString(5, ta.getObservacoes());
+                    pstmt.addBatch();
+                }
+                pstmt.executeBatch();
+            }
+
+            return true;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao atualizar aluno completo: " + e.getMessage(), e);
+        } finally {
+            try {
+                if (pstmt != null) pstmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            conexao.desconectar(conn);
+        }
+    }
+
+    public void vincularAlunoTurma(int idAluno, int idTurma) {
+
+        String sql = "INSERT INTO turma_aluno (id_aluno, id_turma) VALUES (?, ?)";
+
+        try (Connection conn = conexao.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idAluno);
+            stmt.setInt(2, idTurma);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao vincular aluno à turma", e);
+        }
+    }
 
 
 

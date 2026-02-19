@@ -22,7 +22,7 @@ public class EsqueciSenhaServlet extends HttpServlet {
 
         if (ok > 0) {
             request.setAttribute("email", email);
-            request.getRequestDispatcher("novaSenha.jsp").forward(request, response);
+            request.getRequestDispatcher("hashSenha.jsp").forward(request, response);
         } else {
             request.setAttribute("erro", "Email não encontrado");
             request.getRequestDispatcher("esqueci.jsp").forward(request, response);

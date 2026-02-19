@@ -29,11 +29,21 @@ public class AdminServlet extends HttpServlet {
         request.getRequestDispatcher("adminHome.jsp").forward(request, response);
     }
 
-    //Controle das ações
+
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String acao = request.getParameter("acao");
+
+        if ("alterar".equals(acao)) {
+            alterar(request, response);
+            return;
+        }
+
+        if (request.getParameter("tipo") != null && acao == null) {
+            abrirTelaEdicao(request, response);
+            return;
+        }
+
         switch (acao) {
             case "salvarAluno":
                 cadastrarAluno(request, response);
@@ -54,13 +64,193 @@ public class AdminServlet extends HttpServlet {
             case "salvarTurma":
                 cadastrarTurma(request, response);
                 break;
+            case "editarAluno":
+                carregarListas(request);
+                editarAluno(request, response);
+                break;
 
+            case "excluirAluno":
+                excluirAluno(request, response);
+                break;
+
+            case "atualizarAluno":
+                atualizarAluno(request, response);
+                break;
+            case "excluirSala":
+                salaDAO.excluir(Integer.parseInt(request.getParameter("id")));
+                response.sendRedirect("admin");
+                break;
+
+            case "excluirDisciplina":
+                disciplinaDAO.excluirDisciplina(Integer.parseInt(request.getParameter("id")));
+                response.sendRedirect("admin");
+                break;
+
+            case "excluirProfessor":
+                professorDAO.desativar(Integer.parseInt(request.getParameter("id")));
+                response.sendRedirect("admin");
+                break;
+            case "vincularAlunoTurma":
+                vincularAlunoTurma(request, response);
+                break;
+
+            case "vincularProfessorDisciplina":
+                vincularProfessorDisciplina(request, response);
+                break;
+
+            case "vincularProfessorTurma":
+                vincularProfessorTurma(request, response);
+                break;
             default:
                 enviarErro(request, response, "Ação inválida.");
         }
     }
 
-    //Listas
+    private void abrirTelaEdicao(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String tipo = request.getParameter("tipo");
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        carregarListas(request); // importante para selects
+
+        switch (tipo) {
+
+            case "professor":
+                ProfessorDTO professor = professorDAO.buscarPorId(id);
+                request.setAttribute("professor", professor);
+                break;
+
+            case "aluno":
+                AlunoDTO aluno = alunoDAO.buscarAlunoPorId(id);
+                request.setAttribute("aluno", aluno);
+                break;
+            case "sala":
+                SalaDTO sala = salaDAO.buscarSala(id);
+                request.setAttribute("sala", sala);
+                break;
+            case "disciplina":
+                DisciplinaDTO disciplina = disciplinaDAO.buscar(id);
+                request.setAttribute("disciplina", disciplina);
+                break;
+
+        }
+
+        request.setAttribute("tipo", tipo);
+        request.getRequestDispatcher("editar.jsp").forward(request, response);
+    }
+
+    private void alterar(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String tipo = request.getParameter("tipo");
+
+        try {
+
+            switch (tipo) {
+
+                case "professor":
+                    alterarProfessorSimples(request);
+                    break;
+
+                case "aluno":
+                    alterarAlunoSimples(request);
+                    break;
+
+                case "sala":
+                    alterarSalaSimples(request);
+                    break;
+
+                case "disciplina":
+                    System.out.println("editado");
+
+                    alterarDisciplinaSimples(request);
+                    break;
+
+            }
+
+            response.sendRedirect("admin");
+
+        } catch (Exception e) {
+            throw new ServletException(e);
+        }
+    }
+    private void alterarProfessorSimples(HttpServletRequest request) {
+
+        ProfessorDTO professor = new ProfessorDTO();
+
+        professor.setId(Integer.parseInt(request.getParameter("id")));
+        professor.setNome(request.getParameter("nome"));
+        professor.setEmail(request.getParameter("email"));
+        professor.setSenha(request.getParameter("senha"));
+
+        String[] turmaIds = request.getParameterValues("turmaIds");
+        List<Integer> listaTurmas = new ArrayList<>();
+
+        if (turmaIds != null) {
+            for (String t : turmaIds) {
+                listaTurmas.add(Integer.parseInt(t));
+            }
+        }
+
+        professorDAO.atualizarProfessorCompleto(professor, listaTurmas);
+    }
+    private void alterarAlunoSimples(HttpServletRequest request) {
+
+        AlunoDTO aluno = new AlunoDTO();
+
+        aluno.setId(Integer.parseInt(request.getParameter("id")));
+        aluno.setNome(request.getParameter("nome"));
+        aluno.setEmail(request.getParameter("email"));
+        aluno.setCpf(request.getParameter("cpf"));
+        aluno.setMatricula(request.getParameter("matricula"));
+        aluno.setEstaAtivo(true);
+
+        String[] turmaIds = request.getParameterValues("turmaIds");
+        List<TurmaAlunoDTO> lista = new ArrayList<>();
+
+        if (turmaIds != null) {
+            for (String idTurma : turmaIds) {
+                TurmaDTO turma = new TurmaDTO();
+                turma.setId(Integer.parseInt(idTurma));
+
+                TurmaAlunoDTO ta = new TurmaAlunoDTO();
+                ta.setTurma(turma);
+
+                lista.add(ta);
+            }
+        }
+
+        aluno.setMatriculas(lista);
+
+        alunoDAO.alterarAlunoCompleto(aluno);
+    }
+
+    private void alterarDisciplinaSimples(HttpServletRequest request) {
+
+        DisciplinaDTO disciplina = new DisciplinaDTO();
+
+        disciplina.setId(Integer.parseInt(request.getParameter("id")));
+        disciplina.setNome(request.getParameter("nome"));
+        disciplina.setCargaHoraria(Integer.parseInt(request.getParameter("cargaHoraria")));
+
+        disciplinaDAO.editarDisciplina(disciplina);
+        System.out.println("editado");
+    }
+
+    private void alterarSalaSimples(HttpServletRequest request) {
+
+        SalaDTO sala = new SalaDTO();
+
+        sala.setId(Integer.parseInt(request.getParameter("id")));
+        sala.setNome(request.getParameter("nomeSala"));
+        sala.setCapacidade(Integer.parseInt(request.getParameter("capacidade")));
+        salaDAO.editarSala(sala);
+    }
+
+
+
+
     private void carregarListas(HttpServletRequest request) {
         List<AlunoDTO> listaAlunos = alunoDAO.listarAlunos();
         List<ProfessorDTO> listaProfessores = professorDAO.listarProfessores();
@@ -75,7 +265,6 @@ public class AdminServlet extends HttpServlet {
         request.setAttribute("listaTurmas", listaTurmas);
     }
 
-    //Mensagens
     private void enviarMensagem(HttpServletRequest req, HttpServletResponse resp, String mensagem)
             throws ServletException, IOException {
         req.setAttribute("mensagem", mensagem);
@@ -90,7 +279,7 @@ public class AdminServlet extends HttpServlet {
         req.getRequestDispatcher("adminHome.jsp").forward(req, resp);
     }
 
-    //Cadastros
+
     private void cadastrarAluno(HttpServletRequest request, HttpServletResponse response) {
         try {
             String cpf = request.getParameter("cpf");
@@ -107,7 +296,11 @@ public class AdminServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            tratarErro(response, request, "Erro ao cadastrar aluno", e);
+            try {
+                enviarErro(request, response, "Erro ao cadastrar aluno: " + e.getMessage());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -136,7 +329,11 @@ public class AdminServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            tratarErro(response, request, "Erro ao cadastrar professor", e);
+            try {
+                enviarErro(request, response, "Erro ao cadastrar professor: " + e.getMessage());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -153,10 +350,18 @@ public class AdminServlet extends HttpServlet {
 
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            tratarErro(response, request, "Capacidade inválida", e);
+            try {
+                enviarErro(request, response, "Capacidade inválida: " + e.getMessage());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            tratarErro(response, request, "Erro ao cadastrar sala", e);
+            try {
+                enviarErro(request, response, "Erro ao cadastrar sala: " + e.getMessage());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -174,10 +379,18 @@ public class AdminServlet extends HttpServlet {
 
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            tratarErro(response, request, "ID inválido", e);
+            try {
+                enviarErro(request, response, "ID inválido: " + e.getMessage());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            tratarErro(response, request, "Erro ao cadastrar turma", e);
+            try {
+                enviarErro(request, response, "Erro ao cadastrar turma: " + e.getMessage());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -187,25 +400,170 @@ public class AdminServlet extends HttpServlet {
             String nomeDisciplina = request.getParameter("nomeDisciplina");
             int cargaHoraria = Integer.parseInt(request.getParameter("cargaHoraria"));
 
+
+
             disciplinaDAO.adicionarDisciplina(nomeDisciplina, cargaHoraria);
 
             enviarMensagem(request, response, "Disciplina cadastrada com sucesso!");
 
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            tratarErro(response, request, "Carga horária inválida", e);
+            try {
+                enviarErro(request, response, "Carga horária inválida: " + e.getMessage());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            tratarErro(response, request, "Erro ao cadastrar disciplina", e);
+            try {
+                enviarErro(request, response, "Erro ao cadastrar disciplina: " + e.getMessage());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
-    //Tratamento
-    private void tratarErro(HttpServletResponse response, HttpServletRequest request, String mensagem, Exception e){
-        try{
-            enviarErro(request, response, mensagem + ": " + e.getMessage());
-        } catch (Exception ex) {
-            ex.printStackTrace();
+    private void excluirAluno(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        int id = Integer.parseInt(request.getParameter("id"));
+        alunoDAO.excluir(id);
+
+        response.sendRedirect("admin");
+    }
+    private void editarAluno(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        AlunoDTO aluno = alunoDAO.buscarAlunoPorId(id);
+
+        request.setAttribute("aluno", aluno);
+        request.setAttribute("tipo", "aluno");
+
+        request.getRequestDispatcher("editar.jsp").forward(request, response);
+    }
+    private void atualizarAluno(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        try {
+
+            int id = Integer.parseInt(request.getParameter("id"));
+
+            AlunoDTO aluno = new AlunoDTO();
+            aluno.setId(id);
+            aluno.setNome(request.getParameter("nome"));
+            aluno.setEmail(request.getParameter("email"));
+            aluno.setCpf(request.getParameter("cpf"));
+            aluno.setMatricula(request.getParameter("matricula"));
+            aluno.setEstaAtivo(Boolean.parseBoolean(request.getParameter("ativo")));
+
+            // ===== TURMAS =====
+
+            String[] turmaIds = request.getParameterValues("turmaIds");
+
+            List<TurmaAlunoDTO> listaMatriculas = new ArrayList<>();
+
+            if (turmaIds != null) {
+
+                for (String turmaIdStr : turmaIds) {
+
+                    int turmaId = Integer.parseInt(turmaIdStr);
+
+                    TurmaDTO turma = new TurmaDTO();
+                    turma.setId(turmaId);
+
+                    TurmaAlunoDTO ta = new TurmaAlunoDTO();
+                    ta.setTurma(turma);
+                    String nota1Str = request.getParameter("nota1_" + turmaId);
+                    String nota2Str = request.getParameter("nota2_" + turmaId);
+                    String obs = request.getParameter("obs_" + turmaId);
+
+                    if (nota1Str != null && !nota1Str.isBlank()) {
+                        ta.setNota1(Double.parseDouble(nota1Str));
+                    }
+
+                    if (nota2Str != null && !nota2Str.isBlank()) {
+                        ta.setNota2(Double.parseDouble(nota2Str));
+                    }
+
+                    ta.setObservacoes(obs);
+
+                    listaMatriculas.add(ta);
+                }
+            }
+
+            aluno.setMatriculas(listaMatriculas);
+
+            boolean sucesso = alunoDAO.alterarAlunoCompleto(aluno);
+
+            if (sucesso) {
+                response.sendRedirect("admin");
+            } else {
+                request.setAttribute("erro", "Erro ao atualizar aluno.");
+                carregarListas(request);
+                request.getRequestDispatcher("adminHome.jsp").forward(request, response);
+            }
+
+        } catch (Exception e) {
+            throw new ServletException(e);
         }
     }
+
+
+
+    private void vincularAlunoTurma(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        try {
+
+            int idAluno = Integer.parseInt(request.getParameter("idAluno"));
+            int idTurma = Integer.parseInt(request.getParameter("idTurma"));
+
+            alunoDAO.vincularAlunoTurma(idAluno, idTurma);
+
+            enviarMensagem(request, response, "Aluno matriculado com sucesso!");
+
+        } catch (Exception e) {
+            enviarErro(request, response, "Erro ao matricular aluno: " + e.getMessage());
+        }
+    }
+
+    private void vincularProfessorTurma(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        try {
+
+            int idProfessor = Integer.parseInt(request.getParameter("idProfessor"));
+            int idTurma = Integer.parseInt(request.getParameter("idTurma"));
+
+            professorDAO.vincularProfessorTurma(idProfessor, idTurma);
+
+            enviarMensagem(request, response, "Professor vinculado à turma com sucesso!");
+
+        } catch (Exception e) {
+            enviarErro(request, response, "Erro ao vincular professor: " + e.getMessage());
+        }
+    }
+    private void vincularProfessorDisciplina(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        try {
+
+            int idProfessor = Integer.parseInt(request.getParameter("idProfessor"));
+            int idDisciplina = Integer.parseInt(request.getParameter("idDisciplina"));
+
+            professorDAO.vincularProfessorDisciplina(idProfessor, idDisciplina);
+
+            enviarMensagem(request, response, "Professor vinculado à disciplina com sucesso!");
+
+        } catch (Exception e) {
+            enviarErro(request, response, "Erro ao vincular professor à disciplina: " + e.getMessage());
+        }
+    }
+
+
+
+
+
 }

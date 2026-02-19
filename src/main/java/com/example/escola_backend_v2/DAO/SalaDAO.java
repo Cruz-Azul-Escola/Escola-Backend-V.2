@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.escola_backend_v2.DTO.AlunoDTO;
 import com.example.escola_backend_v2.DTO.ProfessorDTO;
 import com.example.escola_backend_v2.DTO.SalaDTO;
 import com.example.escola_backend_v2.Util.Conexao;
@@ -49,13 +50,14 @@ public class SalaDAO {
     }
 
     //Método para editar capacidade da sala
-    public int editarSala(int capacidade, int id) {
+    public int editarSala(SalaDTO salaDTO) {
         Connection conn = conexao.conectar();
-        String query = "UPDATE sala SET capacidade = ? WHERE id_sala = ?";
+        String query = "UPDATE sala SET nome_sala=?, capacidade = ? WHERE id_sala = ?";
         try {
             PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setInt(1, capacidade);
-            pstmt.setInt(2, id);
+            pstmt.setString(1, salaDTO.getNome());
+            pstmt.setInt(2, salaDTO.getCapacidade());
+            pstmt.setInt(3, salaDTO.getId());
             return pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -79,19 +81,37 @@ public class SalaDAO {
         }
     }
 
-    //Método para buscar sala
-    public int buscarSala(String sala){
+    public void excluir(int ind) {
         Connection conn = conexao.conectar();
-        String query = "SELECT * FROM sala WHERE sala = ?";
+        String query = "DELETE FROM sala WHERE id_sala = ?";
         try {
             PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setString(1, sala);
+            pstmt.setString(1, query);
+            pstmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally{
+            conexao.desconectar(conn);
+        }
+    }
+
+    //Método para buscar sala
+    public SalaDTO buscarSala(int id){
+        Connection conn = conexao.conectar();
+        String query = "SELECT * FROM sala WHERE id_sala = ?";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                return 1;
+                SalaDTO salaDTO = new SalaDTO();
+                salaDTO.setId(rs.getInt("id_sala"));
+                salaDTO.setNome(rs.getString("nome_sala"));
+                salaDTO.setCapacidade(rs.getInt("capacidade"));
+                return salaDTO;
             } else{
-                return 0;
+                return null;
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
