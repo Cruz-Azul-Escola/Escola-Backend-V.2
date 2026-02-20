@@ -21,328 +21,12 @@
 <head>
   <meta charset="UTF-8">
   <title>Portal do Professor</title>
-  <link rel="stylesheet" href="style-professor.css">
+  <link rel="shortcut icon" href="assets/icons/Logo da escola.png" type="image/x-icon">
+  <link rel="stylesheet" href="styles/styleProfessor.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
-  }
 
-  body {
-    background-color: #EAF0FB;
-    color: #123A8D;
-  }
-
-  /* TOPBAR */
-  .topbar {
-    background-color: #163F8C;
-    color: #fff;
-    padding: 18px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .logo-area {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
-  #logo {
-    width: 52px;
-    height: 52px;
-    background: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  #logo img {
-    width: 28px;
-  }
-
-  .logo-area h1 {
-    font-size: 20px;
-    font-weight: 600;
-  }
-
-  .logo-area span {
-    font-size: 13px;
-    opacity: 0.85;
-  }
-
-  .btn-logout {
-    background: white;
-    color: #163F8C;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-
-  /* CONTAINER */
-  .container {
-    max-width: 1150px;
-    margin: 50px auto;
-    padding: 0 20px;
-  }
-
-  .card {
-    background: #F6F7FB;
-    border-radius: 24px;
-    padding: 30px;
-    margin-bottom: 40px;
-  }
-
-  /* WELCOME CARD */
-  .welcome-header {
-    background-color: #163F8C;
-    color: white;
-    padding: 18px 24px;
-    border-radius: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .welcome-header h2 {
-    font-size: 26px;
-  }
-
-  .usuario {
-    font-size: 14px;
-  }
-
-  .welcome-content {
-    display: flex;
-    gap: 30px;
-    margin-top: 30px;
-  }
-
-  .total-card {
-    flex: 1;
-    background: #DCE6F8;
-    border-radius: 18px;
-    padding: 30px;
-    text-align: center;
-  }
-
-  .total-card span {
-    display: block;
-    margin-top: 10px;
-    font-size: 15px;
-  }
-
-  .total-card strong {
-    font-size: 48px;
-    font-weight: bold;
-    display: block;
-    margin-top: 8px;
-  }
-
-  .disciplina-card {
-    flex: 1;
-    background: #F6E2A9;
-    border: 2px solid #F4B400;
-    border-radius: 18px;
-    padding: 30px;
-    text-align: center;
-  }
-
-  .disciplina-card span {
-    font-size: 14px;
-  }
-
-  .disciplina-card h3 {
-    font-size: 28px;
-    margin-top: 8px;
-  }
-
-  /* SEARCH */
-  .search-header h3 {
-    font-size: 20px;
-  }
-
-  .search-header p {
-    font-size: 14px;
-    margin-top: 6px;
-    opacity: 0.8;
-  }
-
-  .search-form {
-    display: flex;
-    gap: 20px;
-    margin-top: 20px;
-  }
-
-  .input-group {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .input-group label {
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
-
-  .input-group input {
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #C8D4F2;
-  }
-  .input-group select {
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #C8D4F2;
-  }
-
-
-
-  .btn-search {
-    background: #163F8C;
-    color: white;
-    border: none;
-    padding: 14px 22px;
-    border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    align-self: flex-end;
-  }
-
-  /* INFO ALUNO */
-  .info-header {
-    background-color: #F4B400;
-    color: white;
-    padding: 14px 20px;
-    border-radius: 12px;
-    margin-bottom: 25px;
-  }
-
-  .aluno-dados {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-
-  .aluno-dados span {
-    font-size: 13px;
-    opacity: 0.8;
-  }
-
-  .aluno-dados strong {
-    display: block;
-    margin-top: 4px;
-    font-size: 18px;
-  }
-
-  .email span {
-    font-size: 13px;
-  }
-
-  .email strong {
-    display: block;
-    margin-top: 4px;
-    margin-bottom: 20px;
-  }
-
-  /* NOTAS */
-  .notas-box {
-    background: #DCE6F8;
-    padding: 24px;
-    border-radius: 16px;
-  }
-
-  .notas-box h4 {
-    margin-bottom: 20px;
-  }
-
-  .notas-grid {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .nota-item span {
-    display: block;
-    margin-bottom: 6px;
-  }
-
-  .nota-item strong {
-    font-size: 40px;
-  }
-
-  .nota-item.media strong {
-    color: #F57C00;
-  }
-
-  /* BOTÕES */
-  .botoes {
-    display: flex;
-    gap: 20px;
-    margin-top: 25px;
-  }
-
-  .btn-primary {
-    flex: 1;
-    background: #163F8C;
-    color: white;
-    border: none;
-    padding: 14px;
-    border-radius: 12px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-
-  .btn-warning {
-    flex: 1;
-    background: #F57C00;
-    color: white;
-    border: none;
-    padding: 14px;
-    border-radius: 12px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  .modal {
-    display: none;
-    position: fixed;
-    z-index: 999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.4);
-    justify-content: center;
-    align-items: center;
-  }
-
-  .modal-content {
-    background: white;
-    padding: 30px;
-    border-radius: 20px;
-    width: 400px;
-    text-align: center;
-  }
-
-  .modal-content input,
-  .modal-content textarea {
-    width: 100%;
-    margin-bottom: 15px;
-    padding: 10px;
-  }
-
-
-</style>
 <body>
-
-
 <header class="topbar">
   <div class="logo-area">
     <div id="logo">
@@ -350,16 +34,15 @@
     </div>
     <div>
       <h1>Cruz Azul</h1>
-      <span>Portal do Professor</span>
+      <span>Portal do Professor(a)</span>
     </div>
   </div>
 
-  <button class="btn-logout">➜ Sair</button>
+  <a style="text-decoration: none;" href="login.jsp" class="btn-logout">➜ Sair </a>
 </header>
 
 <main class="container">
 
-  <!-- CARD BOAS-VINDAS -->
   <section class="card welcome-card">
 
     <div class="welcome-header">
@@ -370,7 +53,6 @@
     <div class="welcome-content">
 
       <div class="total-card">
-        <div class="icon">👥</div>
         <span>Total de Alunos</span>
         <strong><%= totalAlunos != null ? totalAlunos : 0 %></strong>
       </div>
@@ -394,8 +76,6 @@
 
   </section>
 
-
-  <!-- BUSCAR ALUNO -->
   <section class="card search-card">
 
     <form method="post" action="homeProfessor" class="search-form">
@@ -429,8 +109,6 @@
 
   </section>
 
-
-  <!-- INFORMAÇÕES DO ALUNO -->
   <% if (aluno != null) {
 
     TurmaAlunoDTO matricula = null;
@@ -499,7 +177,7 @@
       </button>
 
     </div>
-    <!-- MODAL NOTAS -->
+
     <div id="modalNotas" class="modal">
       <div class="modal-content">
         <h3>Lançar Notas</h3>
@@ -522,8 +200,6 @@
       </div>
     </div>
 
-
-    <!-- MODAL OBSERVAÇÃO -->
     <div id="modalObs" class="modal">
       <div class="modal-content">
         <h3>Editar Observação</h3>

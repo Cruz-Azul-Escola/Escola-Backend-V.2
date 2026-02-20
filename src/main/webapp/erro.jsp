@@ -14,26 +14,26 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../styles/style.css">
-  <link rel="stylesheet" href="../styles/styleDadosCadastrais.css">
-  <link rel="stylesheet" href="../styles/styleErroGenerico.css">
-  <link rel="shortcut icon" href="../assets/icons/Logo da escola.png" type="image/x-icon">
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/styleDadosCadastrais.css">
+  <link rel="stylesheet" href="styles/styleErroGenerico.css">
+  <link rel="shortcut icon" href="assets/icons/Logo da escola.png" type="image/x-icon">
   <title>Erro</title>
 </head>
 <body>
 <header>
   <div id="logotipo">
     <div>
-      <img src="../assets/icons/Logo da escola.png" alt="">
+      <img src="assets/icons/Logo da escola.png" alt="">
     </div>
     <div>
       <h1>Cruz Azul</h1>
       <h4>Portal do Aluno</h4>
     </div>
   </div>
-  <a href="../index.html">
+  <a href="index.html">
     <div id="voltar">
-      <img src="../assets/icons/voltar.png" alt="">
+      <img src="assets/icons/voltar.png" alt="">
       <h4>Voltar</h4>
     </div>
   </a>
@@ -43,7 +43,7 @@
     <h2>Ocorreu um erro</h2>
   </div>
   <div id="container">
-    <img src="../assets/icons/Logo da escola.png" alt="">
+    <img src="assets/icons/Logo da escola.png" alt="">
    <h2>Erro no Sistema</h2>
     <%
       Throwable ex = exception;

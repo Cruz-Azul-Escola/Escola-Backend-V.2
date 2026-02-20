@@ -24,7 +24,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>Portal do Aluno</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="styles/styleAluno.css" />
+  <link rel="shortcut icon" href="assets/icons/Logo da escola.png" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
@@ -45,10 +46,9 @@
 </header>
 
 <main class="container">
-  <!-- Card de boas-vindas -->
   <section class="card welcome-card">
     <div class="card-header">
-      <h2>Bem-vindo, Aluno <%= aluno.getNome() %>!</h2>
+      <h2>Bem-vindo, Aluno(a) <%= aluno.getNome() %>!</h2>
       <span class="matricula">Sala: <%= boletim.get(0).getTurma().getSala().getNome() %></span>
     </div>
 
@@ -92,8 +92,6 @@
 
     </div>
   </section>
-
-  <!-- Boletim -->
   <section class="card boletim-card">
     <div class="boletim-header">
       <div>
