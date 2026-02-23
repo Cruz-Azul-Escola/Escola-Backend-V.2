@@ -8,7 +8,8 @@ import java.sql.*;
 import java.util.*;
 
 public class AlunoDAO {
-    Conexao conexao= new Conexao();
+    Conexao conexao = new Conexao();
+
     public int buscarPorEmail(String email) {
         Connection conn = conexao.conectar();
         String sql = "SELECT  id_aluno FROM ALUNO WHERE email = ?";
@@ -21,7 +22,7 @@ public class AlunoDAO {
 
             if (rs.next()) {
                 return 1;
-            }else {
+            } else {
                 return 0;
             }
         } catch (SQLException e) {
@@ -30,7 +31,8 @@ public class AlunoDAO {
             conexao.desconectar(conn);
         }
     }
-    public int editarSenha(int id, String senha){
+
+    public int editarSenha(int id, String senha) {
         String sql = "UPDATE ALUNO SET SENHA=? WHERE  id_aluno=?";
         Connection conn = conexao.conectar();
         try {
@@ -41,7 +43,7 @@ public class AlunoDAO {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }finally {
+        } finally {
             conexao.desconectar(conn);
         }
     }
@@ -127,20 +129,20 @@ public class AlunoDAO {
         }
     }
 
-    public int buscarPorCpf(String cpf){
+    public int buscarPorCpf(String cpf) {
         Connection conn = conexao.conectar();
         String sql = "SELECT id_aluno FROM ALUNO WHERE cpf_signup=? AND EMAIL IS NULL AND SENHA IS NULL";
-        try{
+        try {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, cpf);
             ResultSet rs = pstmt.executeQuery();
-            if (rs.next()){
+            if (rs.next()) {
                 return rs.getInt("id_aluno");
             }
             return 0;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }finally {
+        } finally {
             conexao.desconectar(conn);
         }
     }
@@ -188,7 +190,7 @@ public class AlunoDAO {
                     aluno.setNome(rs.getString("nome"));
                     aluno.setMatricula(rs.getString("matricula"));
                     aluno.setEmail(rs.getString("email"));
-                   // aluno.setSenha(rs.getString("senha"));
+                    // aluno.setSenha(rs.getString("senha"));
                     aluno.setCpf(rs.getString("cpf_signup"));
                     aluno.setMatriculas(matriculas); // lista de TurmaAlunoDTO
                 }
@@ -246,6 +248,7 @@ public class AlunoDAO {
             conexao.desconectar(conn);
         }
     }
+
     public boolean alterarAlunoCompleto(AlunoDTO aluno) {
         Connection conn = conexao.conectar();
         try {
@@ -277,19 +280,17 @@ public class AlunoDAO {
                         psIns.setInt(1, aluno.getId());
                         psIns.setInt(2, ta.getTurma().getId());
 
-                        if (ta.getNota1() != null){
+                        if (ta.getNota1() != null) {
                             psIns.setDouble(3, ta.getNota1());
 
-                        }
-                        else{
+                        } else {
                             psIns.setNull(3, Types.NUMERIC);
 
                         }
-                        if (ta.getNota2() != null){
+                        if (ta.getNota2() != null) {
                             psIns.setDouble(4, ta.getNota2());
 
-                        }
-                        else{
+                        } else {
                             psIns.setNull(4, Types.NUMERIC);
 
                         }
@@ -322,54 +323,52 @@ public class AlunoDAO {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
             conexao.desconectar(conn);
         }
     }
 
 
-    public int excluir(int id){
+    public int excluir(int id) {
         Connection conn = conexao.conectar();
-        String sql="UPDATE ALUNO SET esta_ativo=FALSE WHERE id_aluno = ?";
+        String sql = "UPDATE ALUNO SET esta_ativo=FALSE WHERE id_aluno = ?";
         try {
             PreparedStatement pstm = conn.prepareStatement(sql);
             pstm.setInt(1, id);
-            if (pstm.executeUpdate()>0){
+            if (pstm.executeUpdate() > 0) {
                 return 1;
             }
             return 0;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             conexao.desconectar(conn);
         }
     }
 
-    public boolean notasFaltando(int id){
+    public boolean notasFaltando(int id) {
         String sql = "SELECT COUNT(*) AS faltando FROM turma_aluno WHERE id_aluno =? AND (nota1 IS NULL OR nota2 IS NULL)";
         Connection conn = conexao.conectar();
         try {
-            PreparedStatement pstmt= conn.prepareStatement(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
-            if (rs.next()){
+            if (rs.next()) {
                 int faltando = rs.getInt(1);
-                return faltando==0;
+                return faltando == 0;
             }
             return false;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }finally {
+        } finally {
             conexao.desconectar(conn);
         }
     }
 
     public List<TurmaAlunoDTO> buscarBoletim(int id) {
-        int idAluno=0;
+        int idAluno = 0;
         List<TurmaAlunoDTO> lista = new ArrayList<>();
         Connection conn = conexao.conectar();
-        String sql="SELECT " +
+        String sql = "SELECT " +
                 " a.id_aluno, a.nome AS nome_aluno, " +
                 " ta.nota1, ta.nota2, ta.observacoes, " +
                 " s.id_sala, s.nome_sala, " +
@@ -560,7 +559,7 @@ public class AlunoDAO {
                         "LEFT JOIN turma t ON t.id_turma = ta.id_turma " +
                         "LEFT JOIN disciplina d ON d.id_disciplina = t.id_disciplina " +
                         "LEFT JOIN sala s ON s.id_sala = t.id_sala " +
-                        "WHERE a.esta_ativo = TRUE "+
+                        "WHERE a.esta_ativo = TRUE " +
                         "ORDER BY a.nome, d.nome_disciplina";
 
         try {
@@ -699,23 +698,24 @@ public class AlunoDAO {
     }
 
     public void vincularAlunoTurma(int idAluno, int idTurma) {
-
+        Connection conn = conexao.conectar();
         String sql = "INSERT INTO turma_aluno (id_aluno, id_turma) VALUES (?, ?)";
 
-        try (Connection conn = conexao.conectar();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, idAluno);
             stmt.setInt(2, idTurma);
             stmt.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao vincular aluno à turma", e);
+        } finally {
+            conexao.desconectar(conn);
         }
     }
 
-
-
-
-
 }
+
+
+
+

@@ -1,0 +1,145 @@
+:root {
+    --corAzul: #0E4194;
+    --corAzulSaturada: #E8F0FE;
+    --corAmarelo: #F5B800;
+    --corLaranja: #FF8000;
+    --borda: #D6E3FF;
+    --tamanho16px: 16px;
+    --tamanho22px: 22px;
+    --tamanho36px: 36px;
+}
+
+/* ===== MAIN ===== */
+#admin-main {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+/* ===== WELCOME ===== */
+#welcome-card {
+  background: white;
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 8px;
+}
+#welcome-banner {
+  background: var(--corAzul);
+  color: white;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  font-weight: 600;
+}
+
+/* ===== TOOLBAR ===== */
+#toolbar {
+  background: var(--corAzul);
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  gap: 6px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+}
+#toolbar button {
+  background: transparent;
+  color: white;
+  border: none;
+  box-shadow: none;
+  padding: 8px 1%;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.views {
+  transition: 0.5s;
+}
+
+/* ===== CONTENT ===== */
+#content-panel {
+  background: white;
+  height: fit-content;
+  padding: 20px;
+  border-radius: 20px;
+  border: 2px solid var(--borda);
+}
+.secoes {
+  display: none;
+}
+hr {
+  margin: 40px 0px;
+}
+table {
+  width: 100%;
+  border-radius: 16px;
+  border: 2px solid var(--corAzul);
+  margin-bottom: 20px;
+}
+tr {
+  text-align: left;
+}
+th {
+  text-align: center;
+}
+form {
+  display: grid;
+  align-items: center;
+  grid-template-columns: repeat(2, 1fr);
+  margin-bottom: 20px;
+  gap: 20px;
+}
+form div {
+  width: 100%;
+  margin: 0;
+}
+form select {
+  padding: 0px 20px;
+  width: 100%;
+  height: 60px;
+  border-radius: 60px;
+  border: 2px solid black;
+}
+select:hover {
+    border: 2px solid var(--corAzul);
+    transition: 0.5s;
+}
+select:focus {
+    border: 2px solid var(--corLaranja);
+    outline: none;
+    transition: 0.5s;
+}
+form button {
+  margin: 0;
+  margin-top: 15px;
+  width: 100%;
+}
+
+.tabela {
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+.tabela th, .tabela td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid var(--corAzul);
+}
+.tabela th {
+  background: #E9F1FF;
+  font-weight: 600;
+}
+.tabela tbody tr:nth-child(even) {
+  background: var(--corAzul);
+  color: white;
+}
+
+@media (max-width: 760px) {
+  #toolbar {
+    flex-direction: column;
+  }
+  #toolbar button {
+    width: 100%;
+  }
+}

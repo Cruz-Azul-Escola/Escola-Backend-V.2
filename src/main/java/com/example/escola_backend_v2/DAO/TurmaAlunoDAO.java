@@ -1,10 +1,16 @@
 package com.example.escola_backend_v2.DAO;
 
+import com.example.escola_backend_v2.DTO.AlunoDTO;
+import com.example.escola_backend_v2.DTO.TurmaAlunoDTO;
+import com.example.escola_backend_v2.DTO.TurmaDTO;
 import com.example.escola_backend_v2.Util.Conexao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TurmaAlunoDAO {
     Conexao conexao = new Conexao();
@@ -38,6 +44,39 @@ public class TurmaAlunoDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
+            conexao.desconectar(conn);
+        }
+    }
+
+
+    public List<TurmaAlunoDTO> buscaPorProfessorTurma(TurmaDTO turma) {
+        List<TurmaAlunoDTO> turmaAlunos = new ArrayList<>();
+        String sql = "SELECT ta.*, a.nome, a.email, a.matricula FROM turma_aluno ta JOIN aluno a on ta.id_aluno = a.id_aluno WHERE ta.id_turma = ?";
+        Connection conn = conexao.conectar();
+        try {
+            PreparedStatement pstm = conn.prepareStatement(sql);
+            pstm.setInt(1, turma.getId());
+            ResultSet rs = pstm.executeQuery();
+
+            while (rs.next()) {
+                TurmaAlunoDTO turmaAluno = new TurmaAlunoDTO();
+                turmaAluno.setTurma(turma);
+                turmaAluno.setNota1(rs.getDouble("nota1"));
+                turmaAluno.setNota2(rs.getDouble("nota2"));
+                turmaAluno.setObservacoes(rs.getString("observacoes"));
+                AlunoDTO aluno = new AlunoDTO();
+                aluno.setId(rs.getInt("id_aluno"));
+                aluno.setMatricula(rs.getString("matricula"));
+                aluno.setNome(rs.getString("nome"));
+                aluno.setEmail(rs.getString("email"));
+                turmaAluno.setAluno(aluno);
+                turmaAlunos.add(turmaAluno);
+            }
+            return turmaAlunos;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally {
             conexao.desconectar(conn);
         }
     }

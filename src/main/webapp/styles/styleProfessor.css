@@ -311,3 +311,36 @@ body {
     padding: 10px;
 }
 
+.dashboard {
+    background: linear-gradient(135deg, #163F8C, #2A5BD7);
+    color: white;
+    text-align: center;
+    transition: 0.25s ease;
+    cursor: pointer;
+}
+
+.dashboard h3 {
+    font-size: 22px;
+    margin-bottom: 18px;
+}
+
+.dashboard .btn-primary {
+    background: white;
+    color: #163F8C;
+    text-decoration: none;
+    display: inline-block;
+    padding: 14px 22px;
+    border-radius: 12px;
+    font-weight: 700;
+    transition: 0.2s;
+}
+
+.dashboard .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+}
+
+.dashboard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(22,63,140,0.25);
+}

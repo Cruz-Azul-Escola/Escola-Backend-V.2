@@ -38,6 +38,9 @@
     </div>
   </div>
 
+
+
+
   <a style="text-decoration: none;" href="login.jsp" class="btn-logout">➜ Sair </a>
 </header>
 
@@ -75,6 +78,18 @@
     </div>
 
   </section>
+  <section class="card dashboard">
+    <h3>Dashboard Geral</h3>
+    <br>
+    <br>
+
+    <a  style="text-decoration: none" class="btn-primary"
+        href="dashboard">
+      Visualizar Dashboard Geral
+    </a>
+  </section>
+
+
 
   <section class="card search-card">
 
@@ -96,6 +111,8 @@
           %>
         </select>
       </div>
+
+
 
       <div class="input-group">
         <label>Matrícula</label>
@@ -165,6 +182,7 @@
       </div>
     </div>
   </div>
+
 
     <div class="botoes">
 
