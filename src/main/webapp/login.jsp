@@ -24,7 +24,7 @@
 <header>
     <div id="logotipo">
         <div>
-            <img src="../assets/icons/Logo da escola.png" alt="">
+            <img src="assets/icons/Logo da escola.png" alt="">
         </div>
         <div>
             <button id="button-area-restrita"><h1>Cruz Azul</h1></button>

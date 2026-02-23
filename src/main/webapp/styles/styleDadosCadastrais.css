@@ -27,13 +27,12 @@ form img {
     padding: 0;
     display: flex;
     justify-content: center;
-    margin: 40px 0px;
 }
 #campo-senha label {
     margin-left: 3%;
 }
 #campo-senha > section:nth-child(1) {
-    width: 70%;
+    width: 90%;
 }
 #campo-senha > section:nth-child(2) {
     width: 10%;
