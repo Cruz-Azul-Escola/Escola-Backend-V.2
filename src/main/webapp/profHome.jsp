@@ -38,9 +38,6 @@
     </div>
   </div>
 
-
-
-
   <a style="text-decoration: none;" href="login.jsp" class="btn-logout">➜ Sair </a>
 </header>
 
@@ -78,18 +75,6 @@
     </div>
 
   </section>
-  <section class="card dashboard">
-    <h3>Dashboard Geral</h3>
-    <br>
-    <br>
-
-    <a  style="text-decoration: none" class="btn-primary"
-        href="dashboard">
-      Visualizar Dashboard Geral
-    </a>
-  </section>
-
-
 
   <section class="card search-card">
 
@@ -111,8 +96,6 @@
           %>
         </select>
       </div>
-
-
 
       <div class="input-group">
         <label>Matrícula</label>
@@ -141,48 +124,47 @@
 
   <section class="card info-card">
 
-  <div class="info-header">
-    <h3>Informações do Aluno</h3>
-  </div>
-
-  <div class="aluno-dados">
-    <div>
-      <span>Nome</span>
-      <strong><%= aluno.getNome() %></strong>
+    <div class="info-header">
+      <h3>Informações do Aluno</h3>
     </div>
 
-    <div>
-      <span>Matrícula</span>
-      <strong><%= aluno.getMatricula() %></strong>
-    </div>
-  </div>
-
-  <div class="email">
-    <span>E-mail</span>
-    <strong><%= aluno.getEmail() %></strong>
-  </div>
-
-  <div class="notas-box">
-    <h4>Notas Lançadas</h4>
-
-    <div class="notas-grid">
-      <div class="nota-item">
-        <span>Nota 1</span>
-        <strong><%= n1 %></strong>
+    <div class="aluno-dados">
+      <div>
+        <span>Nome</span>
+        <strong><%= aluno.getNome() %></strong>
       </div>
 
-      <div class="nota-item">
-        <span>Nota 2</span>
-        <strong><%= n2 %></strong>
-      </div>
-
-      <div class="nota-item media">
-        <span>Média</span>
-        <strong><%= String.format("%.2f", media) %></strong>
+      <div>
+        <span>Matrícula</span>
+        <strong><%= aluno.getMatricula() %></strong>
       </div>
     </div>
-  </div>
 
+    <div class="email">
+      <span>E-mail</span>
+      <strong><%= aluno.getEmail() %></strong>
+    </div>
+
+    <div class="notas-box">
+      <h4>Notas Lançadas</h4>
+
+      <div class="notas-grid">
+        <div class="nota-item">
+          <span>Nota 1</span>
+          <strong><%= n1 %></strong>
+        </div>
+
+        <div class="nota-item">
+          <span>Nota 2</span>
+          <strong><%= n2 %></strong>
+        </div>
+
+        <div class="nota-item media">
+          <span>Média</span>
+          <strong><%= String.format("%.2f", media) %></strong>
+        </div>
+      </div>
+    </div>
 
     <div class="botoes">
 
@@ -239,7 +221,7 @@
     </div>
 
 
-</section>
+  </section>
 
   <% } %>
 
@@ -270,4 +252,3 @@
 
 </body>
 </html>
-

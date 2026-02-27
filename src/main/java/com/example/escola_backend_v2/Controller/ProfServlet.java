@@ -45,9 +45,9 @@ public class ProfServlet extends HttpServlet {
 
         int totalAlunos = professorDAO.contarTotalAlunosDoProfessor(professorCompleto.getId());
         System.out.println(totalAlunos);
+        System.out.println(" PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
         req.setAttribute("totalAlunos", totalAlunos);
         req.getRequestDispatcher("/profHome.jsp").forward(req, resp);
-
     }
 
     @Override
