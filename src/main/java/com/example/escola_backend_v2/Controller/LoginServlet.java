@@ -102,8 +102,9 @@ public class LoginServlet extends HttpServlet {
             }
 
         } else {
-            request.setAttribute("erro", "Email ou senha inválidos");
+            request.setAttribute("erroLogin", "Usuário ou senha inválidos!");
             request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
         }
     }
 

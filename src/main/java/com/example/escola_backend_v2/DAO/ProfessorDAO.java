@@ -239,6 +239,8 @@ public class ProfessorDAO {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            conexao.desconectar(conn);
         }
         return professor;
     }
@@ -263,6 +265,9 @@ public class ProfessorDAO {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        finally {
+            conexao.desconectar(conn);
         }
 
         return total;

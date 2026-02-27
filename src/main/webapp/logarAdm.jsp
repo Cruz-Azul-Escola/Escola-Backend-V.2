@@ -38,7 +38,7 @@
             <h4>Portal do Aluno</h4>
         </div>
     </div>
-    <a href="index.html">
+    <a href="login.jsp">
         <div id="voltar">
             <img src="assets/icons/voltar.png" alt="">
             <h4>Voltar</h4>

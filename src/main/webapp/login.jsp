@@ -53,5 +53,12 @@
     </div>
 </main>
 <script src="scripts/scriptIndex.js"></script>
+<% String erro = (String) request.getAttribute("erroLogin"); %>
+
+<% if (erro != null) { %>
+<script>
+    alert("<%= erro %>");
+</script>
+<% } %>
 </body>
 </html>

@@ -137,6 +137,7 @@
 
     double n1 = matricula != null && matricula.getNota1() != null ? matricula.getNota1() : 0;
     double n2 = matricula != null && matricula.getNota2() != null ? matricula.getNota2() : 0;
+    String obs = matricula != null && matricula.getObservacoes() != null ? matricula.getObservacoes() : null;
     double media = (n1 + n2) / 2;
   %>
 
@@ -206,6 +207,7 @@
           <input type="hidden" name="acao" value="salvarNotas">
           <input type="hidden" name="idAluno" value="<%= aluno.getId() %>">
           <input type="hidden" name="idTurma" value="<%= matricula.getTurma().getId() %>">
+          <input type="hidden" name="observacao" value="<%= obs %>">
 
           <label>Nota 1</label>
           <input type="number" step="0.01" value="<%= n1 %>" name="nota1" required>
@@ -231,7 +233,7 @@
           <input type="hidden" name="nota2" value="<%= n2 %>">
 
 
-          <textarea name="observacao" required></textarea>
+          <textarea name="observacao" value="<%= obs %>" required></textarea>
 
           <button type="submit" class="btn-warning">Salvar Observação</button>
           <button type="button" onclick="fecharModalObs()">Cancelar</button>
@@ -268,6 +270,7 @@
     }
   }
 </script>
+
 
 </body>
 </html>
