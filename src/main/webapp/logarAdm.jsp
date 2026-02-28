@@ -35,7 +35,7 @@
         </div>
         <div>
             <h1>Cruz Azul</h1>
-            <h4>Portal do Aluno</h4>
+            <h4>Portal do Admin</h4>
         </div>
     </div>
     <a href="login.jsp">

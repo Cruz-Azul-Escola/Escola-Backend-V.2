@@ -28,7 +28,7 @@
         </div>
         <div>
             <button id="button-area-restrita"><h1>Cruz Azul</h1></button>
-            <h4>Portal do Aluno</h4>
+            <h4>Portal do Aluno e Professor</h4>
         </div>
     </div>
 </header>
