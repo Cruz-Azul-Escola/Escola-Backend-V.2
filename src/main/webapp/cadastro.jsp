@@ -62,7 +62,7 @@
                     <div id="popUp">
                         <div>
                             <h2>A senha deve ter:</h2>
-                            <h2>✕</h2>
+                            <h2 id="fecharPopup" style="cursor:pointer;">✕</h2>
                         </div>
                         <ul>
                             <li>Pelo menos 8 caracteres</li>
@@ -71,8 +71,7 @@
                             <li>1 caractere especial</li>
                         </ul>
                     </div>
-                    <input id="infoSenha" type="checkbox">
-                    <img src="assets/icons/infoSenha.png" alt="">
+                    <img src="assets/icons/infoSenha.png" alt="Info" id="btnInfoSenha" style="cursor:pointer;">
                 </section>
             </div>
             <div>
@@ -83,5 +82,23 @@
         </form>
     </div>
 </main>
+<script>
+    const btnInfo = document.getElementById("btnInfoSenha");
+    const popUp = document.getElementById("popUp");
+    const fechar = document.getElementById("fecharPopup");
+    popUp.style.display = "none";
+    btnInfo.addEventListener("click", () => {
+        popUp.style.display = "block";
+    });
+
+    fechar.addEventListener("click", () => {
+        popUp.style.display = "none";
+    });
+    document.addEventListener("click", function(event) {
+        if (!popUp.contains(event.target) && event.target !== btnInfo) {
+            popUp.style.display = "none";
+        }
+    });
+</script>
 </body>
 </html>

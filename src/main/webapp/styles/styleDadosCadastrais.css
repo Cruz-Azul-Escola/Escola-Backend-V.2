@@ -8,34 +8,32 @@
     --tamanho36px: 36px;
 }
 
-form img {
-    position: relative;
-    top: -58px;
+#btnInfoSenha {
     width: 30px;
     height: 30px;
-}
-#infoSenha {
-    position: relative;
-    opacity: 0;
-    z-index: 100;
-    width: 100%;
-    height: 100%;
-    margin-top: 6px;
-    transition: 0s;
+    cursor: pointer;
+    position: static;
+    opacity: 1;
+    transform: translateY(-20px);
 }
 #campo-senha {
     padding: 0;
     display: flex;
-    justify-content: center;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+#campo-senha > section:nth-child(1) {
+    width: 100%;
+}
+
+#campo-senha > section:nth-child(2) {
+    width: auto;
+    display: flex;
+    align-items: center;
 }
 #campo-senha label {
     margin-left: 3%;
-}
-#campo-senha > section:nth-child(1) {
-    width: 90%;
-}
-#campo-senha > section:nth-child(2) {
-    width: 10%;
 }
 #campo-senha > section > input{
     width: 100%;
