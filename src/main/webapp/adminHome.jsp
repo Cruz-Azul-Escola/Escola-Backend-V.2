@@ -126,7 +126,11 @@
             <form method="post" action="admin">
                 <input type="hidden" name="acao" value="salvarAluno">
                 <input type="text" name="nome" placeholder="Nome" required>
-                <input type="text" name="cpf" placeholder="CPF" required>
+                <input        type="text"
+                              id="cpf"
+                              maxlength="14"
+                              placeholder="000.000.000-00"
+                              autocomplete="off" required>
                 <select name="idSala" required>
                     <option value="">Selecione a Sala</option>
                     <%
@@ -145,42 +149,44 @@
             <hr>
             <h3>Alunos Cadastrados</h3>
 
-            <% if(listaAlunos != null && !listaAlunos.isEmpty()) { %>
-            <table border="1" cellpadding="5">
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>CPF</th>
-                    <th>Matrícula</th>
-                    <th>Ações</th>
-                </tr>
+            <div class="tabela-container">
+                <% if(listaAlunos != null && !listaAlunos.isEmpty()) { %>
 
-                <% for(AlunoDTO a : listaAlunos) { %>
-                <tr>
-                    <td><%= a.getId() %></td>
-                    <td><%= a.getNome() %></td>
-                    <td><%= a.getCpf() %></td>
-                    <td><%= a.getMatricula() %></td>
-                    <td>
-                        <form method="post" action="admin" style="display:inline;">
-                            <input type="hidden" name="acao" value="editarAluno">
-                            <input type="hidden" name="id" value="<%= a.getId() %>">
-                            <button type="submit">Editar</button>
-                        </form>
+                <table class="tabela" border="1" cellpadding="5">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>CPF</th>
+                        <th>Matrícula</th>
+                        <th>Ações</th>
+                    </tr>
 
-                        <form method="post" action="admin" style="display:inline;">
-                            <input type="hidden" name="acao" value="excluirAluno">
-                            <input type="hidden" name="id" value="<%= a.getId() %>">
-                            <button type="submit">Excluir</button>
-                        </form>
-                    </td>
-                </tr>
+                    <% for(AlunoDTO a : listaAlunos) { %>
+                    <tr>
+                        <td><%= a.getId() %></td>
+                        <td><%= a.getNome() %></td>
+                        <td><%= a.getCpf() %></td>
+                        <td><%= a.getMatricula() %></td>
+                        <td style="display: flex; justify-content: space-evenly">
+                            <form method="post" action="admin" style="display:inline;">
+                                <input type="hidden" name="acao" value="editarAluno">
+                                <input type="hidden" name="id" value="<%= a.getId() %>">
+                                <button class="btn-acao btn-editar" type="submit">Editar</button>
+                            </form>
+
+                            <form method="post" action="admin" style="display:inline;">
+                                <input type="hidden" name="acao" value="excluirAluno">
+                                <input type="hidden" name="id" value="<%= a.getId() %>">
+                                <button class="btn-acao btn-excluir" type="submit">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% } %>
+                </table>
+                <% } else { %>
+                <p>Nenhum aluno cadastrado.</p>
                 <% } %>
-            </table>
-            <% } else { %>
-            <p>Nenhum aluno cadastrado.</p>
-            <% } %>
-
+            </div>
         </div>
 
         <!-- PROFESSORES -->
@@ -191,8 +197,6 @@
                 <input type="text" name="nome" placeholder="Nome" required>
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="password" name="senha" placeholder="Senha" required>
-                <label>Ativo? <input type="checkbox" name="estaAtivo" value="true" checked></label>
-                <label>Turmas:</label>
                 <select name="turmaIds" multiple size="5">
                     <%
                         List<TurmaDTO> turmas = (List<TurmaDTO>) request.getAttribute("listaTurmas");
@@ -210,62 +214,63 @@
             <hr>
             <h3>Professores Cadastrados</h3>
 
-            <% if(listaProfessores != null && !listaProfessores.isEmpty()) { %>
-            <table border="1" cellpadding="5">
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Email</th>
-                    <th>Ativo</th>
-                    <th>Disciplinas</th>
-                    <th>Ações</th>
-                </tr>
+            <div class="tabela-container">
+                <% if(listaProfessores != null && !listaProfessores.isEmpty()) { %>
+                <table class="tabela" border="1" cellpadding="5">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Ativo</th>
+                        <th>Disciplinas</th>
+                        <th>Ações</th>
+                    </tr>
 
-                <% ProfessorDAO professorDAO = new ProfessorDAO();
-                    for(ProfessorDTO p : listaProfessores) { %>
-                <tr>
-                    <td><%= p.getId() %></td>
-                    <td><%= p.getNome() %></td>
-                    <td><%= p.getEmail() %></td>
-                    <td><%= p.isEstaAtivo() ? "Sim" : "Não" %></td>
-                    <td>
-                        <%
-                            List<DisciplinaDTO> disciplinas = professorDAO.listarDisciplinasDoProfessor(p.getId());
+                    <% ProfessorDAO professorDAO = new ProfessorDAO();
+                        for(ProfessorDTO p : listaProfessores) { %>
+                    <tr>
+                        <td><%= p.getId() %></td>
+                        <td><%= p.getNome() %></td>
+                        <td><%= p.getEmail() %></td>
+                        <td><%= p.isEstaAtivo() ? "Sim" : "Não" %></td>
+                        <td>
+                            <%
+                                List<DisciplinaDTO> disciplinas = professorDAO.listarDisciplinasDoProfessor(p.getId());
 
-                            if(disciplinas != null && !disciplinas.isEmpty()){
-                                for(DisciplinaDTO d : disciplinas){
-                        %>
-                        <%= d.getNome() %><br>
-                        <%
-                            }
-                        } else {
-                        %>
-                        Nenhuma
-                        <%
-                            }
-                        %>
-                    </td>
+                                if(disciplinas != null && !disciplinas.isEmpty()){
+                                    for(DisciplinaDTO d : disciplinas){
+                            %>
+                            <%= d.getNome() %><br>
+                            <%
+                                }
+                            } else {
+                            %>
+                            Nenhuma
+                            <%
+                                }
+                            %>
+                        </td>
 
-                    <td>
-                        <form method="post" action="admin" style="display:inline;">
-                            <input type="hidden" name="tipo" value="professor">
-                            <input type="hidden" name="id" value="<%= p.getId() %>">
-                            <button type="submit">Editar</button>
-                        </form>
+                        <td style="display: flex; justify-content: space-evenly">
+                            <form method="post" action="admin" style="display:inline;">
+                                <input type="hidden" name="tipo" value="professor">
+                                <input type="hidden" name="id" value="<%= p.getId() %>">
+                                <button class="btn-acao btn-editar" type="submit">Editar</button>
+                            </form>
 
-                        <form method="post" action="admin" style="display:inline;">
-                            <input type="hidden" name="acao" value="excluirProfessor">
-                            <input type="hidden" name="id" value="<%= p.getId() %>">
-                            <button type="submit">Excluir</button>
-                        </form>
-                    </td>
-                </tr>
+                            <form method="post" action="admin" style="display:inline;">
+                                <input type="hidden" name="acao" value="excluirProfessor">
+                                <input type="hidden" name="id" value="<%= p.getId() %>">
+                                <button class="btn-acao btn-excluir" type="submit">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% } %>
+                </table>
+                <% } else { %>
+                <p>Nenhum professor cadastrado.</p>
                 <% } %>
-            </table>
-            <% } else { %>
-            <p>Nenhum professor cadastrado.</p>
-            <% } %>
-
+            </div>
         </div>
 
         <!-- DISCIPLINAS -->
@@ -280,42 +285,45 @@
             <hr>
             <h3>Disciplinas Cadastradas</h3>
 
-            <% if(listaDisciplinas != null && !listaDisciplinas.isEmpty()) { %>
-            <table border="1" cellpadding="5">
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Carga Horária</th>
-                    <th>Ações</th>
-                </tr>
-
-                <% for(DisciplinaDTO d : listaDisciplinas) { %>
-                <tr>
-                    <td><%= d.getId() %></td>
-                    <td><%= d.getNome() %></td>
-                    <td><%= d.getCargaHoraria() %>h</td>
-                    <td>
-                        <form method="post" action="admin" style="display:inline;">
-                            <input type="hidden" name="tipo" value="disciplina">
-                            <input type="hidden" name="id" value="<%= d.getId() %>">
-                            <button type="submit">Editar</button>
-                        </form>
+            <div class="tabela-container">
 
 
+                <% if(listaDisciplinas != null && !listaDisciplinas.isEmpty()) { %>
+                <table class="tabela" border="1" cellpadding="5">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Carga Horária</th>
+                        <th>Ações</th>
+                    </tr>
 
-                        <form method="post" action="admin" style="display:inline;">
-                            <input type="hidden" name="acao" value="excluirDisciplina">
-                            <input type="hidden" name="id" value="<%= d.getId() %>">
-                            <button type="submit">Excluir</button>
-                        </form>
-                    </td>
-                </tr>
+                    <% for(DisciplinaDTO d : listaDisciplinas) { %>
+                    <tr>
+                        <td><%= d.getId() %></td>
+                        <td><%= d.getNome() %></td>
+                        <td><%= d.getCargaHoraria() %>h</td>
+                        <td style="display: flex; justify-content: space-evenly">
+                            <form method="post" action="admin" style="display:inline;">
+                                <input type="hidden" name="tipo" value="disciplina">
+                                <input type="hidden" name="id" value="<%= d.getId() %>">
+                                <button class="btn-acao btn-editar" type="submit">Editar</button>
+                            </form>
+
+
+
+                            <form method="post" action="admin" style="display:inline;">
+                                <input type="hidden" name="acao" value="excluirDisciplina">
+                                <input type="hidden" name="id" value="<%= d.getId() %>">
+                                <button class="btn-acao btn-excluir" type="submit">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% } %>
+                </table>
+                <% } else { %>
+                <p>Nenhuma disciplina cadastrada.</p>
                 <% } %>
-            </table>
-            <% } else { %>
-            <p>Nenhuma disciplina cadastrada.</p>
-            <% } %>
-
+            </div>
         </div>
 
         <!-- SALAS -->
@@ -330,41 +338,44 @@
             <hr>
             <h3>Salas Cadastradas</h3>
 
-            <% if(listaSalas != null && !listaSalas.isEmpty()) { %>
-            <table border="1" cellpadding="5">
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Capacidade</th>
-                    <th>Ações</th>
-                </tr>
-
-                <% for(SalaDTO s : listaSalas) { %>
-                <tr>
-                    <td><%= s.getId() %></td>
-                    <td><%= s.getNome() %></td>
-                    <td><%= s.getCapacidade() %></td>
-                    <td>
-                        <form method="post" action="admin" style="display:inline;">
-                            <input type="hidden" name="tipo" value="sala">
-                            <input type="hidden" name="id" value="<%= s.getId() %>">
-                            <button type="submit">Editar</button>
-                        </form>
+            <div class="tabela-container">
 
 
-                        <form method="post" action="admin" style="display:inline;">
-                            <input type="hidden" name="acao" value="excluirSala">
-                            <input type="hidden" name="id" value="<%= s.getId() %>">
-                            <button type="submit">Excluir</button>
-                        </form>
-                    </td>
-                </tr>
+                <% if(listaSalas != null && !listaSalas.isEmpty()) { %>
+                <table class="tabela" border="1" cellpadding="5">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Capacidade</th>
+                        <th>Ações</th>
+                    </tr>
+
+                    <% for(SalaDTO s : listaSalas) { %>
+                    <tr>
+                        <td><%= s.getId() %></td>
+                        <td><%= s.getNome() %></td>
+                        <td><%= s.getCapacidade() %></td>
+                        <td style="display: flex; justify-content: space-evenly">
+                            <form method="post" action="admin" style="display:inline;">
+                                <input type="hidden" name="tipo" value="sala">
+                                <input type="hidden" name="id" value="<%= s.getId() %>">
+                                <button class="btn-acao btn-editar" type="submit">Editar</button>
+                            </form>
+
+
+                            <form method="post" action="admin" style="display:inline;">
+                                <input type="hidden" name="acao" value="excluirSala">
+                                <input type="hidden" name="id" value="<%= s.getId() %>">
+                                <button class="btn-acao btn-excluir" type="submit">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% } %>
+                </table>
+                <% } else { %>
+                <p>Nenhuma sala cadastrada.</p>
                 <% } %>
-            </table>
-            <% } else { %>
-            <p>Nenhuma sala cadastrada.</p>
-            <% } %>
-
+            </div>
         </div>
 
         <!-- TURMAS -->
@@ -523,6 +534,8 @@
         });
         document.getElementById(id).classList.add('ativa');
     }
+
 </script>
+<script src="scripts/scriptValidacaoCpf.js"></script>
 </body>
 </html>

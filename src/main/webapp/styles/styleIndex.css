@@ -7,6 +7,11 @@
     --tamanho22px: 22px;
     --tamanho36px: 36px;
 }
+html, body {
+    height: 100%;
+    margin: 0;
+
+}
 main {
     padding-top: 30px;
     height: 97.7%;
@@ -44,14 +49,15 @@ h2 {
 }
 #container {
     transition: 0.5s;
-    padding-top: 20px;
+    padding: 20px 0 40px 0;
     display: block;
-    border-radius: 100px 100px 100px 100px;
+    border-radius: 100px;
     margin: 0 auto;
     background-color: white;
     width: 80%;
     max-width: 900px;
-    height: 80%;
+    min-height: 90%;
+    height: auto;
 }
 #container button {
     width: 50%;
