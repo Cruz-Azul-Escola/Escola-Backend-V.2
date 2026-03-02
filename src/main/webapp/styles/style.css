@@ -136,6 +136,34 @@ button {
     transition: 0.5s;
 }
 
+.tabela-container {
+    overflow: auto;
+    max-height: 300px;
+}
+.tabela {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    border: 2px solid var(--corAzul);
+}
+.tabela th, .tabela td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid var(--corAzul);
+}
+.tabela th {
+    background: #E9F1FF;
+    font-weight: 600;
+}
+.tabela tbody tr:nth-child(odd){
+    background: #E9F1FF;
+    color: black;
+}
+.tabela tbody tr:nth-child(even) {
+    background: #0E5A94;
+    color: white;
+}
+
 @media (max-width: 500px) {
     header img {
         width: 60px;

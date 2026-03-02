@@ -313,7 +313,7 @@ public class AdminServlet extends HttpServlet {
             professor.setNome(request.getParameter("nome"));
             professor.setEmail(email);
             professor.setSenha(request.getParameter("senha"));
-            professor.setEstaAtivo(Boolean.parseBoolean(request.getParameter("estaAtivo")));
+            professor.setEstaAtivo(true);
 
             String[] turmaIdsParam = request.getParameterValues("turmaIds");
             List<Integer> turmaIds = new ArrayList<>();

@@ -49,11 +49,16 @@
     <form action="${pageContext.request.contextPath}/buscar" method="post">
       <div>
         <label>CPF</label>
-        <input type="text" name="cpf" placeholder="Digite seu CPF" required pattern="^[0-9]{3}\.?[0-9]{3}\.?[0-9]{3}[ \-]?[0-9]{2}$" title="Digite um CPF válido, Ex: 123.456.789-00 ou 12345678900">
+        <input         type="text"
+                       id="cpf"
+                       maxlength="14"
+                       placeholder="000.000.000-00"
+                       autocomplete="off" required pattern="^[0-9]{3}\.?[0-9]{3}\.?[0-9]{3}[ \-]?[0-9]{2}$" title="Digite um CPF válido, Ex: 123.456.789-00 ou 12345678900">
       </div>
       <button type="submit" class="confirmar">Confirmar CPF</button>
     </form>
   </div>
 </main>
+<script src="scripts/scriptValidacaoCpf.js"></script>
 </body>
 </html>
