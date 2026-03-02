@@ -85,7 +85,6 @@ public class LoginServlet extends HttpServlet {
 
         if (usuario != null) {
             HttpSession session = request.getSession();
-
             if (usuario instanceof AlunoDTO) {
                 AlunoDTO aluno = (AlunoDTO) usuario;
                 session.setAttribute("usuarioLogado", aluno);

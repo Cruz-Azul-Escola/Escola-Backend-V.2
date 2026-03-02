@@ -24,7 +24,11 @@
         </div>
     </div>
 
-    <button class="btn-logout">➜ Sair</button>
+    <a href="homeProfessor">
+        <div id="voltar">
+            <h4 >➜ Sair </h4>
+        </div>
+    </a>
 </header>
 
 <main>
