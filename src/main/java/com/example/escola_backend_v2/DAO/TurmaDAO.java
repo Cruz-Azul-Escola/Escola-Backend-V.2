@@ -73,4 +73,48 @@ public class TurmaDAO {
 
         return lista;
     }
+    public List<TurmaDTO> buscarPorId(int id) {
+        List<TurmaDTO> lista = new ArrayList<>();
+        Connection conn = conexao.conectar();
+
+        String sql = "SELECT t.id_turma, t.periodo_letivo, " +
+                "d.id_disciplina, d.nome_disciplina, " +
+                "s.id_sala, s.nome_sala " +
+                "FROM turma t " +
+                "JOIN disciplina d ON d.id_disciplina = t.id_disciplina " +
+                "JOIN sala s ON s.id_sala = t.id_sala " +
+                "WHERE id_turma = ?";
+
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+
+                DisciplinaDTO d = new DisciplinaDTO();
+                d.setId(rs.getInt("id_disciplina"));
+                d.setNome(rs.getString("nome_disciplina"));
+
+                SalaDTO s = new SalaDTO();
+                s.setId(rs.getInt("id_sala"));
+                s.setNome(rs.getString("nome_sala"));
+
+                TurmaDTO t = new TurmaDTO();
+                t.setId(rs.getInt("id_turma"));
+                t.setPeriodoLetivo(rs.getString("periodo_letivo"));
+                t.setDisciplina(d);
+                t.setSala(s);
+
+                lista.add(t);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            conexao.desconectar(conn);
+        }
+
+        return lista;
+    }
 }

@@ -1,4 +1,5 @@
 const graficoNotasPeriodo = document.getElementById('NotasPeriodo');
+const boxplotNotasSala = document.getElementById('NotasSala');
 
 new Chart(graficoNotasPeriodo, {
     type: 'bar',
@@ -36,6 +37,47 @@ new Chart(graficoNotasPeriodo, {
         elements: {
             bar: {
                 borderRadius: 8
+            }
+        }
+    }
+});
+const datasets = [];
+
+for (const sala in dadosBoxplot) {
+
+    datasets.push({
+        label: sala,
+        data: dadosBoxplot[sala],
+        borderWidth: 2
+    });
+}
+
+new Chart(boxplotNotasSala, {
+    type: 'line',
+    data:{
+        labels: periodos,
+        datasets: datasets
+    },
+    options: {
+        responsive: true,
+
+        plugins: {
+            title: {
+                display: true,
+                text: "Notas por Sala"
+            },
+            legend: {
+                position: "top"
+            }
+        },
+
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 10,
+                ticks: {
+                    stepSize: 1
+                }
             }
         }
     }

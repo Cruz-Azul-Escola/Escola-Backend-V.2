@@ -10,6 +10,7 @@ import java.util.List;
 import com.example.escola_backend_v2.DTO.AlunoDTO;
 import com.example.escola_backend_v2.DTO.ProfessorDTO;
 import com.example.escola_backend_v2.DTO.SalaDTO;
+import com.example.escola_backend_v2.DTO.TurmaDTO;
 import com.example.escola_backend_v2.Util.Conexao;
 
 public class SalaDAO {
@@ -140,6 +141,29 @@ public class SalaDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally{
+            conexao.desconectar(conn);
+        }
+    }
+    public List<SalaDTO> buscarSalaPorTurma(TurmaDTO turma){
+        List<SalaDTO> salas = new ArrayList<>();
+        Connection conn = conexao.conectar();
+        String query = "SELECT * FROM sala WHERE id_sala = ?";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, turma.getId());
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                SalaDTO salaDTO = new SalaDTO();
+                salaDTO.setId(rs.getInt("id_sala"));
+                salaDTO.setNome(rs.getString("nome_sala"));
+                salaDTO.setCapacidade(rs.getInt("capacidade"));
+                salas.add(salaDTO);
+            }
+            return salas;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }finally{
             conexao.desconectar(conn);
         }
     }
