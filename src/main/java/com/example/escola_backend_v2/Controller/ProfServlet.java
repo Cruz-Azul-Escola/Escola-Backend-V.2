@@ -41,12 +41,11 @@ public class ProfServlet extends HttpServlet {
         System.out.println("baannanannnan");
         ProfessorDTO professorCompleto = professorDAO.buscarPorId(professorLogado.getId());
         req.setAttribute("professor", professorCompleto);
-
-
         int totalAlunos = professorDAO.contarTotalAlunosDoProfessor(professorCompleto.getId());
         System.out.println(totalAlunos);
-        System.out.println(" PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
         req.setAttribute("totalAlunos", totalAlunos);
+        var alunosProfessor = alunoDAO.buscarAlunosDoProfessor(professorCompleto.getId());
+        req.setAttribute("alunosProfessor", alunosProfessor);
         req.getRequestDispatcher("/profHome.jsp").forward(req, resp);
     }
 
@@ -65,15 +64,10 @@ public class ProfServlet extends HttpServlet {
 
             request.setAttribute("aluno", aluno);
             request.setAttribute("idTurmaSelecionada", idTurma);
-
-
             request.setAttribute("aluno", aluno);
             doGet(request, response);
         }
-
-
         else if ("salvarNotas".equals(acao)) {
-
             int idAluno = Integer.parseInt(request.getParameter("idAluno"));
             int idTurma = Integer.parseInt(request.getParameter("idTurma"));
             Double nota1 = request.getParameter("nota1").isEmpty() ? null : Double.parseDouble(request.getParameter("nota1"));

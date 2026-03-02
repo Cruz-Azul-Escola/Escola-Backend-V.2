@@ -175,3 +175,14 @@ button {
         top: 0px;
     }
 }
+body {
+    font-family: inherit;
+}
+
+.bootstrap-scope {
+    all: initial;
+}
+
+.bootstrap-scope * {
+    all: revert;
+}
