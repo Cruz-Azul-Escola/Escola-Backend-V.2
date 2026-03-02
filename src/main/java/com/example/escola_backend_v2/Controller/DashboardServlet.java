@@ -2,10 +2,7 @@
 package com.example.escola_backend_v2.Controller;
 
 
-import com.example.escola_backend_v2.DAO.ProfessorTurmaDAO;
-import com.example.escola_backend_v2.DAO.SalaDAO;
-import com.example.escola_backend_v2.DAO.TurmaAlunoDAO;
-import com.example.escola_backend_v2.DAO.TurmaDAO;
+import com.example.escola_backend_v2.DAO.*;
 import com.example.escola_backend_v2.DTO.*;
 import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
@@ -15,7 +12,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.*;
 
 @WebServlet("/dashboard")
@@ -28,11 +24,13 @@ public class DashboardServlet extends HttpServlet {
         TurmaAlunoDAO matriculaDao = new TurmaAlunoDAO();
         TurmaDAO turmaDao = new TurmaDAO();
         SalaDAO salaDao = new SalaDAO();
+        DisciplinaDAO disciplinaDao = new DisciplinaDAO();
 
         List<ProfessorTurmaDTO> professorTurmas = professorTurmaDao.buscarPorProfessor(idProfessor);
         List<TurmaDTO> turmas = new ArrayList<>();
         List<TurmaAlunoDTO> todasMatriculas = new ArrayList<>();
         List<SalaDTO> salas = new ArrayList<>();
+        List<DisciplinaDTO> disciplinas = new ArrayList<>();
 
         for (ProfessorTurmaDTO pt : professorTurmas) {
             TurmaDTO turma = pt.getTurma();
@@ -41,6 +39,7 @@ public class DashboardServlet extends HttpServlet {
         for (TurmaDTO t : turmas) {
             todasMatriculas.addAll(matriculaDao.buscaPorProfessorTurma(t));
             salas.addAll(salaDao.buscarSalaPorTurma(t));
+            disciplinas.addAll(disciplinaDao.buscarDisciplinaPorTurma(t));
         }
 
         int numeroAlunos = todasMatriculas.size();
@@ -139,6 +138,12 @@ public class DashboardServlet extends HttpServlet {
         List<String> periodos = Arrays.asList("1º período", "2º período", "Nota Final");
         List<Double> mediasNotas = Arrays.asList(mediaN1, mediaN2, mediaMedia);
 
+        List<String> stringDisciplinas = new ArrayList<>();
+        for (DisciplinaDTO d : disciplinas) {
+            stringDisciplinas.add(d.getNome());
+        }
+        String concatDisciplinas = String.join(", ", stringDisciplinas);
+
         request.setAttribute("numeroAlunos", numeroAlunos);
         request.setAttribute("mediaN1", mediaN1);
         request.setAttribute("mediaN2", mediaN2);
@@ -149,6 +154,7 @@ public class DashboardServlet extends HttpServlet {
         request.setAttribute("mediasNotas", gson.toJson(mediasNotas));
         request.setAttribute("dadosBoxplot", gson.toJson(dadosBoxplot));
         request.setAttribute("nomeSalas", gson.toJson(nomeSalas));
+        request.setAttribute("disciplinas", concatDisciplinas);
         request.getRequestDispatcher("dashboard.jsp").forward(request, response);
     }
 }

@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.escola_backend_v2.DTO.DisciplinaDTO;
+import com.example.escola_backend_v2.DTO.SalaDTO;
+import com.example.escola_backend_v2.DTO.TurmaDTO;
 import com.example.escola_backend_v2.Util.Conexao;
 
 public class DisciplinaDAO {
@@ -146,4 +148,27 @@ public class DisciplinaDAO {
             conexao.desconectar(conn);
         }
      }
+    public List<DisciplinaDTO> buscarDisciplinaPorTurma(TurmaDTO turma){
+        List<DisciplinaDTO> disciplinas = new ArrayList<>();
+        Connection conn = conexao.conectar();
+        String query = "SELECT d.* FROM turma t JOIN disciplina d ON t.id_disciplina = d.id_disciplina WHERE id_turma = ?";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, turma.getId());
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                DisciplinaDTO disciplinaDTO = new DisciplinaDTO();
+                disciplinaDTO.setId(rs.getInt("id_disciplina"));
+                disciplinaDTO.setNome(rs.getString("nome_disciplina"));
+                disciplinaDTO.setCargaHoraria(rs.getInt("carga_horaria"));
+                disciplinas.add(disciplinaDTO);
+            }
+            return disciplinas;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }finally{
+            conexao.desconectar(conn);
+        }
+    }
 }

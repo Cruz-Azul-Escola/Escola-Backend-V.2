@@ -147,7 +147,7 @@ public class SalaDAO {
     public List<SalaDTO> buscarSalaPorTurma(TurmaDTO turma){
         List<SalaDTO> salas = new ArrayList<>();
         Connection conn = conexao.conectar();
-        String query = "SELECT * FROM sala WHERE id_sala = ?";
+        String query = "SELECT s.* FROM turma t JOIN sala s ON t.id_sala = s.id_sala WHERE id_turma = ?";
         try {
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, turma.getId());

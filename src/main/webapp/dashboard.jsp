@@ -33,7 +33,7 @@
 
         <div class="filtros">
             <div class="filtro box">
-                1º período
+                ${disciplinas}
             </div>
         </div>
     </div>
