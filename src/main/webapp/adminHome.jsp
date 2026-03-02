@@ -174,7 +174,7 @@
                                 <button class="btn-acao btn-editar" type="submit">Editar</button>
                             </form>
 
-                            <form method="post" action="admin" style="display:inline;">
+                            <form onsubmit="return validarFormulario();" method="post" action="admin" style="display:inline;">
                                 <input type="hidden" name="acao" value="excluirAluno">
                                 <input type="hidden" name="id" value="<%= a.getId() %>">
                                 <button class="btn-acao btn-excluir" type="submit">Excluir</button>
@@ -258,7 +258,7 @@
                                 <button class="btn-acao btn-editar" type="submit">Editar</button>
                             </form>
 
-                            <form method="post" action="admin" style="display:inline;">
+                            <form onsubmit="return validarFormulario();" method="post" action="admin" style="display:inline;">
                                 <input type="hidden" name="acao" value="excluirProfessor">
                                 <input type="hidden" name="id" value="<%= p.getId() %>">
                                 <button class="btn-acao btn-excluir" type="submit">Excluir</button>
@@ -311,7 +311,7 @@
 
 
 
-                            <form method="post" action="admin" style="display:inline;">
+                            <form onsubmit="return validarFormulario();" method="post" action="admin" style="display:inline;">
                                 <input type="hidden" name="acao" value="excluirDisciplina">
                                 <input type="hidden" name="id" value="<%= d.getId() %>">
                                 <button class="btn-acao btn-excluir" type="submit">Excluir</button>
@@ -363,7 +363,7 @@
                             </form>
 
 
-                            <form method="post" action="admin" style="display:inline;">
+                            <form onsubmit="return validarFormulario();" method="post" action="admin" style="display:inline;">
                                 <input type="hidden" name="acao" value="excluirSala">
                                 <input type="hidden" name="id" value="<%= s.getId() %>">
                                 <button class="btn-acao btn-excluir" type="submit">Excluir</button>
@@ -533,6 +533,10 @@
             div.classList.remove('ativa');
         });
         document.getElementById(id).classList.add('ativa');
+    }
+
+    function validarFormulario() {
+        return confirm("Deseja excluir registro?");
     }
 
 </script>
