@@ -10,7 +10,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="com.example.escola_backend_v2.DTO.AlunoDTO" %>
 <%@ page import="com.example.escola_backend_v2.DTO.TurmaAlunoDTO" %>
-<%@ page import="java.util.List" %>
 
 
 <%
@@ -25,8 +24,6 @@
   <title>Portal do Professor</title>
   <link rel="shortcut icon" href="assets/icons/Logo da escola.png" type="image/x-icon">
   <link rel="stylesheet" href="styles/styleProfessor.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -103,73 +100,24 @@
 
       <div class="input-group">
         <label>Disciplina</label>
-        <select name="idTurma" id="filtroTurma" required>
-          <% for (var turma : professor.getTurmas()) { %>
+        <select name="idTurma" required>
+          <%
+            for (var turma : professor.getTurmas()) {
+          %>
           <option value="<%= turma.getId() %>">
             <%= turma.getDisciplina().getNome() %>
           </option>
-          <% } %>
+          <%
+            }
+          %>
         </select>
       </div>
 
 
 
-      <%
-        List<TurmaAlunoDTO> alunosProfessor =
-                (List<TurmaAlunoDTO>) request.getAttribute("alunosProfessor");
-      %>
-      <div class="bootstrap-scope">
-        <div class="mb-4">
-          <h5 class="mb-3 text-primary">Selecionar Aluno</h5>
-
-          <div class="input-group mb-3">
-            <span class="input-group-text"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 50 50">
-<path d="M 21 3 C 11.621094 3 4 10.621094 4 20 C 4 29.378906 11.621094 37 21 37 C 24.710938 37 28.140625 35.804688 30.9375 33.78125 L 44.09375 46.90625 L 46.90625 44.09375 L 33.90625 31.0625 C 36.460938 28.085938 38 24.222656 38 20 C 38 10.621094 30.378906 3 21 3 Z M 21 5 C 29.296875 5 36 11.703125 36 20 C 36 28.296875 29.296875 35 21 35 C 12.703125 35 6 28.296875 6 20 C 6 11.703125 12.703125 5 21 5 Z"></path>
-</svg></span>
-            <input type="text"
-                   id="filtroAluno"
-                   class="form-control"
-                   placeholder="Buscar aluno pelo nome...">
-          </div>
-          <div class="row g-2 text-center">
-
-            <% if(alunosProfessor != null) {
-              for(TurmaAlunoDTO ta : alunosProfessor) { %>
-
-            <div class="col-md-4 aluno-item"
-                 data-nome="<%= ta.getAluno().getNome().toLowerCase() %>"
-                 data-turma="<%= ta.getTurma().getId() %>">
-              <input type="radio"
-                     class="btn-check"
-                     name="matricula"
-                     id="aluno_<%= ta.getAluno().getId() %>_<%= ta.getTurma().getId() %>"
-                     value="<%= ta.getAluno().getMatricula() %>"
-                     autocomplete="off"
-                     required>
-
-              <label class="btn btn-outline-primary w-100 btn-sm"
-                     for="aluno_<%= ta.getAluno().getId() %>_<%= ta.getTurma().getId() %>">
-
-                <strong><%= ta.getAluno().getNome() %></strong>
-                <br>
-                <small>
-                  <%= ta.getTurma().getDisciplina().getNome() %>
-                </small>
-                <br>
-                <small>
-                  <%= ta.getAluno().getMatricula() %>
-                </small>
-                <small>
-                  <%= ta.getTurma().getSala().getNome() %>
-                </small>
-
-              </label>
-            </div>
-
-            <% } } %>
-
-          </div>
-        </div>
+      <div class="input-group">
+        <label>Matrícula</label>
+        <input type="text" name="matricula" required>
       </div>
 
       <button type="submit" class="btn-search">Buscar</button>
@@ -205,12 +153,10 @@
         <strong><%= aluno.getNome() %></strong>
       </div>
 
-
-    </div>
-
-    <div class="email">
-      <span>Matricula</span>
-      <strong><%= aluno.getMatricula() %></strong>
+      <div>
+        <span>Matrícula</span>
+        <strong><%= aluno.getMatricula() %></strong>
+      </div>
     </div>
 
     <div class="email">
@@ -323,25 +269,6 @@
       event.target.style.display = "none";
     }
   }
-
-    document.getElementById("filtroAluno").addEventListener("keyup", function () {
-
-    let termo = this.value.toLowerCase();
-    let alunos = document.querySelectorAll(".aluno-item");
-
-    alunos.forEach(function (aluno) {
-
-    let nome = aluno.getAttribute("data-nome");
-
-    if (nome.includes(termo)) {
-    aluno.style.display = "block";
-  } else {
-    aluno.style.display = "none";
-  }
-
-  });
-
-  });
 </script>
 
 
