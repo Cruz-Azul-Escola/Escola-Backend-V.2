@@ -168,6 +168,10 @@ table button {
   box-shadow: 0px;
 }
 
+.filtros {
+  margin-bottom: 30px;
+}
+
 @media (max-width: 760px) {
   #toolbar {
     flex-direction: column;

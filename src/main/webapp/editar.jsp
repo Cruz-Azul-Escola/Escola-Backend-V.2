@@ -280,7 +280,7 @@
 
 <script>
   function voltar() {
-    location.href = "adminHome.jsp"
+    window.history.back();
   }
 </script>
 </body>

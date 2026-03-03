@@ -31,7 +31,7 @@
       <h4>Portal do Aluno</h4>
     </div>
   </div>
-  <a href="index.html">
+  <a href="login.jsp">
     <div id="voltar">
       <img src="assets/icons/voltar.png" alt="">
       <h4>Voltar</h4>
@@ -73,7 +73,8 @@
     <%
       }
     %>
-    <a href="login.jsp">Voltar ao login</a> </div>
+      <a href="login.jsp"><button>Voltar ao login</button></a>
+  </div>
 </main>
 </body>
 </html>

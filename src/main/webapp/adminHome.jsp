@@ -102,7 +102,7 @@
             <h3>Alunos Cadastrados</h3>
             <div>
                 <label>Filtro</label>
-                <input id="filtro" type="text" >
+                <input id="filtro" type="text" class="filtros">
             </div>
 
             <div class="tabela-container">
@@ -186,7 +186,7 @@
             <h3>Professores Cadastrados</h3>
             <div>
                 <label>Filtro</label>
-                <input id="filtro2" type="text" >
+                <input id="filtro2" type="text" class="filtros">
             </div>
             <div class="tabela-container">
                 <% if(listaProfessores != null && !listaProfessores.isEmpty()) { %>
@@ -267,7 +267,7 @@
             <h3>Disciplinas Cadastradas</h3>
             <div>
                 <label>Filtro</label>
-                <input id="filtro3" type="text" >
+                <input id="filtro3" type="text" class="filtros">
             </div>
 
             <div class="tabela-container">
@@ -331,7 +331,7 @@
             <h3>Salas Cadastradas</h3>
             <div>
                 <label>Filtro</label>
-                <input id="filtro4" type="text" >
+                <input id="filtro4" type="text" class="filtros">
             </div>
             <div class="tabela-container">
 
