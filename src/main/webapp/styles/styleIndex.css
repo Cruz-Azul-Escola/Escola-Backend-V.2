@@ -49,15 +49,14 @@ h2 {
 }
 #container {
     transition: 0.5s;
-    padding: 20px 0 40px 0;
+    padding-top: 20px;
     display: block;
     border-radius: 100px;
     margin: 0 auto;
     background-color: white;
     width: 80%;
     max-width: 900px;
-    min-height: 90%;
-    height: auto;
+    height: 80%;
 }
 #container button {
     width: 50%;
@@ -69,7 +68,7 @@ a {
 }
 #esqueceu-senha {
     text-align: right;
-    margin-right: 11%;
+    margin-right: 20px;
 }
 #linkConta {
     padding-bottom: 0px;
@@ -77,7 +76,7 @@ a {
 
 @media(max-width: 1300px) {
     #container {
-        height: 91.5%;
+        height: 83%;
         width: 90%;
         margin: 0;
         margin-left: auto;
@@ -86,11 +85,11 @@ a {
 }
 @media(max-width: 850px) {
     #container {
-        height: 91.5%;
+        height: 83%;
         width: 100%;
         margin: 0;
         margin-left: auto;
-        border-radius: 0px 0px 0px 0px;
+        border-radius: 0px;
     }
 }
 

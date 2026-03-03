@@ -24,159 +24,96 @@
   <meta charset="UTF-8">
   <title>Portal do Professor</title>
   <link rel="shortcut icon" href="assets/icons/Logo da escola.png" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/style.css">
   <link rel="stylesheet" href="styles/styleProfessor.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <script defer src="/scripts/scriptAbrirIframeProfessor.js"></script>
+  <script defer src="scripts/scriptProfessor.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
-<header class="topbar">
-  <div class="logo-area">
-    <div id="logo">
-      <img src="logo.png" alt="Cruz Azul">
+<header id="cabecalho-site">
+  <div id="logotipo">
+    <div>
+      <img src="assets/icons/Logo da escola.png" alt="">
     </div>
     <div>
       <h1>Cruz Azul</h1>
-      <span>Portal do Professor(a)</span>
+      <h4>Portal do Professor</h4>
     </div>
   </div>
-
-
-
-
-  <a style="text-decoration: none;" href="login.jsp" class="btn-logout">➜ Sair </a>
+  <a href="login.jsp">
+    <div id="voltar">
+      <img src="assets/icons/voltar.png" alt="">
+      <h4>Sair</h4>
+    </div>
+  </a>
 </header>
 
 <main class="container">
-
-  <section class="card welcome-card">
-
-    <div class="welcome-header">
-      <h2>Bem-vindo, Professor <%= professor.getNome()%>!</h2>
-      <span class="usuario">Usuário: <%= professor.getEmail()%></span>
+  <section class="cartao">
+    <div class="cabecalho-boasvindas">
+      <h3>Bem-vindo, Professor <%= professor.getNome()%>!</h3>
+      <h4>Usuário: <%= professor.getEmail()%></h4>
     </div>
 
-    <div class="welcome-content">
-
-      <div class="total-card">
-        <span>Total de Alunos</span>
-        <strong><%= totalAlunos != null ? totalAlunos : 0 %></strong>
+    <div class="informacoes-gerais">
+      <div class="dados">
+        <div class="rotulo">Total de Alunos</div>
+        <div class="valor"><%= totalAlunos != null ? totalAlunos : 0 %></div>
       </div>
 
-      <div class="disciplina-card">
-        <span>Disciplinas</span>
+      <div class="dados">
+        <div class="rotulo">Disciplinas</div>
         <%
           if (professor.getTurmas() != null && !professor.getTurmas().isEmpty()) {
         %>
-        <h3><%= professor.getTurmas().get(0).getDisciplina().getNome() %></h3>
+        <select id="opcoes-disciplina" class="valor">
+          <option value="Disciplina 1"><%= professor.getTurmas().get(0).getDisciplina().getNome() %></option>
+        </select>
         <%
         } else {
         %>
-        <h3>Nenhuma</h3>
+        <select id="opcoes-disciplina" class="valor">
+          <option value="Nenhuma">Nenhuma</option>
+        </select>
         <%
           }
         %>
       </div>
-
     </div>
-
   </section>
-  <section class="card dashboard">
-    <h3>Dashboard Geral</h3>
-    <br>
-    <br>
 
-    <a  style="text-decoration: none" class="btn-primary"
-        href="dashboard">
-      Visualizar Dashboard Geral
+  <section class="cartao">
+    <h3>Dashboard Geral</h3>
+    <a style="text-decoration: none" class="btn-primary" href="dashboard">
+      <button>
+        Visualizar Dashboard Geral
+      </button>
     </a>
   </section>
 
-
-
-  <section class="card search-card">
-
-    <form method="post" action="homeProfessor" class="search-form">
-
-      <input type="hidden" name="acao" value="buscarAluno">
-
-      <div class="input-group">
-        <label>Disciplina</label>
-        <select name="idTurma" id="filtroTurma" required>
-          <% for (var turma : professor.getTurmas()) { %>
-          <option value="<%= turma.getId() %>">
-            <%= turma.getDisciplina().getNome() %>
-          </option>
-          <% } %>
-        </select>
+  <section class="cartao">
+    <div id="cabecalho-busca">
+      <div id="titulo-busca">
+        <img src="assets/icons/lupa azul.png" alt="">
+        <h3>Buscar Aluno</h3>
       </div>
-
-
-
-      <%
-        List<TurmaAlunoDTO> alunosProfessor =
-                (List<TurmaAlunoDTO>) request.getAttribute("alunosProfessor");
-      %>
-      <div class="bootstrap-scope">
-        <div class="mb-4">
-          <h5 class="mb-3 text-primary">Selecionar Aluno</h5>
-
-          <div class="input-group mb-3">
-            <span class="input-group-text"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 50 50">
-<path d="M 21 3 C 11.621094 3 4 10.621094 4 20 C 4 29.378906 11.621094 37 21 37 C 24.710938 37 28.140625 35.804688 30.9375 33.78125 L 44.09375 46.90625 L 46.90625 44.09375 L 33.90625 31.0625 C 36.460938 28.085938 38 24.222656 38 20 C 38 10.621094 30.378906 3 21 3 Z M 21 5 C 29.296875 5 36 11.703125 36 20 C 36 28.296875 29.296875 35 21 35 C 12.703125 35 6 28.296875 6 20 C 6 11.703125 12.703125 5 21 5 Z"></path>
-</svg></span>
-            <input type="text"
-                   id="filtroAluno"
-                   class="form-control"
-                   placeholder="Buscar aluno pelo nome...">
-          </div>
-          <div class="row g-2 text-center">
-
-            <% if(alunosProfessor != null) {
-              for(TurmaAlunoDTO ta : alunosProfessor) { %>
-
-            <div class="col-md-4 aluno-item"
-                 data-nome="<%= ta.getAluno().getNome().toLowerCase() %>"
-                 data-turma="<%= ta.getTurma().getId() %>">
-              <input type="radio"
-                     class="btn-check"
-                     name="matricula"
-                     id="aluno_<%= ta.getAluno().getId() %>_<%= ta.getTurma().getId() %>"
-                     value="<%= ta.getAluno().getMatricula() %>"
-                     autocomplete="off"
-                     required>
-
-              <label class="btn btn-outline-primary w-100 btn-sm"
-                     for="aluno_<%= ta.getAluno().getId() %>_<%= ta.getTurma().getId() %>">
-
-                <strong><%= ta.getAluno().getNome() %></strong>
-                <br>
-                <small>
-                  <%= ta.getTurma().getDisciplina().getNome() %>
-                </small>
-                <br>
-                <small>
-                  <%= ta.getAluno().getMatricula() %>
-                </small>
-                <small>
-                  <%= ta.getTurma().getSala().getNome() %>
-                </small>
-
-              </label>
-            </div>
-
-            <% } } %>
-
-          </div>
-        </div>
+      <p>Digite a mátricula do aluno para visualizar e editar informações</p>
+    </div>
+    <form>
+      <div>
+        <label for="">Mátricula</label>
+        <input name="matricula" type="number" required>
       </div>
-
-      <button type="submit" class="btn-search">Buscar</button>
-
+      <button type="submit">
+        <img src="assets/icons/lupa branca.png" alt="">
+        <p>Buscar</p>
+      </button>
     </form>
-
-
   </section>
 
   <% if (aluno != null) {
@@ -193,63 +130,80 @@
     double media = (n1 + n2) / 2;
   %>
 
-  <section class="card info-card">
-
-    <div class="info-header">
+  <section class="cartao">
+    <div id="cabecalho-info-aluno">
       <h3>Informações do Aluno</h3>
     </div>
-
-    <div class="aluno-dados">
+    <div id="info-aluno">
       <div>
-        <span>Nome</span>
-        <strong><%= aluno.getNome() %></strong>
+        <h5>Nome</h5>
+        <h3><%= aluno.getNome() %></h3>
       </div>
-
-
+      <div>
+        <h5>Matrícula</h5>
+        <h3><%= aluno.getMatricula() %></h3>
+      </div>
+      <div>
+        <h5>E-mail<h5>
+          <h3><a href="mailto:"><%= aluno.getEmail() %></a></h3>
+      </div>
     </div>
-
-    <div class="email">
-      <span>Matricula</span>
-      <strong><%= aluno.getMatricula() %></strong>
+    <div class="abas">
+      <a class="aba" id="abrirNotas">Notas</a>
+      <a class="aba" id="abrirObservacoes">Observações</a>
     </div>
-
-    <div class="email">
-      <span>E-mail</span>
-      <strong><%= aluno.getEmail() %></strong>
-    </div>
-
-    <div class="notas-box">
-      <h4>Notas Lançadas</h4>
-
-      <div class="notas-grid">
-        <div class="nota-item">
-          <span>Nota 1</span>
-          <strong><%= n1 %></strong>
+    <div id="notas-lancadas" class="areas">
+      <h3>Notas Lançadas</h3>
+      <div id="formula-nota">
+        <div>
+          <h3>Nota 1</h3>
+          <h1><%= n1 %></h1>
         </div>
-
-        <div class="nota-item">
-          <span>Nota 2</span>
-          <strong><%= n2 %></strong>
+        <div>
+          <h3>Nota 2</h3>
+          <h1><%= n2 %></h1>
         </div>
-
-        <div class="nota-item media">
-          <span>Média</span>
-          <strong><%= String.format("%.2f", media) %></strong>
+        <div>
+          <h3>Média</h3>
+          <h1><%= String.format("%.2f", media) %></h1>
         </div>
       </div>
     </div>
+    <div id="observacoes-lancadas" class="areas">
+      <article class="card-observacao">
+        <div class="barra-lateral"></div>
+
+        <div class="observacao-conteudo">
+          <div class="observacao-topo">
+            <div class="disciplina">Matemática</div>
+            <div class="professor">Professor(a): Ana Souza</div>
+          </div>
+
+          <div class="observacao-texto">
+            Longa e chata observação que estou com preguiça de escrever
+          </div>
+        </div>
+      </article>
 
 
-    <div class="botoes">
+      <article class="card-observacao">
+        <div class="barra-lateral"></div>
 
-      <button type="button" class="btn-primary" onclick="abrirModalNotas()">
-        Editar Notas
-      </button>
+        <div class="observacao-conteudo">
+          <div class="observacao-topo">
+            <div class="disciplina">Matemática</div>
+            <div class="professor">Professor(a): Ana Souza</div>
+          </div>
 
-      <button type="button" class="btn-warning" onclick="abrirModalObs()">
-        Editar Observação
-      </button>
-
+          <div class="observacao-texto">
+            Longa e chata observação que estou com preguiça de escrever
+          </div>
+        </div>
+      </article>
+    </div>
+    <div id="opcoes-edicao">
+      <button id="btn-notas">Lançar/Editar Notas</button>
+      <button id="btn-observacoes">Fazer/Editar Observação</button>
     </div>
 
     <div id="modalNotas" class="modal">
@@ -294,56 +248,10 @@
         </form>
       </div>
     </div>
-
-
   </section>
 
   <% } %>
 
 </main>
-<script>
-  function abrirModalNotas() {
-    document.getElementById("modalNotas").style.display = "flex";
-  }
-
-  function fecharModalNotas() {
-    document.getElementById("modalNotas").style.display = "none";
-  }
-
-  function abrirModalObs() {
-    document.getElementById("modalObs").style.display = "flex";
-  }
-
-  function fecharModalObs() {
-    document.getElementById("modalObs").style.display = "none";
-  }
-
-  window.onclick = function(event) {
-    if (event.target.classList.contains("modal")) {
-      event.target.style.display = "none";
-    }
-  }
-
-    document.getElementById("filtroAluno").addEventListener("keyup", function () {
-
-    let termo = this.value.toLowerCase();
-    let alunos = document.querySelectorAll(".aluno-item");
-
-    alunos.forEach(function (aluno) {
-
-    let nome = aluno.getAttribute("data-nome");
-
-    if (nome.includes(termo)) {
-    aluno.style.display = "block";
-  } else {
-    aluno.style.display = "none";
-  }
-
-  });
-
-  });
-</script>
-
-
 </body>
 </html>

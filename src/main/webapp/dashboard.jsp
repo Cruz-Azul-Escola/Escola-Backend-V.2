@@ -9,24 +9,25 @@
 <html>
 <head>
     <title>Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="styles/styleDashboard.css">
+    <link rel="shortcut icon" href="assets/icons/Logo da escola.png" type="image/x-icon">
 </head>
 <body>
-<header class="topbar">
-    <div class="logo-area">
-        <div id="logo">
-            <img src="logo.png" alt="Cruz Azul">
+<header id="cabecalho-site">
+    <div id="logotipo">
+        <div>
+            <img src="assets/icons/Logo da escola.png" alt="">
         </div>
         <div>
             <h1>Cruz Azul</h1>
-            <span>Portal do Professor</span>
+            <h4>Portal do Professor</h4>
         </div>
     </div>
-
-    <a href="homeProfessor">
+    <a href="profHome.jsp">
         <div id="voltar">
-            <h4 >➜ Sair </h4>
+            <img src="assets/icons/voltar.png" alt="">
+            <h4>Voltar</h4>
         </div>
     </a>
 </header>

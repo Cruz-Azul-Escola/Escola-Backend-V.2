@@ -29,6 +29,7 @@ header {
     color: white;
     background-color: var(--corAzul);
     padding: 10px;
+    height: fit-content;
 }
 header img {
     transition: 0.5s;
@@ -155,13 +156,20 @@ button {
     background: #E9F1FF;
     font-weight: 600;
 }
-.tabela tbody tr:nth-child(odd){
-    background: #E9F1FF;
-    color: black;
-}
 .tabela tbody tr:nth-child(even) {
-    background: #0E5A94;
+    background: var(--corAzul);
     color: white;
+}
+
+.fechar {
+    width: 50px;
+    height: 50px;
+    background: #0D4DB8;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
 }
 
 @media (max-width: 500px) {
@@ -174,15 +182,4 @@ button {
     #voltar {
         top: 0px;
     }
-}
-body {
-    font-family: inherit;
-}
-
-.bootstrap-scope {
-    all: initial;
-}
-
-.bootstrap-scope * {
-    all: revert;
 }
