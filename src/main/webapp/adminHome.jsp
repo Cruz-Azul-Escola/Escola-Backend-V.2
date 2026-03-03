@@ -98,7 +98,12 @@
                 <button type="submit">Salvar</button>
             </form>
             <hr>
+
             <h3>Alunos Cadastrados</h3>
+            <div>
+                <label>Filtro</label>
+                <input id="filtro" type="text" >
+            </div>
 
             <div class="tabela-container">
                 <% if(listaAlunos != null && !listaAlunos.isEmpty()) { %>
@@ -113,9 +118,9 @@
                     </tr>
 
                     <% for(AlunoDTO a : listaAlunos) { %>
-                    <tr>
+                    <tr class="item-linha">
                         <td><%= a.getId() %></td>
-                        <td><%= a.getNome() %></td>
+                        <td class="nomeItemLinha"><%= a.getNome() %></td>
                         <td><%= a.getCpf() %></td>
                         <td><%= a.getMatricula() %></td>
                         <td style="display: flex; justify-content: space-evenly">
@@ -176,8 +181,13 @@
                 <button type="submit">Salvar</button>
             </form>
             <hr>
-            <h3>Professores Cadastrados</h3>
 
+
+            <h3>Professores Cadastrados</h3>
+            <div>
+                <label>Filtro</label>
+                <input id="filtro2" type="text" >
+            </div>
             <div class="tabela-container">
                 <% if(listaProfessores != null && !listaProfessores.isEmpty()) { %>
                 <table class="tabela" border="1" cellpadding="5">
@@ -192,9 +202,9 @@
 
                     <% ProfessorDAO professorDAO = new ProfessorDAO();
                         for(ProfessorDTO p : listaProfessores) { %>
-                    <tr>
+                    <tr class="item-linha">
                         <td><%= p.getId() %></td>
-                        <td><%= p.getNome() %></td>
+                        <td class="nomeItemLinha"><%= p.getNome() %></td>
                         <td><%= p.getEmail() %></td>
                         <td><%= p.isEstaAtivo() ? "Sim" : "Não" %></td>
                         <td>
@@ -253,7 +263,12 @@
                 <button type="submit">Salvar</button>
             </form>
             <hr>
+
             <h3>Disciplinas Cadastradas</h3>
+            <div>
+                <label>Filtro</label>
+                <input id="filtro3" type="text" >
+            </div>
 
             <div class="tabela-container">
 
@@ -268,9 +283,9 @@
                     </tr>
 
                     <% for(DisciplinaDTO d : listaDisciplinas) { %>
-                    <tr>
+                    <tr class="item-linha">
                         <td><%= d.getId() %></td>
-                        <td><%= d.getNome() %></td>
+                        <td class="nomeItemLinha"><%= d.getNome() %></td>
                         <td><%= d.getCargaHoraria() %>h</td>
                         <td style="display: flex; justify-content: space-evenly">
                             <form method="post" action="admin" style="display:inline;">
@@ -312,8 +327,12 @@
                 <button type="submit">Salvar</button>
             </form>
             <hr>
-            <h3>Salas Cadastradas</h3>
 
+            <h3>Salas Cadastradas</h3>
+            <div>
+                <label>Filtro</label>
+                <input id="filtro4" type="text" >
+            </div>
             <div class="tabela-container">
 
 
@@ -327,9 +346,9 @@
                     </tr>
 
                     <% for(SalaDTO s : listaSalas) { %>
-                    <tr>
+                    <tr class="item-linha">
                         <td><%= s.getId() %></td>
-                        <td><%= s.getNome() %></td>
+                        <td class="nomeItemLinha"><%= s.getNome() %></td>
                         <td><%= s.getCapacidade() %></td>
                         <td style="display: flex; justify-content: space-evenly">
                             <form method="post" action="admin" style="display:inline;">
@@ -520,10 +539,71 @@
         document.getElementById(button).style.backgroundColor = "white";
         document.getElementById(button).style.color = "var(--corAzul)";
     }
-
     function validarFormulario() {
         return confirm("Deseja excluir registro?");
     }
+
+    document.getElementById("filtro").addEventListener("keyup", function () {
+        let termo = this.value.toLowerCase();
+        let alunos = document.querySelectorAll(".item-linha");
+        alunos.forEach(function (aluno) {
+            let nome = aluno.querySelector(".nomeItemLinha")
+                .textContent
+                .toLowerCase();
+
+            if (nome.includes(termo)) {
+                aluno.style.display = "";
+            } else {
+                aluno.style.display = "none";
+            }
+        });
+    });
+    document.getElementById("filtro2").addEventListener("keyup", function () {
+        let termo = this.value.toLowerCase();
+        let alunos = document.querySelectorAll(".item-linha");
+        alunos.forEach(function (aluno) {
+            let nome = aluno.querySelector(".nomeItemLinha")
+                .textContent
+                .toLowerCase();
+
+            if (nome.includes(termo)) {
+                aluno.style.display = "";
+            } else {
+                aluno.style.display = "none";
+            }
+        });
+    });
+    document.getElementById("filtro3").addEventListener("keyup", function () {
+        let termo = this.value.toLowerCase();
+        let alunos = document.querySelectorAll(".item-linha");
+        alunos.forEach(function (aluno) {
+            let nome = aluno.querySelector(".nomeItemLinha")
+                .textContent
+                .toLowerCase();
+
+            if (nome.includes(termo)) {
+                aluno.style.display = "";
+            } else {
+                aluno.style.display = "none";
+            }
+        });
+    });
+    document.getElementById("filtro4").addEventListener("keyup", function () {
+        let termo = this.value.toLowerCase();
+        let alunos = document.querySelectorAll(".item-linha");
+        alunos.forEach(function (aluno) {
+            let nome = aluno.querySelector(".nomeItemLinha")
+                .textContent
+                .toLowerCase();
+
+            if (nome.includes(termo)) {
+                aluno.style.display = "";
+            } else {
+                aluno.style.display = "none";
+            }
+        });
+    });
+
 </script>
 <script src="scripts/scriptValidacaoCpf.js"></script>
 </body>

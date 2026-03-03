@@ -10,7 +10,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="com.example.escola_backend_v2.DTO.AlunoDTO" %>
 <%@ page import="com.example.escola_backend_v2.DTO.TurmaAlunoDTO" %>
-<%@ page import="java.util.List" %>
 
 
 <%
@@ -253,5 +252,30 @@
   <% } %>
 
 </main>
+<script>
+  function abrirModalNotas() {
+    document.getElementById("modalNotas").style.display = "flex";
+  }
+
+  function fecharModalNotas() {
+    document.getElementById("modalNotas").style.display = "none";
+  }
+
+  function abrirModalObs() {
+    document.getElementById("modalObs").style.display = "flex";
+  }
+
+  function fecharModalObs() {
+    document.getElementById("modalObs").style.display = "none";
+  }
+
+  window.onclick = function(event) {
+    if (event.target.classList.contains("modal")) {
+      event.target.style.display = "none";
+    }
+  }
+</script>
+
+
 </body>
 </html>
