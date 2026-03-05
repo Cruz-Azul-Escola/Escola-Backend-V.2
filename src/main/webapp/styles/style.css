@@ -73,6 +73,7 @@ header h4 {
     color: var(--corAzul);
     transition: 0.5s;
 }
+
 label {
     display: block;
     position: relative;
@@ -193,4 +194,15 @@ button {
     #voltar {
         top: 0px;
     }
+}
+body {
+    font-family: inherit;
+}
+
+.bootstrap-scope {
+    all: initial;
+}
+
+.bootstrap-scope * {
+    all: revert;
 }

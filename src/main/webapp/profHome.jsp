@@ -144,7 +144,7 @@
       </div>
       <div>
         <h5>E-mail<h5>
-          <h3><a href="mailto:"><%= aluno.getEmail() %></a></h3>
+          <h3><a href="mailto:<%= aluno.getEmail() %>"><%= aluno.getEmail() %></a></h3>
       </div>
     </div>
     <div class="abas">

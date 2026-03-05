@@ -20,6 +20,26 @@
     <link rel="shortcut icon" href="assets/icons/Logo da escola.png" type="image/x-icon">
     <title>Cruz Azul - Login</title>
 </head>
+<style>
+    .mostrar-senha {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.mostrar-senha input {
+    width: auto;
+    height: auto;
+}
+
+.mostrar-senha label {
+    position: static;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    font-size: var(--tamanho16px);
+}</style>
 <body>
 <header>
     <div id="logotipo">
@@ -57,6 +77,7 @@
 
 <% if (erro != null) { %>
 <script>
+
     alert("<%= erro %>");
 </script>
 <% } %>

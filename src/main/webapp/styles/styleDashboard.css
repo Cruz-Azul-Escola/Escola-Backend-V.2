@@ -142,3 +142,11 @@ main {
         height: 300px !important;
     }
 }
+.vazio{
+    display: none;
+}
+#opcoes{
+    border: 0;
+    background-color: rgba(22,63,140,0.25);
+    color: #163F8C;
+}
