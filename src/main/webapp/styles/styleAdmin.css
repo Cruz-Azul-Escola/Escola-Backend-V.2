@@ -158,16 +158,6 @@ form button {
   display: block;
 }
 
-table button {
-  color: black;
-  width: fit-content;
-  padding: 0px 10px;
-  border-radius: 15px;
-  background-color: var(--corAzulSaturada);
-  border: 1px solid var(--corAzul);
-  box-shadow: 0px;
-}
-
 .filtros {
   margin-bottom: 30px;
 }
