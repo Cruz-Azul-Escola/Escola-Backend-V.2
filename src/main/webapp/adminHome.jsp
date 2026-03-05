@@ -126,11 +126,7 @@
             <form method="post" action="admin">
                 <input type="hidden" name="acao" value="salvarAluno">
                 <input type="text" name="nome" placeholder="Nome" required>
-                <input        type="text"
-                              id="cpf"
-                              maxlength="14"
-                              placeholder="000.000.000-00"
-                              autocomplete="off" required>
+                <input type="text" name="cpf" id="cpf" maxlength="14" placeholder="000.000.000-00" autocomplete="off" required>
                 <select name="idSala" required>
                     <option value="">Selecione a Sala</option>
                     <%

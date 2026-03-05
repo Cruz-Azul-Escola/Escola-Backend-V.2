@@ -65,5 +65,12 @@
         </form>
     </div>
 </main>
+<% String erro = (String) request.getAttribute("erroLogin"); %>
+
+<% if (erro != null) { %>
+<script>
+    alert("<%= erro %>");
+</script>
+<% } %>
 </body>
 </html>

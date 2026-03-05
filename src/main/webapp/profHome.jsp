@@ -161,7 +161,7 @@
 
     <div class="email">
       <span>E-mail</span>
-      <strong><%= aluno.getEmail() %></strong>
+      <strong> <a href="mailto:<%= aluno.getEmail() %>"><%= aluno.getEmail() %></a></strong>
     </div>
 
     <div class="notas-box">

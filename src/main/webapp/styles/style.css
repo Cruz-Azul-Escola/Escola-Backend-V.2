@@ -72,6 +72,7 @@ header h4 {
     color: var(--corAzul);
     transition: 0.5s;
 }
+
 label {
     display: block;
     position: relative;

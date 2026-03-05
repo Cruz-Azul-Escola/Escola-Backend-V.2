@@ -283,6 +283,7 @@ public class AdminServlet extends HttpServlet {
     private void cadastrarAluno(HttpServletRequest request, HttpServletResponse response) {
         try {
             String cpf = request.getParameter("cpf");
+            System.out.println(cpf);
 
             AlunoDTO aluno = new AlunoDTO();
             aluno.setNome(request.getParameter("nome"));

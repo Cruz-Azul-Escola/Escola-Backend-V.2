@@ -10,6 +10,7 @@
 <head>
     <title>Dashboard</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="assets/icons/Logo da escola.png" type="image/x-icon">
     <link rel="stylesheet" href="styles/styleDashboard.css">
 </head>
 <body>
@@ -40,6 +41,7 @@
                 ${disciplinas}
             </div>
         </div>
+
     </div>
 
     <section class="dash-container">
@@ -59,12 +61,19 @@
             <p>${alunosMaiorMedia}</p>
             <p>${maiorMedia}</p>
         </div>
+        <div class="filtros">
+                <select class="filtro box" onchange="mudarGrafico(this)">
+                    <option value="opcao1">Notas por Periodo</option>
+                    <option value="opcao2">Notas por Sala</option>
+                </select>
+        </div>
 
-        <div class="graficoNotasPeriodo">
+
+        <div id="graficoNotasPeriodo" class="graficoNotasPeriodo">
             <canvas id="NotasPeriodo"></canvas>
         </div>
 
-        <div class="graficoNotasPeriodo">
+        <div id="graficoNotasSala" class="graficoNotasPeriodo vazio">
             <canvas id="NotasSala"></canvas>
         </div>
 
@@ -75,6 +84,22 @@
     const mediasNotas = JSON.parse('${mediasNotas}');
     const nomeSalas = JSON.parse('${nomeSalas}');
     const dadosBoxplot = JSON.parse('${dadosBoxplot}');
+
+
+    function mudarGrafico(select) {
+        const graficoPeriodo = document.getElementById("graficoNotasPeriodo");
+        const graficoSala = document.getElementById("graficoNotasSala");
+
+        if (select.value === "opcao1") {
+            graficoPeriodo.classList.remove("vazio");
+            graficoSala.classList.add("vazio");
+        } else {
+            graficoPeriodo.classList.add("vazio");
+            graficoSala.classList.remove("vazio");
+        }
+    }
+
+
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
