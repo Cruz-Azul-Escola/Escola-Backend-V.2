@@ -77,7 +77,7 @@
                 </div>
                 <div>
                     <label for="">CPF</label>
-                    <input type="text" id="cpf" maxlength="14" placeholder="000.000.000-00" autocomplete="off" required>
+                    <input type="text" name="cpf" id="cpf" maxlength="14" placeholder="000.000.000-00" autocomplete="off" required>
                 </div>
                 <div>
                     <label for="">Sala</label>
