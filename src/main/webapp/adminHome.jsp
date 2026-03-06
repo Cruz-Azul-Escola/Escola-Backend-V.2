@@ -25,60 +25,6 @@
     <script defer src="scripts/scriptAdmin.js"></script>
     <title>Cruz Azul – Portal do Administrador</title>
 </head>
-<style>
-    body {
-        margin: 0;
-        font-family: Arial;
-        background: #f1f3f8;
-    }
-
-    .topbar {
-        background: #1e4b9a;
-        color: white;
-        padding: 15px;
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .menu {
-        display: flex;
-        background: #1e4b9a;
-        padding: 10px;
-    }
-
-    .menu button {
-        background: white;
-        border: none;
-        padding: 10px 20px;
-        margin-right: 10px;
-        cursor: pointer;
-    }
-
-    .content-panel {
-        padding: 30px;
-    }
-
-    .aba {
-        display: none;
-    }
-
-    .aba.ativa {
-        display: block;
-    }
-
-    .mensagem {
-        color: green;
-        font-weight: bold;
-        margin-bottom: 15px;
-    }
-
-    .erro {
-        color: red;
-        font-weight: bold;
-        margin-bottom: 15px;
-    }
-
-</style>
 <body>
 
 <%
@@ -112,34 +58,43 @@
         </div>
     </section>
     <section id="toolbar">
-        <button onclick="mostrar('alunos')" id="view-alunos" class="views">Alunos</button>
-        <button onclick="mostrar('professores')" id="view-professores" class="views">Professores</button>
-        <button onclick="mostrar('turmas')"  id="view-turmas" class="views">Turmas</button>
-        <button onclick="mostrar('disciplinas')" id="view-disciplinas" class="views">Disciplinas</button>
-        <button onclick="mostrar('salas')" id="view-salas" class="views">Salas</button>
-        <button onclick="mostrar('vinculos')" id="view-vinculacoes" class="views">Vinculações</button>
+        <button onclick="mostrar('secao-aluno', 'view-alunos')" id="view-alunos" class="views">Alunos</button>
+        <button onclick="mostrar('secao-professor', 'view-professores')" id="view-professores" class="views">Professores</button>
+        <button onclick="mostrar('secao-turma', 'view-turmas')"  id="view-turmas" class="views">Turmas</button>
+        <button onclick="mostrar('secao-disciplina', 'view-disciplinas')" id="view-disciplinas" class="views">Disciplinas</button>
+        <button onclick="mostrar('secao-sala', 'view-salas')" id="view-salas" class="views">Salas</button>
+        <button onclick="mostrar('secao-vinculo', 'view-vinculacoes')" id="view-vinculacoes" class="views">Vinculações</button>
     </section>
     <section id="content-panel">
         <!-- ALUNOS -->
-        <div id="alunos" class="aba">
+        <div id="secao-aluno" class="secoes">
             <h2>Cadastro de Aluno</h2>
             <form method="post" action="admin">
                 <input type="hidden" name="acao" value="salvarAluno">
-                <input type="text" name="nome" placeholder="Nome" required>
-                <input type="text" name="cpf" id="cpf" maxlength="14" placeholder="000.000.000-00" autocomplete="off" required>
-                <select name="idSala" required>
-                    <option value="">Selecione a Sala</option>
-                    <%
-                        List<SalaDTO> salas = (List<SalaDTO>) request.getAttribute("listaSalas");
-                        if(salas != null){
-                            for(SalaDTO sala : salas){
-                    %>
-                    <option value="<%= sala.getId() %>"><%= sala.getNome() %> (Capacidade: <%= sala.getCapacidade() %>)</option>
-                    <%
+                <div>
+                    <label for="">Nome</label>
+                    <input type="text" name="nome" placeholder="Nome" required>
+                </div>
+                <div>
+                    <label for="">CPF</label>
+                    <input type="text" name="cpf" id="cpf" maxlength="14" placeholder="000.000.000-00" autocomplete="off" required>
+                </div>
+                <div>
+                    <label for="">Sala</label>
+                    <select name="idSala" required>
+                        <option value="">Selecione a Sala</option>
+                        <%
+                            List<SalaDTO> salas = (List<SalaDTO>) request.getAttribute("listaSalas");
+                            if(salas != null){
+                                for(SalaDTO sala : salas){
+                        %>
+                        <option value="<%= sala.getId() %>"><%= sala.getNome() %> (Capacidade: <%= sala.getCapacidade() %>)</option>
+                        <%
+                                }
                             }
-                        }
-                    %>
-                </select>
+                        %>
+                    </select>
+                </div>
                 <button type="submit">Salvar</button>
             </form>
             <hr>
@@ -147,7 +102,7 @@
             <h3>Alunos Cadastrados</h3>
             <div>
                 <label>Filtro</label>
-                <input id="filtro" type="text" >
+                <input id="filtro" type="text" class="filtros">
             </div>
 
             <div class="tabela-container">
@@ -191,25 +146,38 @@
         </div>
 
         <!-- PROFESSORES -->
-        <div id="professores" class="aba">
+        <div id="secao-professor" class="secoes">
             <h2>Cadastro de Professor</h2>
             <form method="post" action="admin">
                 <input type="hidden" name="acao" value="salvarProfessor">
-                <input type="text" name="nome" placeholder="Nome" required>
-                <input type="email" name="email" placeholder="Email" required>
-                <input type="password" name="senha" placeholder="Senha" required>
-                <select name="turmaIds" multiple size="5">
-                    <%
-                        List<TurmaDTO> turmas = (List<TurmaDTO>) request.getAttribute("listaTurmas");
-                        if(turmas != null){
-                            for(TurmaDTO t : turmas){
-                    %>
-                    <option value="<%= t.getId() %>"><%= t.getPeriodoLetivo() %> - Sala: <%= t.getSala().getNome() %> - Disciplina: <%= t.getDisciplina().getNome() %></option>
-                    <%
+                <div>
+                    <label for="">Nome</label>
+                    <input type="text" name="nome" placeholder="Nome" required>
+                </div>
+                <div>
+                    <label for="">Email</label>
+                    <input type="email" name="email" placeholder="Email" required>
+                </div>
+                <div>
+                    <label for="">Senha</label>
+                    <input type="password" name="senha" placeholder="Senha" required>
+                </div>
+                <div>
+                    <label for="">Turma</label>
+                    <select name="idTurma" required>
+                        <option value="">Selecione a Turma</option>
+                        <%
+                            List<TurmaDTO> turmas = (List<TurmaDTO>) request.getAttribute("listaTurmas");
+                            if(turmas != null){
+                                for(TurmaDTO t : turmas){
+                        %>
+                        <option value="<%= t.getId() %>"><%= t.getPeriodoLetivo() %> - Sala: <%= t.getSala().getNome() %> - Disciplina: <%= t.getDisciplina().getNome() %></option>
+                        <%
+                                }
                             }
-                        }
-                    %>
-                </select>
+                        %>
+                    </select>
+                </div>
                 <button type="submit">Salvar</button>
             </form>
             <hr>
@@ -218,7 +186,7 @@
             <h3>Professores Cadastrados</h3>
             <div>
                 <label>Filtro</label>
-                <input id="filtro2" type="text" >
+                <input id="filtro2" type="text" class="filtros">
             </div>
             <div class="tabela-container">
                 <% if(listaProfessores != null && !listaProfessores.isEmpty()) { %>
@@ -280,12 +248,18 @@
         </div>
 
         <!-- DISCIPLINAS -->
-        <div id="disciplinas" class="aba">
+        <div id="secao-disciplina" class="secoes">
             <h2>Cadastro de Disciplina</h2>
             <form method="post" action="admin">
                 <input type="hidden" name="acao" value="salvarDisciplina">
-                <input type="text" name="nomeDisciplina" placeholder="Nome da Disciplina" required>
-                <input type="number" name="cargaHoraria" placeholder="Carga Horária" required>
+                <div>
+                    <label for="">Disciplina</label>
+                    <input type="text" name="nomeDisciplina" placeholder="Nome da Disciplina" required>
+                </div>
+                <div>
+                    <label for="">Carga Horária</label>
+                    <input type="number" name="cargaHoraria" placeholder="Carga Horária" required>
+                </div>
                 <button type="submit">Salvar</button>
             </form>
             <hr>
@@ -293,7 +267,7 @@
             <h3>Disciplinas Cadastradas</h3>
             <div>
                 <label>Filtro</label>
-                <input id="filtro3" type="text" >
+                <input id="filtro3" type="text" class="filtros">
             </div>
 
             <div class="tabela-container">
@@ -338,12 +312,18 @@
         </div>
 
         <!-- SALAS -->
-        <div id="salas" class="aba">
+        <div id="secao-sala" class="secoes">
             <h2>Cadastro de Sala</h2>
             <form method="post" action="admin">
                 <input type="hidden" name="acao" value="salvarSala">
-                <input type="text" name="nomeSala" placeholder="Nome ou Número da Sala" required>
-                <input type="number" name="capacidade" placeholder="Capacidade" required>
+                <div>
+                    <label for="">Sala</label>
+                    <input type="text" name="nomeSala" placeholder="Nome ou Número da Sala" required>
+                </div>
+                <div>
+                    <label for="">Capacidade</label>
+                    <input type="number" name="capacidade" placeholder="Capacidade" required>
+                </div>
                 <button type="submit">Salvar</button>
             </form>
             <hr>
@@ -351,7 +331,7 @@
             <h3>Salas Cadastradas</h3>
             <div>
                 <label>Filtro</label>
-                <input id="filtro4" type="text" >
+                <input id="filtro4" type="text" class="filtros">
             </div>
             <div class="tabela-container">
 
@@ -394,48 +374,51 @@
         </div>
 
         <!-- TURMAS -->
-        <div id="turmas" class="aba">
+        <div id="secao-turma" class="secoes">
             <h2>Cadastro de Turma</h2>
             <form method="post" action="admin">
                 <input type="hidden" name="acao" value="salvarTurma">
-                <label>Disciplina:</label>
-                <select name="idDisciplina" required>
-                    <option value="">Selecione a Disciplina</option>
-                    <%
-                        List<DisciplinaDTO> disciplinas = (List<DisciplinaDTO>) request.getAttribute("listaDisciplinas");
-                        if(disciplinas != null){
-                            for(DisciplinaDTO d : disciplinas){
-                    %>
-                    <option value="<%= d.getId() %>"><%= d.getNome() %> (Carga: <%= d.getCargaHoraria() %>h)</option>
-                    <%
+                <div>
+                    <label>Disciplina</label>
+                    <select name="idDisciplina" required>
+                        <option value="">Selecione a Disciplina</option>
+                        <%
+                            List<DisciplinaDTO> disciplinas = (List<DisciplinaDTO>) request.getAttribute("listaDisciplinas");
+                            if(disciplinas != null){
+                                for(DisciplinaDTO d : disciplinas){
+                        %>
+                        <option value="<%= d.getId() %>"><%= d.getNome() %> (Carga: <%= d.getCargaHoraria() %>h)</option>
+                        <%
+                                }
                             }
-                        }
-                    %>
-                </select>
-
-                <label>Sala:</label>
-                <select name="idSala" required>
-                    <option value="">Selecione a Sala</option>
-                    <%
-                        if(salas != null){
-                            for(SalaDTO s : salas){
-                    %>
-                    <option value="<%= s.getId() %>"><%= s.getNome() %> (Capacidade: <%= s.getCapacidade() %>)</option>
-                    <%
+                        %>
+                    </select>
+                </div>
+                <div>
+                    <label>Sala</label>
+                    <select name="idSala" required>
+                        <option value="">Selecione a Sala</option>
+                        <%
+                            if(salas != null){
+                                for(SalaDTO s : salas){
+                        %>
+                        <option value="<%= s.getId() %>"><%= s.getNome() %> (Capacidade: <%= s.getCapacidade() %>)</option>
+                        <%
+                                }
                             }
-                        }
-                    %>
-                </select>
-
-                <label>Período Letivo:</label>
-                <input type="text" name="periodoLetivo" placeholder="Ex: 2026/1" required>
-
+                        %>
+                    </select>
+                </div>
+                <div>
+                    <label>Período Letivo</label>
+                    <input type="text" name="periodoLetivo" placeholder="Ex: 2026/1" required>
+                </div>
                 <button type="submit">Salvar</button>
             </form>
         </div>
 
         <!-- VINCULAÇÕES -->
-        <div id="vinculos" class="aba">
+        <div id="secao-vinculo" class="secoes">
             <h2>Vinculações</h2>
 
             <!-- Aluno em Turma -->
@@ -543,11 +526,18 @@
     </main>
 
 <script>
-    function mostrar(id) {
-        document.querySelectorAll('.aba').forEach(div => {
+    function mostrar(id , button) {
+        document.querySelectorAll('.secoes').forEach(div => {
             div.classList.remove('ativa');
         });
         document.getElementById(id).classList.add('ativa');
+
+        document.querySelectorAll('.views').forEach(buttons => {
+            buttons.style.backgroundColor = "transparent";
+            buttons.style.color = "white";
+        })
+        document.getElementById(button).style.backgroundColor = "white";
+        document.getElementById(button).style.color = "var(--corAzul)";
     }
     function validarFormulario() {
         return confirm("Deseja excluir registro?");

@@ -23,81 +23,88 @@
   <meta charset="UTF-8">
   <title>Portal do Professor</title>
   <link rel="shortcut icon" href="assets/icons/Logo da escola.png" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/style.css">
   <link rel="stylesheet" href="styles/styleProfessor.css">
+  <script defer src="/scripts/scriptAbrirIframeProfessor.js"></script>
+  <script defer src="scripts/scriptProfessor.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
-<header class="topbar">
-  <div class="logo-area">
-    <div id="logo">
-      <img src="logo.png" alt="Cruz Azul">
+<header id="cabecalho-site">
+  <div id="logotipo">
+    <div>
+      <img src="assets/icons/Logo da escola.png" alt="">
     </div>
     <div>
       <h1>Cruz Azul</h1>
-      <span>Portal do Professor(a)</span>
+      <h4>Portal do Professor</h4>
     </div>
   </div>
-
-
-
-
-  <a style="text-decoration: none;" href="login.jsp" class="btn-logout">➜ Sair </a>
+  <a href="login.jsp">
+    <div id="voltar">
+      <img src="assets/icons/voltar.png" alt="">
+      <h4>Sair</h4>
+    </div>
+  </a>
 </header>
 
 <main class="container">
-
-  <section class="card welcome-card">
-
-    <div class="welcome-header">
-      <h2>Bem-vindo, Professor <%= professor.getNome()%>!</h2>
-      <span class="usuario">Usuário: <%= professor.getEmail()%></span>
+  <section class="cartao">
+    <div class="cabecalho-boasvindas">
+      <h3>Bem-vindo, Professor <%= professor.getNome()%>!</h3>
+      <h4>Usuário: <%= professor.getEmail()%></h4>
     </div>
 
-    <div class="welcome-content">
-
-      <div class="total-card">
-        <span>Total de Alunos</span>
-        <strong><%= totalAlunos != null ? totalAlunos : 0 %></strong>
+    <div class="informacoes-gerais">
+      <div class="dados">
+        <div class="rotulo">Total de Alunos</div>
+        <div class="valor"><%= totalAlunos != null ? totalAlunos : 0 %></div>
       </div>
 
-      <div class="disciplina-card">
-        <span>Disciplinas</span>
+      <div class="dados">
+        <div class="rotulo">Disciplinas</div>
         <%
           if (professor.getTurmas() != null && !professor.getTurmas().isEmpty()) {
         %>
-        <h3><%= professor.getTurmas().get(0).getDisciplina().getNome() %></h3>
+        <select id="opcoes-disciplina" class="valor">
+          <option value="Disciplina 1"><%= professor.getTurmas().get(0).getDisciplina().getNome() %></option>
+        </select>
         <%
         } else {
         %>
-        <h3>Nenhuma</h3>
+        <select id="opcoes-disciplina" class="valor">
+          <option value="Nenhuma">Nenhuma</option>
+        </select>
         <%
           }
         %>
       </div>
-
     </div>
-
   </section>
-  <section class="card dashboard">
-    <h3>Dashboard Geral</h3>
-    <br>
-    <br>
 
-    <a  style="text-decoration: none" class="btn-primary"
-        href="dashboard">
-      Visualizar Dashboard Geral
+  <section class="cartao">
+    <h3>Dashboard Geral</h3>
+    <a style="text-decoration: none" class="btn-primary" href="dashboard">
+      <button>
+        Visualizar Dashboard Geral
+      </button>
     </a>
   </section>
 
-
-
-  <section class="card search-card">
-
+  <section class="cartao">
+    <div id="cabecalho-busca">
+      <div id="titulo-busca">
+        <img src="assets/icons/lupa azul.png" alt="">
+        <h3>Buscar Aluno</h3>
+      </div>
+      <p>Digite a mátricula do aluno para visualizar e editar informações</p>
+    </div>
     <form method="post" action="homeProfessor" class="search-form">
-
       <input type="hidden" name="acao" value="buscarAluno">
-
       <div class="input-group">
         <label>Disciplina</label>
         <select name="idTurma" required>
@@ -112,19 +119,15 @@
           %>
         </select>
       </div>
-
-
-
       <div class="input-group">
         <label>Matrícula</label>
         <input type="text" name="matricula" required>
       </div>
-
-      <button type="submit" class="btn-search">Buscar</button>
-
+      <button type="submit" class="btn-search">
+        <img src="assets/icons/lupa branca.png" alt="">
+        <p>Buscar</p>
+      </button>
     </form>
-
-
   </section>
 
   <% if (aluno != null) {
@@ -141,51 +144,24 @@
     double media = (n1 + n2) / 2;
   %>
 
-  <section class="card info-card">
-
-    <div class="info-header">
+  <section class="cartao">
+    <div id="cabecalho-info-aluno">
       <h3>Informações do Aluno</h3>
     </div>
-
-    <div class="aluno-dados">
+    <div id="info-aluno">
       <div>
-        <span>Nome</span>
-        <strong><%= aluno.getNome() %></strong>
+        <h5>Nome</h5>
+        <h3><%= aluno.getNome() %></h3>
       </div>
-
       <div>
-        <span>Matrícula</span>
-        <strong><%= aluno.getMatricula() %></strong>
+        <h5>Matrícula</h5>
+        <h3><%= aluno.getMatricula() %></h3>
+      </div>
+      <div>
+        <h5>E-mail<h5>
+          <h3><a href="mailto:<%= aluno.getEmail() %>"><%= aluno.getEmail() %></a></h3>
       </div>
     </div>
-
-    <div class="email">
-      <span>E-mail</span>
-      <strong> <a href="mailto:<%= aluno.getEmail() %>"><%= aluno.getEmail() %></a></strong>
-    </div>
-
-    <div class="notas-box">
-      <h4>Notas Lançadas</h4>
-
-      <div class="notas-grid">
-        <div class="nota-item">
-          <span>Nota 1</span>
-          <strong><%= n1 %></strong>
-        </div>
-
-        <div class="nota-item">
-          <span>Nota 2</span>
-          <strong><%= n2 %></strong>
-        </div>
-
-        <div class="nota-item media">
-          <span>Média</span>
-          <strong><%= String.format("%.2f", media) %></strong>
-        </div>
-      </div>
-    </div>
-
-
     <div class="botoes">
 
       <button type="button" class="btn-primary" onclick="abrirModalNotas()">
@@ -209,11 +185,15 @@
           <input type="hidden" name="idTurma" value="<%= matricula.getTurma().getId() %>">
           <input type="hidden" name="observacao" value="<%= obs %>">
 
-          <label>Nota 1</label>
-          <input type="number" step="0.01" value="<%= n1 %>" name="nota1" required>
+          <div>
+            <label>Nota 1</label>
+            <input type="number" step="0.01" value="<%= n1 %>" name="nota1" required>
+          </div>
 
-          <label>Nota 2</label>
-          <input type="number" step="0.01" value="<%= n2 %>" name="nota2" required>
+          <div>
+            <label>Nota 2</label>
+            <input type="number" step="0.01" value="<%= n2 %>" name="nota2" required>
+          </div>
 
           <button type="submit" class="btn-primary">Salvar Notas</button>
           <button type="button" onclick="fecharModalNotas()">Cancelar</button>
@@ -232,16 +212,13 @@
           <input type="hidden" name="nota1" value="<%= n1 %>">
           <input type="hidden" name="nota2" value="<%= n2 %>">
 
-
-          <textarea name="observacao" value="<%= obs %>" required></textarea>
+          <textarea name="observacao" value="<%= obs %>" required><%= obs %></textarea>
 
           <button type="submit" class="btn-warning">Salvar Observação</button>
           <button type="button" onclick="fecharModalObs()">Cancelar</button>
         </form>
       </div>
     </div>
-
-
   </section>
 
   <% } %>
@@ -249,7 +226,8 @@
 </main>
 <script>
   function abrirModalNotas() {
-    document.getElementById("modalNotas").style.display = "flex";
+    document.getElementById("modalNotas").style.display = "block";
+    document.getElementById("modalObs").style.display = "none";
   }
 
   function fecharModalNotas() {
@@ -257,7 +235,8 @@
   }
 
   function abrirModalObs() {
-    document.getElementById("modalObs").style.display = "flex";
+    document.getElementById("modalObs").style.display = "block";
+    document.getElementById("modalNotas").style.display = "none";
   }
 
   function fecharModalObs() {

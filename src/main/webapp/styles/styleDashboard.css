@@ -4,20 +4,6 @@ main {
     padding: 0 25px;
 }
 
-header > a {
-    text-decoration: none;
-}
-
-#voltar {
-    background: #fff;
-    color: #0B3E91;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
 .dashboard {
     background: linear-gradient(135deg, #163F8C, #2A5BD7);
     color: white;
@@ -144,6 +130,9 @@ header > a {
 
     .bignumber p {
         font-size: 32px;
+    }
+    .dash-container {
+        grid-template-columns: 1fr;
     }
 
     .graficoNotasPeriodo canvas {

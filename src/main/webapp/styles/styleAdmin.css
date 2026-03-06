@@ -63,7 +63,6 @@
   height: fit-content;
   padding: 20px;
   border-radius: 20px;
-  border: 2px solid;
 }
 .secoes {
   display: none;
@@ -117,130 +116,51 @@ form button {
   width: 100%;
 }
 
-iframe {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 60%;
-  min-width: 380px;
-  height: 450px;
-  transform: translate(-50%, -50%);
-  border-radius: 15px;
-  border: none;
-  display: none;
-  z-index: 9999;
-}
-
 .confirmar {
   width: 99%;
 }
 
 .popup-body{
+  display: block;
   background: transparent;
-  display:flex;
   align-items:center;
   justify-content:center;
-  height:100vh;
+  height:100%;
 }
-
 .popup{
-  width:min(520px, 92vw);
+  margin: auto;
+  width:min(520px, 92%);
   background:#fff;
   border-radius:18px;
-  padding:18px 18px 14px;
+  padding:20px 20px;
   box-shadow:0 18px 40px rgba(0,0,0,.18);
 }
-
 .popup-topo{
+  width: 100%;
   display:flex;
   align-items:center;
-  justify-content:center;
+  justify-content: space-between;
   position:relative;
   margin-bottom:10px;
 }
-
 .popup-topo h2{
   margin:0;
-  font-weight:700;
-  color:#000;
+  color:var(--corAzul);
 }
-
-.popup-fechar{
-  position:absolute;
-  right:0;
-  top:0;
-  width:32px;
-  height:32px;
-  border-radius:8px;
-  border:none;
-  background:var(--corAzul);
-  color:#fff;
-  font-weight:700;
-  cursor:pointer;
-  box-shadow:none;
-}
-
 .popup-form{
   display:flex;
   flex-direction:column;
   gap:12px;
 }
 
-.popup-form div{
-  width:100%;
+.ativa {
+  display: block;
 }
 
-.popup-form label{
-  font-size:14px;
-  margin-left:16px;
-  margin-bottom:-14px;
+.filtros {
+  margin-bottom: 30px;
 }
 
-.popup-form input,
-.popup-form select{
-  height:46px;
-  border-radius:60px;
-}
-.acoes {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-}
-.btn-acao {
-  padding: 6px 14px;
-  font-size: 13px;
-  font-weight: 600;
-  border-radius: 6px;
-  border: 2px solid transparent;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  letter-spacing: 0.5px;
-}
-.btn-editar {
-  background-color: #E8F0FE;
-  color: #0E4194;
-  border-color: #0E4194;
-}
-.btn-editar:hover {
-  background-color: #0E4194;
-  color: #FFFFFF;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(14, 65, 148, 0.25);
-}
-.btn-excluir {
-  background-color: #FFFFFF;
-  color: #FF8000;
-  border-color: #FF8000;
-}
-.btn-excluir:hover {
-  background-color: #FF8000;
-  color: #FFFFFF;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(255, 128, 0, 0.25);
-}
-.btn-acao:active {
-  transform: scale(0.96);
-}
 @media (max-width: 760px) {
   #toolbar {
     flex-direction: column;

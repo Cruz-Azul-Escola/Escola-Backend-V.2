@@ -24,32 +24,39 @@
 <head>
   <meta charset="UTF-8" />
   <title>Portal do Aluno</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/style.css" />
   <link rel="stylesheet" href="styles/styleAluno.css" />
   <link rel="shortcut icon" href="assets/icons/Logo da escola.png" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script defer src="scripts/scriptAluno.js"></script>
 </head>
 <body>
-<header class="topbar">
-  <div class="logo-area">
-    <div id="logo">
-      <img  src="logo.png" alt="Cruz Azul" />
+<header id="cabecalho-site">
+  <div id="logotipo">
+    <div>
+      <img src="assets/icons/Logo da escola.png" alt="">
     </div>
     <div>
       <h1>Cruz Azul</h1>
-      <span>Portal do Aluno</span>
+      <h4>Portal do Professor</h4>
     </div>
   </div>
- <form action="login.jsp">
-   <button class="btn-logout">➜ Sair</button>
- </form>
-
+  <a href="login.jsp">
+    <div id="voltar">
+      <img src="assets/icons/voltar.png" alt="">
+      <h4>Sair</h4>
+    </div>
+  </a>
 </header>
 
 <main class="container">
-  <section class="card welcome-card">
-    <div class="card-header">
-      <h2>Bem-vindo, Aluno(a) <%= aluno.getNome() %>!</h2>
-      <span class="matricula">Sala: <%= boletim.get(0).getTurma().getSala().getNome() %></span>
+  <section class="cartao">
+    <div class="cabecalho-boasvindas">
+      <div>Bem-vindo, Aluno(a) <%= aluno.getNome() %>!</div>
+      <div>Sala: <%= boletim.get(0).getTurma().getSala().getNome() %></div>
     </div>
 
     <%
@@ -74,152 +81,136 @@
               ? Math.round((somaMedias / qtdMediasValidas) * 10.0) / 10.0
               : 0;
     %>
-    <div class="stats">
-      <div class="stat-box">
-        <span>Média Geral</span>
-        <strong><%= mediaGeral %></strong>
-      </div>
 
-      <div class="stat-box">
-        <span>Disciplinas</span>
-        <strong><%= boletim != null ? boletim.size() : 0 %></strong>
-      </div>
+    <div class="corpo-boasvindas">
+      <div class="estatisticas">
+        <div class="estatistica">
+          <div class="rotulo">Média Geral</div>
+          <div class="valor"><%= mediaGeral %></div>
+        </div>
 
-      <div class="stat-box">
-        <span>Observações</span>
-        <strong><%= totalObservacoes %></strong>
-      </div>
+        <div class="estatistica">
+          <div class="rotulo">Disciplinas</div>
+          <div class="valor"><%= boletim != null ? boletim.size() : 0 %></div>
+        </div>
 
+        <div class="estatistica">
+          <div class="rotulo">Observações</div>
+          <div class="valor"><%= totalObservacoes %></div>
+        </div>
+      </div>
     </div>
   </section>
-  <section class="card boletim-card">
-    <div class="boletim-header">
+
+  <div class="espacador"></div>
+
+  <section class="cartao boletim">
+    <div class="topo-boletim">
       <div>
-        <h3>Boletim Escolar</h3>
+        <h2>Boletim Escolar</h2>
         <p>Visualize suas notas e observações</p>
       </div>
 
       <form action="gerarBoletim" method="get">
-        <button class="btn-pdf" type="submit">Baixar Boletim ⬇</button>
+        <button class="botao-pdf" type="submit">⬇ Baixar PDF</button>
       </form>
     </div>
 
-    <div class="tabs">
-      <button onclick="trocaObs()" id="notas" class="tab  active">
-        Notas
-      </button>
-      <button onclick="trocarNota()" id="obs" class="tab">Observações</button>
+    <div class="abas" role="tablist" aria-label="Boletim">
+      <button type="button" class="aba ativa" id="tab-notas" role="tab" aria-selected="true">Notas</button>
+      <button type="button" class="aba" id="tab-observacoes" role="tab" aria-selected="false">Observações</button>
     </div>
 
-    <div id="boletimDiv">
-      <table class="boletim-table">
-        <thead>
-        <tr>
-          <th>Disciplina</th>
-          <th>Nota 1</th>
-          <th>Nota 2</th>
-          <th>Média</th>
-          <th>Status</th>
-        </tr>
-        </thead>
-        <tbody>
-        <%
-          if (boletim != null && !boletim.isEmpty()) {
-            for (TurmaAlunoDTO ta : boletim) {
-        %>
-        <tr>
-          <td><%= ta.getTurma().getDisciplina().getNome() %></td>
-          <td><%= ta.getNota1() != null ? ta.getNota1() : "-" %></td>
-          <td><%= ta.getNota2() != null ? ta.getNota2() : "-" %></td>
-          <td>
-            <%= ta.getMedia() == -1 ? "Não disponível" : ta.getMedia() %>
-          </td>
+    <div id="painel-notas">
+      <div class="tabela-container">
+        <table class="tabela">
+          <thead>
+          <tr>
+            <th>Disciplina</th>
+            <th>Nota 1</th>
+            <th>Nota 2</th>
+            <th>Média</th>
+            <th>Status</th>
+          </tr>
+          </thead>
+          <tbody>
+          <%
+            if (boletim != null && !boletim.isEmpty()) {
+              for (TurmaAlunoDTO ta : boletim) {
+          %>
+          <tr>
+            <td><%= ta.getTurma().getDisciplina().getNome() %></td>
+            <td><%= ta.getNota1() != null ? ta.getNota1() : "-" %></td>
+            <td><%= ta.getNota2() != null ? ta.getNota2() : "-" %></td>
+            <td>
+              <%= ta.getMedia() == -1 ? "Não disponível" : ta.getMedia() %>
+            </td>
+
+            <%
+              String status;
+
+              if (ta.getMedia() == null || ta.getMedia() < 0) {
+                status = "Indefinido";
+              } else if (ta.getMedia() >= 6) {
+                status = "Aprovado";
+              } else {
+                status = "Reprovado";
+              }
+            %>
+            <td><%= status %></td>
+          </tr>
 
           <%
-            String status;
-
-            if (ta.getMedia() == null || ta.getMedia() < 0) {
-              status = "Indefinido";
-            } else if (ta.getMedia() >= 6) {
-              status = "Aprovado";
-            } else {
-              status = "Reprovado";
+            }
+          } else {
+          %>
+          <tr>
+            <td colspan="5">Nenhuma disciplina encontrada.</td>
+          </tr>
+          <%
             }
           %>
-          <td><%= status %></td>
-        </tr>
-
-        <%
-          }
-        } else {
-        %>
-        <tr>
-          <td colspan="5">Nenhuma disciplina encontrada.</td>
-        </tr>
-        <%
-          }
-        %>
-
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
 
+    <div id="painel-observacoes" style="display:none;">
+      <div class="area-conteudo">
+        <%
+          boolean temObs = false;
 
-
-    <div class="vazio" id="observacoesDiv">
-      <%
-        boolean temObs = false;
-
-        if (boletim != null) {
-          for (TurmaAlunoDTO ta : boletim) {
-            if (ta.getObservacoes() != null && !ta.getObservacoes().isEmpty()) {
-              temObs = true;
-      %>
-      <div class="observacao-card">
-        <h4><%= ta.getTurma().getDisciplina().getNome() %></h4>
-        <span class="professor">
-<%--            Professor(a): <%= ta.getTurma().getProfessores().get(0).getNome() %>--%>
-        </span>
-
-        <p class="observacao-texto">
-          <%= ta.getObservacoes() %>
-        </p>
-      </div>
-      <%
+          if (boletim != null) {
+            for (TurmaAlunoDTO ta : boletim) {
+              if (ta.getObservacoes() != null && !ta.getObservacoes().isEmpty()) {
+                temObs = true;
+        %>
+        <article class="card-observacao">
+          <div class="barra-lateral"></div>
+          <div class="observacao-conteudo">
+            <div class="observacao-topo">
+              <div class="disciplina"><%= ta.getTurma().getDisciplina().getNome() %></div>
+              <div class="professor">Professor(a): Ana Souza</div>
+            </div>
+            <div class="observacao-texto">
+              <%= ta.getObservacoes() %>
+            </div>
+          </div>
+        </article>
+        <%
+              }
             }
           }
-        }
 
-        if (!temObs) {
-      %>
-      <p>Nenhuma observação registrada.</p>
-      <%
-        }
-      %>
+          if (!temObs) {
+        %>
+        <p>Nenhuma observação registrada.</p>
+        <%
+          }
+        %>
+      </div>
     </div>
-
-
   </section>
 </main>
-<script>
-  let notas = document.getElementById("notas");
-  let obs = document.getElementById("obs");
-
-  let notasDiv = document.getElementById("boletimDiv")
-  let obsDiv = document.getElementById("observacoesDiv")
-  function trocarNota() {
-    notas.classList.remove("active");
-    obs.classList.add("active");
-    notasDiv.classList.add("vazio");
-    obsDiv.classList.remove("vazio");
-
-  }
-  function trocaObs() {
-    obs.classList.remove("active");
-    notas.classList.add("active");
-    obsDiv.classList.add("vazio");
-    notasDiv.classList.remove("vazio");
-  }
-</script>
 </body>
 </html>
