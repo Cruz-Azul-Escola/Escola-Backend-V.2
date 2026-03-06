@@ -103,12 +103,27 @@
       </div>
       <p>Digite a mátricula do aluno para visualizar e editar informações</p>
     </div>
-    <form>
-      <div>
-        <label for="">Mátricula</label>
-        <input name="matricula" type="number" required>
+    <form method="post" action="homeProfessor" class="search-form">
+      <input type="hidden" name="acao" value="buscarAluno">
+      <div class="input-group">
+        <label>Disciplina</label>
+        <select name="idTurma" required>
+          <%
+            for (var turma : professor.getTurmas()) {
+          %>
+          <option value="<%= turma.getId() %>">
+            <%= turma.getDisciplina().getNome() %>
+          </option>
+          <%
+            }
+          %>
+        </select>
       </div>
-      <button type="submit">
+      <div class="input-group">
+        <label>Matrícula</label>
+        <input type="text" name="matricula" required>
+      </div>
+      <button type="submit" class="btn-search">
         <img src="assets/icons/lupa branca.png" alt="">
         <p>Buscar</p>
       </button>
@@ -147,62 +162,16 @@
           <h3><a href="mailto:<%= aluno.getEmail() %>"><%= aluno.getEmail() %></a></h3>
       </div>
     </div>
-    <div class="abas">
-      <a class="aba" id="abrirNotas">Notas</a>
-      <a class="aba" id="abrirObservacoes">Observações</a>
-    </div>
-    <div id="notas-lancadas" class="areas">
-      <h3>Notas Lançadas</h3>
-      <div id="formula-nota">
-        <div>
-          <h3>Nota 1</h3>
-          <h1><%= n1 %></h1>
-        </div>
-        <div>
-          <h3>Nota 2</h3>
-          <h1><%= n2 %></h1>
-        </div>
-        <div>
-          <h3>Média</h3>
-          <h1><%= String.format("%.2f", media) %></h1>
-        </div>
-      </div>
-    </div>
-    <div id="observacoes-lancadas" class="areas">
-      <article class="card-observacao">
-        <div class="barra-lateral"></div>
+    <div class="botoes">
 
-        <div class="observacao-conteudo">
-          <div class="observacao-topo">
-            <div class="disciplina">Matemática</div>
-            <div class="professor">Professor(a): Ana Souza</div>
-          </div>
+      <button type="button" class="btn-primary" onclick="abrirModalNotas()">
+        Editar Notas
+      </button>
 
-          <div class="observacao-texto">
-            Longa e chata observação que estou com preguiça de escrever
-          </div>
-        </div>
-      </article>
+      <button type="button" class="btn-warning" onclick="abrirModalObs()">
+        Editar Observação
+      </button>
 
-
-      <article class="card-observacao">
-        <div class="barra-lateral"></div>
-
-        <div class="observacao-conteudo">
-          <div class="observacao-topo">
-            <div class="disciplina">Matemática</div>
-            <div class="professor">Professor(a): Ana Souza</div>
-          </div>
-
-          <div class="observacao-texto">
-            Longa e chata observação que estou com preguiça de escrever
-          </div>
-        </div>
-      </article>
-    </div>
-    <div id="opcoes-edicao">
-      <button id="btn-notas">Lançar/Editar Notas</button>
-      <button id="btn-observacoes">Fazer/Editar Observação</button>
     </div>
 
     <div id="modalNotas" class="modal">
@@ -216,11 +185,15 @@
           <input type="hidden" name="idTurma" value="<%= matricula.getTurma().getId() %>">
           <input type="hidden" name="observacao" value="<%= obs %>">
 
-          <label>Nota 1</label>
-          <input type="number" step="0.01" value="<%= n1 %>" name="nota1" required>
+          <div>
+            <label>Nota 1</label>
+            <input type="number" step="0.01" value="<%= n1 %>" name="nota1" required>
+          </div>
 
-          <label>Nota 2</label>
-          <input type="number" step="0.01" value="<%= n2 %>" name="nota2" required>
+          <div>
+            <label>Nota 2</label>
+            <input type="number" step="0.01" value="<%= n2 %>" name="nota2" required>
+          </div>
 
           <button type="submit" class="btn-primary">Salvar Notas</button>
           <button type="button" onclick="fecharModalNotas()">Cancelar</button>
@@ -239,8 +212,7 @@
           <input type="hidden" name="nota1" value="<%= n1 %>">
           <input type="hidden" name="nota2" value="<%= n2 %>">
 
-
-          <textarea name="observacao" value="<%= obs %>" required></textarea>
+          <textarea name="observacao" value="<%= obs %>" required><%= obs %></textarea>
 
           <button type="submit" class="btn-warning">Salvar Observação</button>
           <button type="button" onclick="fecharModalObs()">Cancelar</button>
@@ -254,7 +226,8 @@
 </main>
 <script>
   function abrirModalNotas() {
-    document.getElementById("modalNotas").style.display = "flex";
+    document.getElementById("modalNotas").style.display = "block";
+    document.getElementById("modalObs").style.display = "none";
   }
 
   function fecharModalNotas() {
@@ -262,7 +235,8 @@
   }
 
   function abrirModalObs() {
-    document.getElementById("modalObs").style.display = "flex";
+    document.getElementById("modalObs").style.display = "block";
+    document.getElementById("modalNotas").style.display = "none";
   }
 
   function fecharModalObs() {
