@@ -796,6 +796,88 @@ public class AlunoDAO {
 
         return lista;
     }
+    public List<TurmaAlunoDTO> buscarAlunosDoProfessorOrdenado(int idProfessor) {
+
+        List<TurmaAlunoDTO> lista = new ArrayList<>();
+        Connection conn = conexao.conectar();
+
+        String sql =
+                "SELECT " +
+                        " a.id_aluno, a.nome AS nome_aluno, a.matricula, a.email, a.esta_ativo, " +
+                        " t.id_turma, t.periodo_letivo, " +
+                        " d.id_disciplina, d.nome_disciplina, " +
+                        " s.id_sala, s.nome_sala, " +
+                        " ta.nota1, ta.nota2, ta.observacoes " +
+                        "FROM professor_turma pt " +
+                        "JOIN turma t ON t.id_turma = pt.turma_id " +
+                        "JOIN disciplina d ON d.id_disciplina = t.id_disciplina " +
+                        "JOIN sala s ON s.id_sala = t.id_sala " +
+                        "JOIN turma_aluno ta ON ta.id_turma = t.id_turma " +
+                        "JOIN aluno a ON a.id_aluno = ta.id_aluno " +
+                        "WHERE pt.professor_id = ? " +
+                        "AND a.esta_ativo = TRUE " +
+                        "ORDER BY (COALESCE(ta.nota1,0) + COALESCE(ta.nota2,0))/2 desc ";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, idProfessor);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+
+                // ALUNO
+                AlunoDTO aluno = new AlunoDTO();
+                aluno.setId(rs.getInt("id_aluno"));
+                aluno.setNome(rs.getString("nome_aluno"));
+                aluno.setMatricula(rs.getString("matricula"));
+                aluno.setEmail(rs.getString("email"));
+                aluno.setEstaAtivo(rs.getBoolean("esta_ativo"));
+
+                // DISCIPLINA
+                DisciplinaDTO disciplina = new DisciplinaDTO();
+                disciplina.setId(rs.getInt("id_disciplina"));
+                disciplina.setNome(rs.getString("nome_disciplina"));
+
+                // SALA
+                SalaDTO sala = new SalaDTO();
+                sala.setId(rs.getInt("id_sala"));
+                sala.setNome(rs.getString("nome_sala"));
+
+                // TURMA
+                TurmaDTO turma = new TurmaDTO();
+                turma.setId(rs.getInt("id_turma"));
+                turma.setPeriodoLetivo(rs.getString("periodo_letivo"));
+                turma.setDisciplina(disciplina);
+                turma.setSala(sala);
+
+                // NOTAS
+                Double nota1 = rs.getObject("nota1") != null ? rs.getDouble("nota1") : null;
+                Double nota2 = rs.getObject("nota2") != null ? rs.getDouble("nota2") : null;
+
+                double media = (nota1 != null && nota2 != null)
+                        ? (nota1 + nota2) / 2.0
+                        : -1;
+
+                // TURMA_ALUNO
+                TurmaAlunoDTO ta = new TurmaAlunoDTO();
+                ta.setAluno(aluno);
+                ta.setTurma(turma);
+                ta.setNota1(nota1);
+                ta.setNota2(nota2);
+                ta.setMedia(media);
+                ta.setObservacoes(rs.getString("observacoes"));
+
+                lista.add(ta);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar alunos do professor: " + e.getMessage(), e);
+        } finally {
+            conexao.desconectar(conn);
+        }
+
+        return lista;
+    }
 
 }
 

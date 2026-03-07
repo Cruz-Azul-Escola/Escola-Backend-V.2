@@ -5,6 +5,7 @@ import com.example.escola_backend_v2.DAO.ProfessorDAO;
 import com.example.escola_backend_v2.DAO.TurmaAlunoDAO;
 import com.example.escola_backend_v2.DTO.AlunoDTO;
 import com.example.escola_backend_v2.DTO.ProfessorDTO;
+import com.example.escola_backend_v2.DTO.TurmaAlunoDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(urlPatterns = {"/homeProfessor", "/buscarAluno", "/salvarNotas"})
 public class ProfServlet extends HttpServlet {
@@ -42,6 +44,8 @@ public class ProfServlet extends HttpServlet {
         ProfessorDTO professorCompleto = professorDAO.buscarPorId(professorLogado.getId());
         req.setAttribute("professor", professorCompleto);
 
+        List<TurmaAlunoDTO> ranking = alunoDAO.buscarAlunosDoProfessorOrdenado(professorLogado.getId());
+        req.setAttribute("listaAlunos", ranking);
 
         int totalAlunos = professorDAO.contarTotalAlunosDoProfessor(professorCompleto.getId());
         System.out.println(totalAlunos);
