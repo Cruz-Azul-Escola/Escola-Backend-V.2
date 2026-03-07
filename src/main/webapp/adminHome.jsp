@@ -97,15 +97,28 @@
                 </div>
                 <button type="submit">Salvar</button>
             </form>
-            <form action="ImportarAlunosServlet" method="post" enctype="multipart/form-data">
+            <form id="formImportar" action="ImportarAlunosServlet" method="post" enctype="multipart/form-data">
 
-                <label>Importar alunos via Excel:</label>
+                <!-- input escondido -->
+                <input
+                        type="file"
+                        id="arquivoExcel"
+                        name="arquivoExcel"
+                        accept=".xlsx,.xls"
+                        style="display:none"
+                        required
+                >
 
-                <input id="arquivo" type="file" name="arquivoExcel" accept=".xlsx,.xls" required>
-
-                <button type="submit">Importar</button>
+                <!-- botão visível -->
+                <button type="button" style="background-color: #0A3C9A" onclick="abrirSeletor()">
+                    Importar Excel
+                </button>
 
             </form>
+
+            <a href="dados_teste.xlsx" download="dados_teste.xlsx">
+                Clique aqui para baixar modelo
+            </a>
             <hr>
 
             <h3>Alunos Cadastrados</h3>
@@ -611,6 +624,18 @@
                 aluno.style.display = "none";
             }
         });
+    });
+
+    function abrirSeletor(){
+        document.getElementById("arquivoExcel").click();
+    }
+
+    document.getElementById("arquivoExcel").addEventListener("change", function(){
+
+        if(this.files.length > 0){
+            document.getElementById("formImportar").submit();
+        }
+
     });
 
 </script>
