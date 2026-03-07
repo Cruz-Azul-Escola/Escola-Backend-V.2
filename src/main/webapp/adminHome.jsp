@@ -72,15 +72,15 @@
             <form method="post" action="admin">
                 <input type="hidden" name="acao" value="salvarAluno">
                 <div>
-                    <label for="">Nome</label>
+                    <label >Nome</label>
                     <input type="text" name="nome" placeholder="Nome" required>
                 </div>
                 <div>
-                    <label for="">CPF</label>
+                    <label >CPF</label>
                     <input type="text" name="cpf" id="cpf" maxlength="14" placeholder="000.000.000-00" autocomplete="off" required>
                 </div>
                 <div>
-                    <label for="">Sala</label>
+                    <label >Sala</label>
                     <select name="idSala" required>
                         <option value="">Selecione a Sala</option>
                         <%
@@ -96,6 +96,15 @@
                     </select>
                 </div>
                 <button type="submit">Salvar</button>
+            </form>
+            <form action="ImportarAlunosServlet" method="post" enctype="multipart/form-data">
+
+                <label>Importar alunos via Excel:</label>
+
+                <input id="arquivo" type="file" name="arquivoExcel" accept=".xlsx,.xls" required>
+
+                <button type="submit">Importar</button>
+
             </form>
             <hr>
 
@@ -151,19 +160,19 @@
             <form method="post" action="admin">
                 <input type="hidden" name="acao" value="salvarProfessor">
                 <div>
-                    <label for="">Nome</label>
+                    <label >Nome</label>
                     <input type="text" name="nome" placeholder="Nome" required>
                 </div>
                 <div>
-                    <label for="">Email</label>
+                    <label >Email</label>
                     <input type="email" name="email" placeholder="Email" required>
                 </div>
                 <div>
-                    <label for="">Senha</label>
+                    <label >Senha</label>
                     <input type="password" name="senha" placeholder="Senha" required>
                 </div>
                 <div>
-                    <label for="">Turma</label>
+                    <label >Turma</label>
                     <select name="idTurma" required>
                         <option value="">Selecione a Turma</option>
                         <%
@@ -253,11 +262,11 @@
             <form method="post" action="admin">
                 <input type="hidden" name="acao" value="salvarDisciplina">
                 <div>
-                    <label for="">Disciplina</label>
+                    <label >Disciplina</label>
                     <input type="text" name="nomeDisciplina" placeholder="Nome da Disciplina" required>
                 </div>
                 <div>
-                    <label for="">Carga Horária</label>
+                    <label >Carga Horária</label>
                     <input type="number" name="cargaHoraria" placeholder="Carga Horária" required>
                 </div>
                 <button type="submit">Salvar</button>
@@ -317,11 +326,11 @@
             <form method="post" action="admin">
                 <input type="hidden" name="acao" value="salvarSala">
                 <div>
-                    <label for="">Sala</label>
+                    <label >Sala</label>
                     <input type="text" name="nomeSala" placeholder="Nome ou Número da Sala" required>
                 </div>
                 <div>
-                    <label for="">Capacidade</label>
+                    <label >Capacidade</label>
                     <input type="number" name="capacidade" placeholder="Capacidade" required>
                 </div>
                 <button type="submit">Salvar</button>

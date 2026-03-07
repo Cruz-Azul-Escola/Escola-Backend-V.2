@@ -24,10 +24,9 @@
             <h4>Portal do Professor</h4>
         </div>
     </div>
-    <a href="profHome.jsp">
+    <a href="homeProfessor">
         <div id="voltar">
-            <img src="assets/icons/voltar.png" alt="">
-            <h4>Voltar</h4>
+            <h4 >➜ Sair </h4>
         </div>
     </a>
 </header>
