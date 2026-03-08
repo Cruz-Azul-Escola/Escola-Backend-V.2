@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="styles/styleDadosCadastrais.css">
     <link rel="stylesheet" href="styles/styleAreaRestrita.css">
+    <script defer src="scripts/scriptVisualizarSenha.js"></script>
     <link rel="shortcut icon" href="assets/icons/Logo da escola.png" type="image/x-icon">
     <title>Área Restrita</title>
 </head>
@@ -58,8 +59,11 @@
                 <input type="text" name="email" placeholder="Digite seu email" required title="Digite um email válido, que tenha .com ou .org.br">
             </div>
             <div>
-                <label>Senha</label>
-                <input type="password" name="senha" placeholder="Digite sua senha" required >
+                <label >Senha</label>
+                <div id="view-senha">
+                    <input id="senha" type="password" name="senha" placeholder="Digite sua senha" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" title="A senha deve ter: - 8 dígitos - 1 letra maiúscula e minúscula - 1 número - 1 caractere especial">
+                    <img src="assets/icons/closeEye.png" alt="" id="visualizar-senha" class="ver-senha" onclick="visualizarSenha()">
+                </div>
             </div>
             <button type="submit" class="confirmar">Entrar</button>
         </form>

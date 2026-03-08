@@ -17,29 +17,10 @@
     <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="styles/styleDadosCadastrais.css">
     <link rel="stylesheet" href="styles/styleIndex.css">
+    <script defer src="scripts/scriptVisualizarSenha.js"></script>
     <link rel="shortcut icon" href="assets/icons/Logo da escola.png" type="image/x-icon">
     <title>Cruz Azul - Login</title>
 </head>
-<style>
-    .mostrar-senha {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 8px;
-}
-
-.mostrar-senha input {
-    width: auto;
-    height: auto;
-}
-
-.mostrar-senha label {
-    position: static;
-    margin: 0;
-    padding: 0;
-    background: transparent;
-    font-size: var(--tamanho16px);
-}</style>
 <body>
 <header>
     <div id="logotipo">
@@ -64,7 +45,10 @@
             </div>
             <div>
                 <label >Senha</label>
-                <input type="password" name="senha" placeholder="Digite sua senha" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" title="A senha deve ter: - 8 dígitos - 1 letra maiúscula e minúscula - 1 número - 1 caractere especial">
+                <div id="view-senha">
+                    <input id="senha" type="password" name="senha" placeholder="Digite sua senha" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" title="A senha deve ter: - 8 dígitos - 1 letra maiúscula e minúscula - 1 número - 1 caractere especial">
+                    <img src="assets/icons/closeEye.png" alt="" id="visualizar-senha" class="ver-senha" onclick="visualizarSenha()">
+                </div>
                 <p id="esqueceu-senha"> Esqueceu a senha? <a href="esqueci.jsp">Crie uma nova</a></p>
             </div>
             <button type="submit" class="confirmar">Entrar</button>
