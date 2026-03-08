@@ -120,6 +120,26 @@ public class SalaDAO {
             conexao.desconectar(conn);
         }
     }
+    public int buscarSalaPorNome(String sala){
+        Connection conn = conexao.conectar();
+        String query = "SELECT id_sala FROM sala WHERE nome_sala = ?";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, sala);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                SalaDTO salaDTO = new SalaDTO();
+                return (rs.getInt("id_sala"));
+
+            } else{
+                return 0;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }finally{
+            conexao.desconectar(conn);
+        }
+    }
 
     //Método para listar todas as salas
     public List<SalaDTO> listarSalas(){

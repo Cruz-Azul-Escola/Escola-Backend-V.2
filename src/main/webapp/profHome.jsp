@@ -10,12 +10,15 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="com.example.escola_backend_v2.DTO.AlunoDTO" %>
 <%@ page import="com.example.escola_backend_v2.DTO.TurmaAlunoDTO" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 
 
 <%
   AlunoDTO aluno = (AlunoDTO) request.getAttribute("aluno");
   ProfessorDTO professor = (ProfessorDTO) session.getAttribute("usuarioLogado");
   Integer totalAlunos = (Integer) request.getAttribute("totalAlunos");
+  List<TurmaAlunoDTO> rankng = (List<TurmaAlunoDTO>)  request.getAttribute("listaAlunos");
 
 %><!DOCTYPE html>
 <html lang="pt-BR">
@@ -94,14 +97,48 @@
       </button>
     </a>
   </section>
-
   <section class="cartao">
+    <h3>Alunos Existentes</h3>
+    <div>
+      <label>Filtro</label>
+      <input id="filtro" type="text" class="filtros">
+    </div>
+
+    <div class="tabela-container">
+      <% if(rankng != null && !rankng.isEmpty()) { %>
+
+      <table class="tabela" border="1" cellpadding="5">
+        <tr>
+          <th>Posição</th>
+          <th>Nome</th>
+          <th>Matrícula</th>
+          <th>Média</th>
+        </tr>
+
+        <% int cont=1;
+          for(TurmaAlunoDTO a : rankng) { %>
+        <tr class="item-linha">
+          <td><%= cont %>°</td>
+          <% cont++; %>
+          <td class="nomeItemLinha"><%= a.getAluno().getNome() %></td>
+          <td><%=a.getAluno().getMatricula() %></td>
+          <td><%=a.getMedia() %></td>
+        </tr>
+        <% } %>
+      </table>
+      <% } else { %>
+      <p>Você não tem nenhum aluno por enquanto.</p>
+      <% } %>
+    </div>
+  </section>
+
+  <section style="padding: 20px" class="cartao">
     <div id="cabecalho-busca">
-      <div id="titulo-busca">
+      <div class="titulo-busca">
         <img src="assets/icons/lupa azul.png" alt="">
         <h3>Buscar Aluno</h3>
       </div>
-      <p>Digite a mátricula do aluno para visualizar e editar informações</p>
+      <p class="titulo-busca">Digite a mátricula do aluno para visualizar e editar informações</p>
     </div>
     <form method="post" action="homeProfessor" class="search-form">
       <input type="hidden" name="acao" value="buscarAluno">
@@ -158,7 +195,7 @@
         <h3><%= aluno.getMatricula() %></h3>
       </div>
       <div>
-        <h5>E-mail<h5>
+        <h5>E-mail</h5>
           <h3><a href="mailto:<%= aluno.getEmail() %>"><%= aluno.getEmail() %></a></h3>
       </div>
     </div>
@@ -248,6 +285,22 @@
       event.target.style.display = "none";
     }
   }
+
+  document.getElementById("filtro").addEventListener("keyup", function () {
+    let termo = this.value.toLowerCase();
+    let alunos = document.querySelectorAll(".item-linha");
+    alunos.forEach(function (aluno) {
+      let nome = aluno.querySelector(".nomeItemLinha")
+              .textContent
+              .toLowerCase();
+
+      if (nome.includes(termo)) {
+        aluno.style.display = "";
+      } else {
+        aluno.style.display = "none";
+      }
+    });
+  });
 </script>
 
 
