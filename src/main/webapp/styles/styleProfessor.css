@@ -250,7 +250,7 @@ form button img {
   justify-content: center;
   justify-items: center;
   align-items: center;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
 }
 .modal-content form textarea {
   resize: none;
