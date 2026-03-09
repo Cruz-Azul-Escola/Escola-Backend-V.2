@@ -1,13 +1,54 @@
 const graficoNotasPeriodo = document.getElementById('NotasPeriodo');
-const boxplotNotasSala = document.getElementById('NotasSala');
+const graficoNotasSala = document.getElementById('NotasSala');
 
-new Chart(graficoNotasPeriodo, {
+let chartPeriodo;
+let chartSala;
+
+function atualizarBigNumbers() {
+
+    document.getElementById("numeroAlunos").innerText =
+        numeroAlunos[disciplinaAtual];
+
+    document.getElementById("mediaMedia").innerText =
+        mediaMedia[disciplinaAtual].toFixed(2);
+
+    document.getElementById("alunosMaiorMedia").innerText =
+        alunosMaiorMedia[disciplinaAtual];
+
+    document.getElementById("maiorMedia").innerText =
+        maiorMedia[disciplinaAtual].toFixed(2);
+}
+
+function atualizarGraficoPeriodo() {
+
+    const dados = mediasNotas[disciplinaAtual];
+
+    chartPeriodo.data.labels = periodos;
+    chartPeriodo.data.datasets[0].data = dados;
+
+    chartPeriodo.update();
+}
+
+function atualizarGraficoSala() {
+
+    const salas = nomeSalas[disciplinaAtual];
+    const dados = dadosSalasDisciplina[disciplinaAtual];
+
+    const medias = salas.map(s => dados[s][2]);
+
+    chartSala.data.labels = salas;
+    chartSala.data.datasets[0].data = medias;
+
+    chartSala.update();
+}
+
+chartPeriodo = new Chart(graficoNotasPeriodo, {
     type: 'bar',
     data:{
-        labels: periodos,
+        labels: [],
         datasets: [{
             label: 'Média dos alunos',
-            data: mediasNotas,
+            data: [],
             backgroundColor: "#0B3E91"
         }]
     },
@@ -41,44 +82,40 @@ new Chart(graficoNotasPeriodo, {
         }
     }
 });
-const datasets = [];
 
-for (const sala in dadosBoxplot) {
-
-    datasets.push({
-        label: sala,
-        data: dadosBoxplot[sala],
-        borderWidth: 2
-    });
-}
-
-new Chart(boxplotNotasSala, {
-    type: 'line',
+chartSala = new Chart(graficoNotasSala, {
+    type: 'bar',
     data:{
-        labels: periodos,
-        datasets: datasets
+        labels: [],
+        datasets: [{
+            label: 'Média Final por Sala',
+            data: [],
+            backgroundColor: "#1E88E5"
+        }]
     },
     options: {
         responsive: true,
-
         plugins: {
             title: {
                 display: true,
                 text: "Notas por Sala"
-            },
-            legend: {
-                position: "top"
             }
         },
-
         scales: {
             y: {
                 beginAtZero: true,
-                max: 10,
-                ticks: {
-                    stepSize: 1
-                }
+                max: 10
             }
         }
     }
 });
+
+window.onload = function () {
+
+    const select = document.querySelector(".filtro");
+    disciplinaAtual = select.value;
+
+    atualizarBigNumbers();
+    atualizarGraficoPeriodo();
+    atualizarGraficoSala();
+};

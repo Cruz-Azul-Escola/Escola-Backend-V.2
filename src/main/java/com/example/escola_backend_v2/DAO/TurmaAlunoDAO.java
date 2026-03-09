@@ -1,8 +1,6 @@
 package com.example.escola_backend_v2.DAO;
 
-import com.example.escola_backend_v2.DTO.AlunoDTO;
-import com.example.escola_backend_v2.DTO.TurmaAlunoDTO;
-import com.example.escola_backend_v2.DTO.TurmaDTO;
+import com.example.escola_backend_v2.DTO.*;
 import com.example.escola_backend_v2.Util.Conexao;
 
 import java.sql.Connection;
@@ -81,4 +79,54 @@ public class TurmaAlunoDAO {
         }
     }
 
+    public List<DisciplinaDTO> listarDisciplinas(TurmaDTO turma, AlunoDTO aluno) {
+        List<DisciplinaDTO> disciplinasTurmaAluno = new ArrayList<>();
+        String sql = "select d.* from turma_aluno ta join turma t on t.id_turma = ta.id_turma join disciplina d on d.id_disciplina = t.id_disciplina where ta.id_turma = ? and ta.id_aluno = ?";
+        Connection conn = conexao.conectar();
+
+        try {
+            PreparedStatement pstm = conn.prepareStatement(sql);
+            pstm.setInt(1, turma.getId());
+            pstm.setInt(2, aluno.getId());
+            ResultSet rs = pstm.executeQuery();
+
+            while (rs.next()) {
+                DisciplinaDTO disciplina = new DisciplinaDTO();
+                disciplina.setId(rs.getInt("id_disciplina"));
+                disciplina.setNome(rs.getString("nome_disciplina"));
+                disciplina.setCargaHoraria(rs.getInt("carga_horaria"));
+                disciplinasTurmaAluno.add(disciplina);
+            }
+            return disciplinasTurmaAluno;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally {
+            conexao.desconectar(conn);
+        }
+    }
+    public SalaDTO bucarSala(TurmaDTO turma, AlunoDTO aluno) {
+        SalaDTO salaTurmaAluno = new SalaDTO();
+        String sql = "select s.* from turma_aluno ta join turma t on t.id_turma = ta.id_turma join sala s on s.id_sala = t.id_sala where ta.id_turma = ? and ta.id_aluno = ?";
+        Connection conn = conexao.conectar();
+
+        try {
+            PreparedStatement pstm = conn.prepareStatement(sql);
+            pstm.setInt(1, turma.getId());
+            pstm.setInt(2, aluno.getId());
+            ResultSet rs = pstm.executeQuery();
+
+            if (rs.next()) {
+                salaTurmaAluno.setId(rs.getInt("id_sala"));
+                salaTurmaAluno.setNome(rs.getString("nome_sala"));
+                salaTurmaAluno.setCapacidade(rs.getInt("capacidade"));
+            }
+            return salaTurmaAluno;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally {
+            conexao.desconectar(conn);
+        }
+    }
 }

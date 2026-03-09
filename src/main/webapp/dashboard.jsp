@@ -1,4 +1,6 @@
-<%--
+<%@ page import="com.example.escola_backend_v2.DTO.DisciplinaDTO" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %><%--
   Created by IntelliJ IDEA.
   User: rafaeltakematsu-ieg
   Date: 19/02/2026
@@ -6,12 +8,25 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8"%>
+<%
+    List<DisciplinaDTO> disciplinas = (List<DisciplinaDTO>) request.getAttribute("disciplinas");
+%>
 <html>
 <head>
     <title>Dashboard</title>
     <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="styles/styleDashboard.css">
     <link rel="shortcut icon" href="assets/icons/Logo da escola.png" type="image/x-icon">
+    <script>
+        const numeroAlunos = JSON.parse('${numeroAlunos}');
+        const mediaMedia = JSON.parse('${mediaMedia}');
+        const alunosMaiorMedia = JSON.parse('<%= request.getAttribute("alunoMaiorMedia") %>');
+        const maiorMedia = JSON.parse('${maiorMedia}')
+        const periodos = JSON.parse('${periodos}');
+        const mediasNotas = JSON.parse('${mediasNotas}');
+        const nomeSalas = JSON.parse('${nomeSalas}');
+        const dadosSalasDisciplina = JSON.parse('${dadosSalasDisciplina}');
+    </script>
 </head>
 <body>
 <header id="cabecalho-site">
@@ -37,9 +52,17 @@
         <h2>Visão Geral - Analítico</h2>
 
         <div class="filtros">
-            <div class="filtro box">
-                ${disciplinas}
-            </div>
+            <select class="filtro box" onchange="filtrarDisciplina(this)" >
+                <%
+                    for (var disciplina : disciplinas) {
+                %>
+                <option value="<%= disciplina.getNome() %>">
+                    <%= disciplina.getNome() %>
+                </option>
+                <%
+                    }
+                %>
+            </select>
         </div>
 
     </div>
@@ -48,18 +71,18 @@
 
         <div class="bignumber">
             <h2>Alunos</h2>
-            <p>${numeroAlunos}</p>
+            <p id="numeroAlunos"></p>
         </div>
 
         <div class=" bignumber">
             <h2>Média da Nota Final</h2>
-            <p>${mediaMedia}</p>
+            <p id="mediaMedia"></p>
         </div>
 
         <div class="bignumber">
             <h2>Maior Nota Final</h2>
-            <p>${alunosMaiorMedia}</p>
-            <p>${maiorMedia}</p>
+            <p id="alunosMaiorMedia"></p>
+            <p id="maiorMedia"></p>
         </div>
         <div class="filtros">
                 <select class="filtro box" onchange="mudarGrafico(this)">
@@ -80,11 +103,6 @@
     </section>
 </main>
 <script>
-    const periodos = JSON.parse('${periodos}');
-    const mediasNotas = JSON.parse('${mediasNotas}');
-    const nomeSalas = JSON.parse('${nomeSalas}');
-    const dadosBoxplot = JSON.parse('${dadosBoxplot}');
-
 
     function mudarGrafico(select) {
         const graficoPeriodo = document.getElementById("graficoNotasPeriodo");
@@ -99,6 +117,16 @@
         }
     }
 
+    let disciplinaAtual = null;
+
+    function filtrarDisciplina(select) {
+
+        disciplinaAtual = select.value;
+
+        atualizarBigNumbers();
+        atualizarGraficoPeriodo();
+        atualizarGraficoSala();
+    }
 
 </script>
 
