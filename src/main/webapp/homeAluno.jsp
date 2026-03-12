@@ -46,12 +46,20 @@
       <h4>Portal do Professor</h4>
     </div>
   </div>
-  <a href="login.jsp">
-    <div id="voltar">
-      <img src="assets/icons/voltar.png" alt="">
-      <h4>Sair</h4>
-    </div>
-  </a>
+  <div id="opcoes-head">
+    <a href="login.jsp">
+      <div id="voltar">
+        <img src="assets/icons/voltar.png" alt="">
+        <h4>Sair</h4>
+      </div>
+    </a>
+    <a id="op-quiz" href="quizAluno.jsp">
+      <div id="quiz">
+        <h4>Quiz Treino</h4>
+      </div>
+    </a>
+  </div>
+
 </header>
 
 <main class="container">

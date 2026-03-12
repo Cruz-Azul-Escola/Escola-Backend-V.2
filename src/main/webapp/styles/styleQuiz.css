@@ -1,0 +1,160 @@
+:root {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --primary-color: #3b82f6;
+    --text-color: #f8fafc;
+    --accent-color: #10b981;
+    --border-radius: 12px;
+}
+
+/* ===== ÁREA DO QUIZ ===== */
+
+main {
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* CARD */
+
+main .card {
+    background-color: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+main h1 {
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+}
+
+/* ===== SETUP SCREEN ===== */
+
+main .setting-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+main label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #94a3b8;
+    background: none;
+    margin-left: 0;
+}
+
+main select,
+main input {
+    width: 100%;
+    padding: 0.8rem;
+    background: #334155;
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    height: auto;
+}
+
+/* ===== BOTÃO PRINCIPAL ===== */
+
+main .primary-btn {
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 1rem;
+    height: auto;
+}
+
+main .primary-btn:hover {
+    background-color: #2563eb;
+}
+
+/* ===== QUIZ SCREEN ===== */
+
+main .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+main .timer {
+    background: #ef4444;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: bold;
+    min-width: 60px;
+}
+
+main .options-grid {
+    display: grid;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+/* BOTÕES DO QUIZ (corrigidos) */
+
+main .option-btn {
+    width: 100%;
+    height: auto;
+    background: #334155;
+    border: 2px solid #475569;
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    box-shadow: none;
+}
+
+main .option-btn:hover {
+    border-color: var(--primary-color);
+    background: #475569;
+}
+
+/* ===== RESULT SCREEN ===== */
+
+main .score-container {
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--accent-color);
+    margin: 1.5rem 0;
+}
+
+main .score-container small {
+    font-size: 1.5rem;
+    color: #94a3b8;
+}
+
+main #performance-msg {
+    margin-bottom: 2rem;
+    color: #cbd5e1;
+}
+
+/* UTILIDADES */
+
+main .hidden {
+    display: none;
+}
+
+main .low-score {
+    color: #ef4444 !important;
+}
+
+main .container {
+    background-color: #E8F0FE;
+}

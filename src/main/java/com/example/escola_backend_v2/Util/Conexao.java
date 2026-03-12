@@ -6,7 +6,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class Conexao {
 
     Dotenv dotenv = Dotenv.configure()
-            .directory("/")
+            .filename(".env")
             .ignoreIfMissing()
             .load();
 
