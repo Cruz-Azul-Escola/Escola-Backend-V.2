@@ -221,6 +221,9 @@ form button img {
   gap: 20px;
   padding: 20px;
 }
+.botoes button {
+  border-radius: 15px;
+}
 .botoes button:nth-child(1) {
   background-color: var(--corAzul);
 }
