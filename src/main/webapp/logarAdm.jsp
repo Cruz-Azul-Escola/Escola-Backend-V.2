@@ -25,6 +25,8 @@
     <link rel="stylesheet" href="styles/styleDadosCadastrais.css">
     <link rel="stylesheet" href="styles/styleAreaRestrita.css">
     <script defer src="scripts/scriptVisualizarSenha.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script defer src="scripts/scriptLoad.js"></script>
     <link rel="shortcut icon" href="assets/icons/Logo da escola.png" type="image/x-icon">
     <title>Área Restrita</title>
 </head>
@@ -53,7 +55,7 @@
     <div id="container">
         <img src="assets/icons/Logo da escola.png" alt="">
         <h2>Conta</h2>
-        <form action="logarAdm" method="post">
+        <form onsubmit="mostrarLoader()" action="logarAdm" method="post">
             <div>
                 <label >Email</label>
                 <input type="text" name="email" placeholder="Digite seu email" required title="Digite um email válido, que tenha .com ou .org.br">
@@ -69,11 +71,41 @@
         </form>
     </div>
 </main>
+
 <% String erro = (String) request.getAttribute("erroLogin"); %>
 
 <% if (erro != null) { %>
 <script>
     alert("<%= erro %>");
+</script>
+<% } %>
+<%
+    String mensagem = (String) request.getAttribute("mensagem");
+%>
+
+
+
+
+<% if (request.getAttribute("mensagem") != null) { %>
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Sucesso',
+        text: '<%= request.getAttribute("mensagem") %>',
+        timer: 2500,
+        showConfirmButton: false
+    });
+</script>
+<% } %>
+<% if (request.getAttribute("erro") != null) { %>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Erro na hora do cadastro ou link, certifique existencia e a singularidade de dados"
+        });
+    });
 </script>
 <% } %>
 </body>

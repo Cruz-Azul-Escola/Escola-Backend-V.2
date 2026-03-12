@@ -33,6 +33,8 @@
   <link rel="stylesheet" href="styles/styleProfessor.css">
   <script defer src="/scripts/scriptAbrirIframeProfessor.js"></script>
   <script defer src="scripts/scriptProfessor.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script defer src="scripts/scriptLoad.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -140,7 +142,7 @@
       </div>
       <p class="titulo-busca">Digite a mátricula do aluno para visualizar e editar informações</p>
     </div>
-    <form method="post" action="homeProfessor" class="search-form">
+    <form onsubmit="mostrarLoader()" method="post" action="homeProfessor" class="search-form">
       <input type="hidden" name="acao" value="buscarAluno">
       <div class="input-group">
         <label>Disciplina</label>
@@ -216,7 +218,7 @@
         <h3>Lançar Notas</h3>
         <p>Aluno: <%= aluno.getNome() %></p>
 
-        <form method="post" action="homeProfessor">
+        <form onsubmit="mostrarLoader()" method="post" action="homeProfessor">
           <input type="hidden" name="acao" value="salvarNotas">
           <input type="hidden" name="idAluno" value="<%= aluno.getId() %>">
           <input type="hidden" name="idTurma" value="<%= matricula.getTurma().getId() %>">
@@ -242,7 +244,7 @@
       <div class="modal-content">
         <h3>Editar Observação</h3>
 
-        <form method="post" action="homeProfessor">
+        <form onsubmit="mostrarLoader()" method="post" action="homeProfessor">
           <input type="hidden" name="acao" value="salvarNotas">
           <input type="hidden" name="idAluno" value="<%= aluno.getId() %>">
           <input type="hidden" name="idTurma" value="<%= matricula.getTurma().getId() %>">
@@ -261,6 +263,36 @@
   <% } %>
 
 </main>
+<%
+  String mensagem = (String) request.getAttribute("mensagem");
+  String erro = (String) request.getAttribute("erro");
+%>
+
+
+
+
+<% if (request.getAttribute("mensagem") != null) { %>
+<script>
+  Swal.fire({
+    icon: 'success',
+    title: 'Sucesso',
+    text: '<%= request.getAttribute("mensagem") %>',
+    timer: 2500,
+    showConfirmButton: false
+  });
+</script>
+<% } %>
+<% if (request.getAttribute("erro") != null) { %>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Erro na hora do cadastro ou link, certifique existencia e a singularidade de dados"
+    });
+  });
+</script>
+<% } %>
 <script>
   function abrirModalNotas() {
     document.getElementById("modalNotas").style.display = "block";

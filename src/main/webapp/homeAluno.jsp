@@ -31,6 +31,8 @@
   <link rel="stylesheet" href="styles/styleAluno.css" />
   <link rel="shortcut icon" href="assets/icons/Logo da escola.png" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script defer src="scripts/scriptLoad.js"></script>
   <script defer src="scripts/scriptAluno.js"></script>
 </head>
 <body>
@@ -212,5 +214,31 @@
     </div>
   </section>
 </main>
+<%
+  String mensagem = (String) request.getAttribute("mensagem");
+  String erro = (String) request.getAttribute("erro");
+%>
+<% if (request.getAttribute("mensagem") != null) { %>
+<script>
+  Swal.fire({
+    icon: 'success',
+    title: 'Sucesso',
+    text: '<%= request.getAttribute("mensagem") %>',
+    timer: 2500,
+    showConfirmButton: false
+  });
+</script>
+<% } %>
+<% if (request.getAttribute("erro") != null) { %>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Erro na hora do cadastro ou link, certifique existencia e a singularidade de dados"
+    });
+  });
+</script>
+<% } %>
 </body>
 </html>

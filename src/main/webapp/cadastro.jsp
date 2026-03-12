@@ -23,6 +23,7 @@
     <script defer src="scripts/scriptVisualizarSenha.js"></script>
     <link rel="shortcut icon" href="assets/icons/Logo da escola.png" type="image/x-icon">
     <title>Cruz Azul - Criar Conta</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <header>
@@ -44,7 +45,7 @@
     <div id="container">
         <img src="assets/images/logo de conta.png" alt="">
         <h2>Crie sua Conta</h2>
-        <form action="${pageContext.request.contextPath}/cadastrar" method="post">
+        <form onsubmit="mostrarLoader()" action="${pageContext.request.contextPath}/cadastrar" method="post">
             <input type="hidden" name="id" value="<%= id %>" />
             <div>
                 <label >Nome</label>
@@ -86,6 +87,10 @@
         </form>
     </div>
 </main>
+<%
+    String mensagem = (String) request.getAttribute("mensagem");
+    String erro = (String) request.getAttribute("erro");
+%>
 <script>
     const btnInfo = document.getElementById("btnInfoSenha");
     const popUp = document.getElementById("popUp");
@@ -104,5 +109,27 @@
         }
     });
 </script>
+<% if (request.getAttribute("mensagem") != null) { %>
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Sucesso',
+        text: '<%= request.getAttribute("mensagem") %>',
+        timer: 2500,
+        showConfirmButton: false
+    });
+</script>
+<% } %>
+<% if (request.getAttribute("erro") != null) { %>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        Swal.fire({
+            icon: 'error',
+            title: 'Erro',
+            text: '<%= erro %>'
+        });
+    });
+</script>
+<% } %>
 </body>
 </html>

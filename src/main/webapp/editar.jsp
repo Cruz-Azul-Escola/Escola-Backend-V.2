@@ -20,6 +20,8 @@
   <link rel="shortcut icon" href="assets/icons/Logo da escola.png" type="image/x-icon">
   <link rel="stylesheet" href="styles/style.css">
   <link rel="stylesheet" href="styles/styleAdmin.css">
+  <script defer src="scripts/scriptLoad.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <title>Cruz Azul – Portal do Administrador</title>
 </head>
 <body class="popup-body">
@@ -43,25 +45,25 @@
 
     <button onclick="voltar()" type="button" class="fechar" aria-label="Fechar">✕</button>
   </div>
-  <form method="post" action="admin" class="popup-form">
+  <form onsubmit="mostrarLoader()" method="post" action="admin" class="popup-form">
     <input type="hidden" name="acao" value="alterar">
     <input type="hidden" name="tipo" value="<%= tipo %>">
     <input type="hidden" name="id" value="<%= p.getId() %>">
 
     <div>
-      <label for="">Nome</label>
+      <label >Nome</label>
       <input type="text" name="nome" placeholder="Nome" value="<%= p.getNome() %>" required>
     </div>
     <div>
-      <label for="">Email</label>
+      <label >Email</label>
       <input type="email" name="email" placeholder="Email" value="<%= p.getEmail() %>" required>
     </div>
     <div>
-      <label for="">Senha</label>
+      <label >Senha</label>
       <input type="text" name="senha" placeholder="Senha" value="<%= p.getSenha() %>" required>
     </div>
     <div>
-      <label for="">Turmas</label>
+      <label >Turmas</label>
       <select name="turmas" required>
         <%
           for(TurmaDTO t : listaTurmas){
@@ -103,29 +105,29 @@
 
     <button onclick="voltar()" type="button" class="fechar" aria-label="Fechar">✕</button>
   </div>
-  <form method="post" action="admin" class="popup-form">
+  <form onsubmit="mostrarLoader()" method="post" action="admin" class="popup-form">
     <input type="hidden" name="acao" value="alterar">
     <input type="hidden" name="tipo" value="<%= tipo %>">
     <input type="hidden" name="id" value="<%= a.getId() %>">
 
     <div>
-      <label for="">Nome</label>
+      <label >Nome</label>
       <input type="text" name="nome" placeholder="Nome" value="<%= a.getNome() %>" required>
     </div>
     <div>
-      <label for="">Email</label>
+      <label >Email</label>
       <input type="text" name="email" placeholder="Email" value="<%= a.getEmail() %>" required>
     </div>
     <div>
-      <label for="">CPF</label>
+      <label >CPF</label>
       <input type="text" name="cpf" placeholder="CPF" value="<%= a.getCpf() %>" required>
     </div>
     <div>
-      <label for="">Matrícula</label>
+      <label >Matrícula</label>
       <input type="text" name="matricula" placeholder="Matrícula" value="<%= a.getMatricula() %>" required>
     </div>
     <div>
-      <label for="">Turma</label>
+      <label >Turma</label>
       <select name="idSala" required>
         <%
           if(listaTurmas != null){
@@ -170,17 +172,17 @@
 
     <button onclick="voltar()" type="button" class="fechar" aria-label="Fechar">✕</button>
   </div>
-  <form method="post" action="admin" class="popup-form">
+  <form onsubmit="mostrarLoader()" method="post" action="admin" class="popup-form">
     <input type="hidden" name="acao" value="alterar">
     <input type="hidden" name="tipo" value="<%= tipo %>">
     <input type="hidden" name="id" value="<%= d.getId() %>">
 
     <div>
-      <label for="">Nome da Disciplina</label>
+      <label >Nome da Disciplina</label>
       <input type="text" name="nome" placeholder="Disciplina" value="<%= d.getNome() %>" required>
     </div>
     <div>
-      <label for="">Carga Horária</label>
+      <label >Carga Horária</label>
       <input type="text" name="cargaHoraria" placeholder="Carga Horária" value="<%= d.getCargaHoraria() %>" required>
     </div>
 
@@ -203,7 +205,7 @@
 
     <button onclick="voltar()" type="button" class="fechar" aria-label="Fechar">✕</button>
   </div>
-  <form method="post" action="admin" class="popup-form">
+  <form  onsubmit="mostrarLoader()" method="post" action="admin" class="popup-form">
     <input type="hidden" name="acao" value="alterar">
     <input type="hidden" name="tipo" value="<%= tipo %>">
     <input type="hidden" name="id" value="<%= s.getId() %>">
@@ -238,13 +240,13 @@
 
     <button onclick="voltar()" type="button" class="fechar" aria-label="Fechar">✕</button>
   </div>
-  <form method="post" action="admin" class="popup-form">
+  <form onsubmit="mostrarLoader()" method="post" action="admin" class="popup-form">
     <input type="hidden" name="acao" value="alterar">
     <input type="hidden" name="tipo" value="<%= tipo %>">
     <input type="hidden" name="id" value="<%= t.getId() %>">
 
     <div>
-      <label for="">Disciplina</label>
+      <label >Disciplina</label>
       <select name="idDisciplina" required>
         <% for(DisciplinaDTO d : listaDisciplinas){ %>
         <option value="<%= d.getId() %>"
@@ -255,8 +257,8 @@
       </select>
     </div>
     <div>
-      <label for="">Sala</label>
-      <select name="idDisciplina" required>
+      <label >Sala</label>
+      <select name="idSala" required>
         <% for(SalaDTO s : listaSalas){ %>
         <option value="<%= s.getId() %>"
                 <%= s.getId() == t.getSala().getId() ? "selected" : "" %>>
@@ -266,7 +268,7 @@
       </select>
     </div>
     <div>
-      <label for="">Período Letivo</label>
+      <label >Período Letivo</label>
       <input type="text" name="periodoLetivo" placeholder="Ex: 2026/1" value="<%= t.getPeriodoLetivo() %>" required>
     </div>
 
@@ -277,7 +279,32 @@
 <%
   }
 %>
-
+<%
+  String mensagem = (String) request.getAttribute("mensagem");
+  String erro = (String) request.getAttribute("erro");
+%>
+<% if (request.getAttribute("mensagem") != null) { %>
+<script>
+  Swal.fire({
+    icon: 'success',
+    title: 'Sucesso',
+    text: '<%= request.getAttribute("mensagem") %>',
+    timer: 2500,
+    showConfirmButton: false
+  });
+</script>
+<% } %>
+<% if (request.getAttribute("erro") != null) { %>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Erro na hora do cadastro ou link, certifique existencia e a singularidade de dados"
+    });
+  });
+</script>
+<% } %>
 <script>
   function voltar() {
     window.history.back();

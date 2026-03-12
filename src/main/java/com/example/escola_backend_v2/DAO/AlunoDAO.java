@@ -49,7 +49,8 @@ public class AlunoDAO {
     }
 
     public AlunoDTO preCadastro(AlunoDTO alunoDTO) {
-        Connection conn = conexao.conectar();
+
+        Connection conn = null;
 
         String sqlInsertAluno =
                 "INSERT INTO aluno (nome, cpf_signup, matricula, esta_ativo) " +
@@ -63,43 +64,67 @@ public class AlunoDAO {
                         "VALUES (?, ?, NULL, NULL, '')";
 
         try {
-            //gerando uma matricula
+
+            conn = conexao.conectar();
+
+            if (conn == null) {
+                throw new RuntimeException("Falha ao conectar com o banco.");
+            }
+
+            // gerar matrícula
             String matricula = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 
-            //primeiro crio o aluno em si
             PreparedStatement psAluno = conn.prepareStatement(sqlInsertAluno, Statement.RETURN_GENERATED_KEYS);
             psAluno.setString(1, alunoDTO.getNome());
             psAluno.setString(2, alunoDTO.getCpf());
             psAluno.setString(3, matricula);
 
-            psAluno.executeUpdate();
+            int linhas = psAluno.executeUpdate();
+
+            if (linhas == 0) {
+                throw new RuntimeException("Falha ao inserir aluno.");
+            }
 
             ResultSet rs = psAluno.getGeneratedKeys();
+
             if (!rs.next()) {
                 throw new RuntimeException("Falha ao gerar ID do aluno.");
             }
+
             int idAluno = rs.getInt(1);
+
             alunoDTO.setId(idAluno);
             alunoDTO.setMatricula(matricula);
+
+            // buscar turmas da sala
             PreparedStatement psTurmas = conn.prepareStatement(sqlBuscarTurmasSala);
             psTurmas.setInt(1, alunoDTO.getIdSala());
+
             ResultSet rsTurmas = psTurmas.executeQuery();
+
             PreparedStatement psInsertTurmaAluno = conn.prepareStatement(sqlInsertTurmaAluno);
 
             while (rsTurmas.next()) {
+
                 int idTurma = rsTurmas.getInt("id_turma");
 
                 psInsertTurmaAluno.setInt(1, idAluno);
                 psInsertTurmaAluno.setInt(2, idTurma);
+
                 psInsertTurmaAluno.executeUpdate();
             }
 
             return alunoDTO;
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
+
+            // qualquer erro vai para o Servlet
             throw new RuntimeException("Erro no pré-cadastro do aluno: " + e.getMessage(), e);
+
         } finally {
+
             conexao.desconectar(conn);
+
         }
     }
 

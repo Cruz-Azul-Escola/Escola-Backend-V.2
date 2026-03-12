@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="styles/styleAdmin.css">
     <script defer src="scripts/scriptAdmin.js"></script>
+
     <title>Cruz Azul – Portal do Administrador</title>
 </head>
 <body>
@@ -69,7 +70,7 @@
         <!-- ALUNOS -->
         <div id="secao-aluno" class="secoes">
             <h2>Cadastro de Aluno</h2>
-            <form method="post" action="admin">
+            <form method="post" action="admin" onsubmit="mostrarLoader()">
                 <input type="hidden" name="acao" value="salvarAluno">
                 <div>
                     <label >Nome</label>
@@ -97,7 +98,7 @@
                 </div>
                 <button type="submit">Salvar</button>
             </form>
-            <form id="formImportar" action="ImportarAlunosServlet" method="post" enctype="multipart/form-data">
+            <form onsubmit="mostrarLoader()" id="formImportar" action="ImportarAlunosServlet" method="post" enctype="multipart/form-data">
 
                 <!-- input escondido -->
                 <input
@@ -146,13 +147,13 @@
                         <td><%= a.getCpf() %></td>
                         <td><%= a.getMatricula() %></td>
                         <td style="display: flex; justify-content: space-evenly">
-                            <form method="post" action="admin" style="display:inline;">
+                            <form onsubmit="mostrarLoader()"method="post" action="admin" style="display:inline;">
                                 <input type="hidden" name="acao" value="editarAluno">
                                 <input type="hidden" name="id" value="<%= a.getId() %>">
                                 <button class="btn-acao btn-editar" type="submit">Editar</button>
                             </form>
 
-                            <form onsubmit="return validarFormulario();" method="post" action="admin" style="display:inline;">
+                            <form onsubmit="if(!validarFormulario()) return false; mostrarLoader();" method="post" action="admin" style="display:inline;">                                <input type="hidden" name="acao" value="excluirSala">
                                 <input type="hidden" name="acao" value="excluirAluno">
                                 <input type="hidden" name="id" value="<%= a.getId() %>">
                                 <button class="btn-acao btn-excluir" type="submit">Excluir</button>
@@ -170,7 +171,7 @@
         <!-- PROFESSORES -->
         <div id="secao-professor" class="secoes">
             <h2>Cadastro de Professor</h2>
-            <form method="post" action="admin">
+            <form onsubmit="mostrarLoader()" method="post" action="admin">
                 <input type="hidden" name="acao" value="salvarProfessor">
                 <div>
                     <label >Nome</label>
@@ -248,13 +249,13 @@
                         </td>
 
                         <td style="display: flex; justify-content: space-evenly">
-                            <form method="post" action="admin" style="display:inline;">
+                            <form onsubmit="mostrarLoader()" method="post" action="admin" style="display:inline;">
                                 <input type="hidden" name="tipo" value="professor">
                                 <input type="hidden" name="id" value="<%= p.getId() %>">
                                 <button class="btn-acao btn-editar" type="submit">Editar</button>
                             </form>
 
-                            <form onsubmit="return validarFormulario();" method="post" action="admin" style="display:inline;">
+                            <form onsubmit="if(!validarFormulario()) return false; mostrarLoader();" method="post" action="admin" style="display:inline;">                                <input type="hidden" name="acao" value="excluirSala">
                                 <input type="hidden" name="acao" value="excluirProfessor">
                                 <input type="hidden" name="id" value="<%= p.getId() %>">
                                 <button class="btn-acao btn-excluir" type="submit">Excluir</button>
@@ -272,7 +273,7 @@
         <!-- DISCIPLINAS -->
         <div id="secao-disciplina" class="secoes">
             <h2>Cadastro de Disciplina</h2>
-            <form method="post" action="admin">
+            <form onsubmit="mostrarLoader()" method="post" action="admin">
                 <input type="hidden" name="acao" value="salvarDisciplina">
                 <div>
                     <label >Disciplina</label>
@@ -310,7 +311,7 @@
                         <td class="nomeItemLinha"><%= d.getNome() %></td>
                         <td><%= d.getCargaHoraria() %>h</td>
                         <td style="display: flex; justify-content: space-evenly">
-                            <form method="post" action="admin" style="display:inline;">
+                            <form onsubmit="mostrarLoader()" method="post" action="admin" style="display:inline;">
                                 <input type="hidden" name="tipo" value="disciplina">
                                 <input type="hidden" name="id" value="<%= d.getId() %>">
                                 <button class="btn-acao btn-editar" type="submit">Editar</button>
@@ -318,7 +319,7 @@
 
 
 
-                            <form onsubmit="return validarFormulario();" method="post" action="admin" style="display:inline;">
+                            <form onsubmit="if(!validarFormulario()) return false; mostrarLoader();" method="post" action="admin" style="display:inline;">                                <input type="hidden" name="acao" value="excluirSala">
                                 <input type="hidden" name="acao" value="excluirDisciplina">
                                 <input type="hidden" name="id" value="<%= d.getId() %>">
                                 <button class="btn-acao btn-excluir" type="submit">Excluir</button>
@@ -336,7 +337,7 @@
         <!-- SALAS -->
         <div id="secao-sala" class="secoes">
             <h2>Cadastro de Sala</h2>
-            <form method="post" action="admin">
+            <form onsubmit="mostrarLoader()" method="post" action="admin">
                 <input type="hidden" name="acao" value="salvarSala">
                 <div>
                     <label >Sala</label>
@@ -373,14 +374,14 @@
                         <td class="nomeItemLinha"><%= s.getNome() %></td>
                         <td><%= s.getCapacidade() %></td>
                         <td style="display: flex; justify-content: space-evenly">
-                            <form method="post" action="admin" style="display:inline;">
+                            <form onsubmit="mostrarLoader()" method="post" action="admin" style="display:inline;">
                                 <input type="hidden" name="tipo" value="sala">
                                 <input type="hidden" name="id" value="<%= s.getId() %>">
                                 <button class="btn-acao btn-editar" type="submit">Editar</button>
                             </form>
 
 
-                            <form onsubmit="return validarFormulario();" method="post" action="admin" style="display:inline;">
+                            <form onsubmit="if(!validarFormulario()) return false; mostrarLoader();" method="post" action="admin" style="display:inline;">                                <input type="hidden" name="acao" value="excluirSala">
                                 <input type="hidden" name="acao" value="excluirSala">
                                 <input type="hidden" name="id" value="<%= s.getId() %>">
                                 <button class="btn-acao btn-excluir" type="submit">Excluir</button>
@@ -398,7 +399,7 @@
         <!-- TURMAS -->
         <div id="secao-turma" class="secoes">
             <h2>Cadastro de Turma</h2>
-            <form method="post" action="admin">
+            <form onsubmit="mostrarLoader()" method="post" action="admin">
                 <input type="hidden" name="acao" value="salvarTurma">
                 <div>
                     <label>Disciplina</label>
@@ -437,6 +438,48 @@
                 </div>
                 <button type="submit">Salvar</button>
             </form>
+
+            <div class="tabela-container">
+
+
+                <% if(listaSalas != null && !listaSalas.isEmpty()) { %>
+                <table class="tabela" border="1" cellpadding="5">
+                    <tr>
+                        <th>ID</th>
+                        <th>Periodo</th>
+                        <th>Sala</th>
+                        <th>Disciplina</th>
+                        <th>Ações</th>
+                    </tr>
+
+                    <% for(TurmaDTO t : listaTurmas) { %>
+                    <tr class="item-linha">
+                        <td><%= t.getId() %></td>
+                        <td class="nomeItemLinha"><%= t.getPeriodoLetivo() %></td>
+                        <td><%= t.getSala().getNome() %></td>
+                        <td><%= t.getDisciplina().getNome() %></td>
+
+                        <td style="display: flex; justify-content: space-evenly">
+                            <form onsubmit="mostrarLoader()" method="post" action="admin" style="display:inline;">
+                                <input type="hidden" name="tipo" value="turma">
+                                <input type="hidden" name="id" value="<%= t.getId() %>">
+                                <button class="btn-acao btn-editar" type="submit">Editar</button>
+                            </form>
+
+
+                            <form onsubmit="if(!validarFormulario()) return false; mostrarLoader();" method="post" action="admin" style="display:inline;">                                <input type="hidden" name="acao" value="excluirSala">
+                                <input type="hidden" name="acao" value="excluirTurma">
+                                <input type="hidden" name="id" value="<%= t.getId() %>">
+                                <button class="btn-acao btn-excluir" type="submit">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% } %>
+                </table>
+                <% } else { %>
+                <p>Nenhuma sala cadastrada.</p>
+                <% } %>
+            </div>
         </div>
 
         <!-- VINCULAÇÕES -->
@@ -445,7 +488,7 @@
 
             <!-- Aluno em Turma -->
             <h3>Matricular Aluno</h3>
-            <form method="post" action="admin">
+            <form onsubmit="mostrarLoader()" method="post" action="admin">
                 <input type="hidden" name="acao" value="vincularAlunoTurma">
                 <select name="idAluno" required>
                     <option value="">Selecione o Aluno</option>
@@ -479,7 +522,7 @@
 
             <!-- Professor em Disciplina -->
             <h3>Vincular Professor à Disciplina</h3>
-            <form method="post" action="admin">
+            <form onsubmit="mostrarLoader()" method="post" action="admin">
                 <input type="hidden" name="acao" value="vincularProfessorDisciplina">
                 <select name="idProfessor" required>
                     <option value="">Selecione o Professor</option>
@@ -512,7 +555,7 @@
 
             <!-- Professor em Turma -->
             <h3>Vincular Professor à Turma</h3>
-            <form method="post" action="admin">
+            <form onsubmit="mostrarLoader()" method="post" action="admin">
                 <input type="hidden" name="acao" value="vincularProfessorTurma">
                 <select name="idProfessor" required>
                     <option value="">Selecione o Professor</option>
@@ -546,99 +589,93 @@
 
     </section>
     </main>
-
+<%
+    String mensagem = (String) request.getAttribute("mensagem");
+    String erro = (String) request.getAttribute("erro");
+%>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    function mostrar(id , button) {
-        document.querySelectorAll('.secoes').forEach(div => {
-            div.classList.remove('ativa');
-        });
-        document.getElementById(id).classList.add('ativa');
+    document.addEventListener("DOMContentLoaded", function () {
 
-        document.querySelectorAll('.views').forEach(buttons => {
-            buttons.style.backgroundColor = "transparent";
-            buttons.style.color = "white";
-        })
-        document.getElementById(button).style.backgroundColor = "white";
-        document.getElementById(button).style.color = "var(--corAzul)";
-    }
+        window.mostrar = function(id , button) {
+            document.querySelectorAll('.secoes').forEach(div => {
+                div.classList.remove('ativa');
+            });
+
+            document.getElementById(id)?.classList.add('ativa');
+
+            document.querySelectorAll('.views').forEach(btn => {
+                btn.style.backgroundColor = "transparent";
+                btn.style.color = "white";
+            });
+            const btn = document.getElementById(button);
+
+            if (btn) {
+                btn.style.backgroundColor = "white";
+                btn.style.color = "var(--corAzul)";
+            }
+        };
+
+        document.getElementById("filtro")?.addEventListener("keyup", function () {
+            let termo = this.value.toLowerCase();
+            let alunos = document.querySelectorAll(".item-linha");
+
+            alunos.forEach(function (aluno) {
+                let nome = aluno.querySelector(".nomeItemLinha").textContent.toLowerCase();
+                aluno.style.display = nome.includes(termo) ? "" : "none";
+            });
+        });
+
+        document.getElementById("arquivoExcel")?.addEventListener("change", function(){
+            if(this.files.length > 0){
+                document.getElementById("formImportar")?.submit();
+            }
+        });
+
+    });
+
     function validarFormulario() {
         return confirm("Deseja excluir registro?");
     }
 
-    document.getElementById("filtro").addEventListener("keyup", function () {
-        let termo = this.value.toLowerCase();
-        let alunos = document.querySelectorAll(".item-linha");
-        alunos.forEach(function (aluno) {
-            let nome = aluno.querySelector(".nomeItemLinha")
-                .textContent
-                .toLowerCase();
-
-            if (nome.includes(termo)) {
-                aluno.style.display = "";
-            } else {
-                aluno.style.display = "none";
-            }
-        });
-    });
-    document.getElementById("filtro2").addEventListener("keyup", function () {
-        let termo = this.value.toLowerCase();
-        let alunos = document.querySelectorAll(".item-linha");
-        alunos.forEach(function (aluno) {
-            let nome = aluno.querySelector(".nomeItemLinha")
-                .textContent
-                .toLowerCase();
-
-            if (nome.includes(termo)) {
-                aluno.style.display = "";
-            } else {
-                aluno.style.display = "none";
-            }
-        });
-    });
-    document.getElementById("filtro3").addEventListener("keyup", function () {
-        let termo = this.value.toLowerCase();
-        let alunos = document.querySelectorAll(".item-linha");
-        alunos.forEach(function (aluno) {
-            let nome = aluno.querySelector(".nomeItemLinha")
-                .textContent
-                .toLowerCase();
-
-            if (nome.includes(termo)) {
-                aluno.style.display = "";
-            } else {
-                aluno.style.display = "none";
-            }
-        });
-    });
-    document.getElementById("filtro4").addEventListener("keyup", function () {
-        let termo = this.value.toLowerCase();
-        let alunos = document.querySelectorAll(".item-linha");
-        alunos.forEach(function (aluno) {
-            let nome = aluno.querySelector(".nomeItemLinha")
-                .textContent
-                .toLowerCase();
-
-            if (nome.includes(termo)) {
-                aluno.style.display = "";
-            } else {
-                aluno.style.display = "none";
-            }
-        });
-    });
-
     function abrirSeletor(){
-        document.getElementById("arquivoExcel").click();
+        document.getElementById("arquivoExcel")?.click();
     }
 
-    document.getElementById("arquivoExcel").addEventListener("change", function(){
-
-        if(this.files.length > 0){
-            document.getElementById("formImportar").submit();
-        }
-
-    });
-
+    function mostrarLoader() {
+        Swal.fire({
+            title: 'Processando...',
+            text: 'Aguarde um momento',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+    }
 </script>
+<% if (request.getAttribute("mensagem") != null) { %>
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Sucesso',
+        text: '<%= request.getAttribute("mensagem") %>',
+        timer: 2500,
+        showConfirmButton: false
+    });
+</script>
+<% } %>
+<% if (request.getAttribute("erro") != null) { %>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Erro na hora do cadastro ou link, certifique existencia e a singularidade de dados"
+        });
+    });
+</script>
+<% } %>
 <script src="scripts/scriptValidacaoCpf.js"></script>
 </body>
 </html>

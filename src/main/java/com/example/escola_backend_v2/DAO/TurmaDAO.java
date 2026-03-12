@@ -90,7 +90,7 @@ public class TurmaDAO {
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
 
-            while (rs.next()) {
+            if (rs.next()) {
 
                 DisciplinaDTO d = new DisciplinaDTO();
                 d.setId(rs.getInt("id_disciplina"));
@@ -116,5 +116,44 @@ public class TurmaDAO {
         }
 
         return lista;
+    }
+    public void deletarTurma(int idTurma) {
+        Connection conn = conexao.conectar();
+        String sql = "DELETE FROM turma WHERE id_turma = ?";
+
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, idTurma);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao deletar turma: " + e.getMessage(), e);
+        } finally {
+            conexao.desconectar(conn);
+        }
+    }
+    public void editarTurma(int idTurma, int idDisciplina, int idSala, String periodoLetivo) {
+        Connection conn = conexao.conectar();
+
+        String sql = "UPDATE turma " +
+                "SET id_disciplina = ?, id_sala = ?, periodo_letivo = ? " +
+                "WHERE id_turma = ?";
+
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1, idDisciplina);
+            pstmt.setInt(2, idSala);
+            pstmt.setString(3, periodoLetivo);
+            pstmt.setInt(4, idTurma);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao editar turma: " + e.getMessage(), e);
+        } finally {
+            conexao.desconectar(conn);
+        }
     }
 }

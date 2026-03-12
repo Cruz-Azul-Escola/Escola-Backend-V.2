@@ -19,6 +19,8 @@
   <link rel="stylesheet" href="styles/styleDadosCadastrais.css">
   <link rel="stylesheet" href="styles/styleVerificar.css">
   <link rel="shortcut icon" href="assets/icons/Logo da escola.png" type="image/x-icon">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script defer src="scripts/scriptLoad.js"></script>
   <title>Cruz Azul - Código</title>
 </head>
 <body>
@@ -47,7 +49,7 @@
   <div id="container">
     <img src="assets/icons/Logo da escola.png" alt="">
     <h2>Token</h2>
-    <form action="hashSenha" method="post">
+    <form onsubmit="mostrarLoader()" action="hashSenha" method="post">
       <input type="hidden" name="email" value="<%= request.getAttribute("email") %>">
       <div>
         <label >Código</label>
@@ -57,5 +59,32 @@
     </form>
   </div>
 </main>
+<%
+  String mensagem = (String) request.getAttribute("mensagem");
+  String erro = (String) request.getAttribute("erro");
+%>
+
+<% if (request.getAttribute("mensagem") != null) { %>
+<script>
+  Swal.fire({
+    icon: 'success',
+    title: 'Sucesso',
+    text: '<%= request.getAttribute("mensagem") %>',
+    timer: 2500,
+    showConfirmButton: false
+  });
+</script>
+<% } %>
+<% if (request.getAttribute("erro") != null) { %>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Erro na hora do cadastro ou link, certifique existencia e a singularidade de dados"
+    });
+  });
+</script>
+<% } %>
 </body>
 </html>

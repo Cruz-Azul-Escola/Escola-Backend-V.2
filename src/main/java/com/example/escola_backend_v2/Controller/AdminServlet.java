@@ -77,18 +77,38 @@ public class AdminServlet extends HttpServlet {
                 atualizarAluno(request, response);
                 break;
             case "excluirSala":
-                salaDAO.excluir(Integer.parseInt(request.getParameter("id")));
-                response.sendRedirect("admin");
+                try {
+                    salaDAO.excluir(Integer.parseInt(request.getParameter("id")));
+                    enviarMensagem(request, response, "Sala excluída com sucesso!");
+                } catch (Exception e) {
+                    enviarErro(request, response, "Erro ao excluir sala: " + e.getMessage());
+                }
+                break;
+            case "excluirTurma":
+                try {
+                    turmaDAO.deletarTurma(Integer.parseInt(request.getParameter("id")));
+                    enviarMensagem(request, response, "Turma excluída com sucesso!");
+                } catch (Exception e) {
+                    enviarErro(request, response, "Erro ao excluir Turma: " + e.getMessage());
+                }
                 break;
 
             case "excluirDisciplina":
-                disciplinaDAO.excluirDisciplina(Integer.parseInt(request.getParameter("id")));
-                response.sendRedirect("admin");
+                try {
+                    disciplinaDAO.excluirDisciplina(Integer.parseInt(request.getParameter("id")));
+                    enviarMensagem(request, response, "Disciplina excluída com sucesso!");
+                } catch (Exception e) {
+                    enviarErro(request, response, "Erro ao excluir disciplina: " + e.getMessage());
+                }
                 break;
 
             case "excluirProfessor":
-                professorDAO.desativar(Integer.parseInt(request.getParameter("id")));
-                response.sendRedirect("admin");
+                try {
+                    professorDAO.desativar(Integer.parseInt(request.getParameter("id")));
+                    enviarMensagem(request, response, "Professor excluída com sucesso!");
+                } catch (Exception e) {
+                    enviarErro(request, response, "Erro ao excluir professor: " + e.getMessage());
+                }
                 break;
             case "vincularAlunoTurma":
                 vincularAlunoTurma(request, response);
@@ -129,6 +149,10 @@ public class AdminServlet extends HttpServlet {
                 SalaDTO sala = salaDAO.buscarSala(id);
                 request.setAttribute("sala", sala);
                 break;
+            case "turma":
+                List<TurmaDTO> turma = turmaDAO.buscarPorId(id);
+                request.setAttribute("turma", turma.get(0));
+                break;
             case "disciplina":
                 DisciplinaDTO disciplina = disciplinaDAO.buscar(id);
                 request.setAttribute("disciplina", disciplina);
@@ -160,6 +184,9 @@ public class AdminServlet extends HttpServlet {
                 case "sala":
                     alterarSalaSimples(request);
                     break;
+                case "turma":
+                    alterarTurmaSimples(request);
+                    break;
 
                 case "disciplina":
                     System.out.println("editado");
@@ -169,7 +196,7 @@ public class AdminServlet extends HttpServlet {
 
             }
 
-            response.sendRedirect("admin");
+            enviarMensagem(request, response, "Registro alterado com sucesso!");
 
         } catch (Exception e) {
             throw new ServletException(e);
@@ -195,7 +222,14 @@ public class AdminServlet extends HttpServlet {
 
         professorDAO.atualizarProfessorCompleto(professor, listaTurmas);
     }
-    private void alterarAlunoSimples(HttpServletRequest request) {
+    private void alterarTurmaSimples(HttpServletRequest request) {
+
+        turmaDAO.editarTurma(Integer.parseInt(request.getParameter("id")), Integer.parseInt(request.getParameter("idDisciplina")), Integer.parseInt(request.getParameter("idSala")), request.getParameter("periodoLetivo"));
+
+
+    }
+
+        private void alterarAlunoSimples(HttpServletRequest request) {
 
         AlunoDTO aluno = new AlunoDTO();
 
@@ -291,6 +325,11 @@ public class AdminServlet extends HttpServlet {
             aluno.setIdSala(Integer.parseInt(request.getParameter("idSala")));
 
             AlunoDTO alunoCadastrado = alunoDAO.preCadastro(aluno);
+
+            if (alunoCadastrado == null) {
+                enviarErro(request, response, "Não foi possível cadastrar o aluno.");
+                return;
+            }
 
             enviarMensagem(request, response,
                     "Aluno cadastrado com sucesso! Matrícula: " + alunoCadastrado.getMatricula());
@@ -430,7 +469,7 @@ public class AdminServlet extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         alunoDAO.excluir(id);
 
-        response.sendRedirect("admin");
+        enviarMensagem(request, response, "Registro alterado com sucesso!");
     }
     private void editarAluno(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -499,7 +538,7 @@ public class AdminServlet extends HttpServlet {
             boolean sucesso = alunoDAO.alterarAlunoCompleto(aluno);
 
             if (sucesso) {
-                response.sendRedirect("admin");
+                enviarMensagem(request, response, "Registro alterado com sucesso!");
             } else {
                 request.setAttribute("erro", "Erro ao atualizar aluno.");
                 carregarListas(request);
