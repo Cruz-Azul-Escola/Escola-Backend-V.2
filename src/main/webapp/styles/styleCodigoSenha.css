@@ -50,7 +50,7 @@ main > div:nth-child(1) {
     background-color: white;
     width: 80%;
     max-width: 900px;
-    min-height: 800px;
+    min-height: 700px;
     height: 80%;
 }
 #container button {
