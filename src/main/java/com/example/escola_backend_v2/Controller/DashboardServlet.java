@@ -84,7 +84,7 @@ public class DashboardServlet extends HttpServlet {
             double mediaAluno = tm.getMedia() != null ? tm.getMedia() : 0;
 
             // pega a sala dos alunos
-            String nomeSala = matriculaDao.bucarSala(tm.getTurma(), tm.getAluno()).getNome();
+            String nomeSala = tm.getTurma().getSala().getNome();
 
             // percorre as disciplinas dos alunos
             for (DisciplinaDTO d : disciplinas) {
@@ -189,15 +189,11 @@ public class DashboardServlet extends HttpServlet {
         }
         // Cálculo das maiores médias por disciplina
         for (TurmaAlunoDTO ta : todasMatriculas) {
-
-            for (DisciplinaDTO disciplina : matriculaDao.listarDisciplinas(ta.getTurma(), ta.getAluno())) {
-
+            for (DisciplinaDTO disciplina : disciplinas) {
                 String nomeDisciplina = disciplina.getNome();
                 double mediaAluno = ta.getMedia();
-
                 if (!maiorMediaDisciplina.containsKey(nomeDisciplina) ||
                         mediaAluno > maiorMediaDisciplina.get(nomeDisciplina)) {
-
                     maiorMediaDisciplina.put(nomeDisciplina, mediaAluno);
                     alunoMaiorMediaDisciplina.put(nomeDisciplina, ta.getAluno().getNome());
                 }
