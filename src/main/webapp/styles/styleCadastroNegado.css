@@ -52,6 +52,7 @@ main > div:nth-child(1) {
     width: 80%;
     max-width: 900px;
     height: 80%;
+    min-height: 700px;
 }
 #container button {
     width: 50%;
@@ -72,6 +73,7 @@ a {
 
 @media(max-width: 1300px) {
     #container {
+        min-height: 800px;
         height: 91.5%;
         width: 90%;
         margin: 0;
@@ -81,6 +83,7 @@ a {
 }
 @media(max-width: 850px) {
     #container {
+        min-height: 800px;
         height: 91.5%;
         width: 100%;
         margin: 0;
@@ -91,6 +94,7 @@ a {
 
 @media(max-height: 700px) {
     #container {
+        min-height: 800px;
         height: fit-content;
     }
 }
